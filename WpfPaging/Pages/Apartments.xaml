@@ -1,0 +1,112 @@
+﻿<Page x:Class="WpfPaging.Pages.Apartments"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:WpfPaging.Pages"
+      mc:Ignorable="d" 
+        DataContext="{Binding ApartmentsViewModel, Source={StaticResource ViewModelLocator}}"
+      d:DesignHeight="800" d:DesignWidth="1200"
+      Title="Apartments">
+    <Page.Resources>
+        <!-- Стили для кнопок меню -->
+        <Style TargetType="Button" x:Key="MenuControls">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Margin" Value="3"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Width" Value="120"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Background" Value="Peru"/>
+        </Style>
+        <!--Стили для заголовка страницы-->
+        <Style TargetType="TextBlock" x:Key="PageTitle">
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="Margin" Value="0, 12, 0, 8"/>
+        </Style>
+        <!-- Для текстбоксов-->
+        <Style TargetType="TextBox" x:Key="TextField">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Margin" Value="3, 3, 3, 6"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Width" Value="120"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="Peru"/>
+        </Style>
+        <!-- Для Текстблоков в области ввода данных-->
+        <Style TargetType="TextBlock" x:Key="BlockField">
+        
+            <Setter Property="Margin" Value="3, 6, 3, 3"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Width" Value="120"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Background" Value="White"/>
+        </Style>
+        <!-- Для комбобоксов -->
+        <Style TargetType="ComboBox" x:Key="ComboField">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Margin" Value="3, 3, 3, 6"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Width" Value="120"/>
+            <Setter Property="Height" Value="20"/>
+        </Style>
+    </Page.Resources>
+    <Border Padding="10">
+        <!-- Делю страницу на два ряда чтобы отделить пункты меню от рабочей области-->
+    <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="6*"/>
+            </Grid.RowDefinitions>
+        <!--Заголовок-->
+            <StackPanel Background="PeachPuff" Orientation="Vertical" VerticalAlignment="Center">
+                    <TextBlock Text="Житлові будинки: вхідні дані" TextAlignment="Center" Style="{StaticResource PageTitle}"/>
+           
+            <!--Меню переключатели-->
+              <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,15">
+                <Button Style="{StaticResource MenuControls}" Command="{Binding ChangePage2}" Content="Меню" />
+                <Button Style="{StaticResource MenuControls}" Command="{Binding ChangePage}" Content="Житлові" />
+                <TextBox Width="100" HorizontalAlignment="Center" Text="{Binding LogText, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Center" />
+                <Button Style="{StaticResource MenuControls}" Command="{Binding SendLog}" Content="Send log" />
+                <Button Style="{StaticResource MenuControls}" IsEnabled="False" Content="Developing" Width="100"></Button>
+              </StackPanel>
+            
+            <!--Делю рабочую область на две колонки-->
+        </StackPanel>
+            <Grid Grid.Row="1">
+
+                <Grid.ColumnDefinitions>
+                    <!--Для панели ввода данных-->
+                    <ColumnDefinition Width="2*"/>
+                    <!--Для таблицы-->
+                    <ColumnDefinition Width="7*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel>
+                    
+                    <TextBlock Style="{StaticResource BlockField}">Генплановий №</TextBlock>
+                    <TextBox Style="{StaticResource TextField}"></TextBox>
+                    
+                    <TextBlock Style="{StaticResource BlockField}">Поверхів:</TextBlock>
+                    <ComboBox Style="{StaticResource ComboField}"></ComboBox>
+
+                    <TextBlock Style="{StaticResource BlockField}">Під'їздів:</TextBlock>
+                    <ComboBox Style="{StaticResource ComboField}"></ComboBox>
+
+                    <TextBlock Style="{StaticResource BlockField}">Квартир на площ.:</TextBlock>
+                    <ComboBox Style="{StaticResource ComboField}"></ComboBox>
+
+                    <TextBlock Style="{StaticResource BlockField}">Рівень електриф.:</TextBlock>
+                    <ComboBox Style="{StaticResource ComboField}"></ComboBox>
+
+                    <TextBlock Style="{StaticResource BlockField}">Катег. надійності:</TextBlock>
+                    <ComboBox Style="{StaticResource ComboField}"></ComboBox>
+
+
+                </StackPanel>
+                
+                
+            </Grid>
+              </Grid>
+    </Border>
+</Page>

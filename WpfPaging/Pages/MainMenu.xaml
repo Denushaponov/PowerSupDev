@@ -1,0 +1,39 @@
+﻿<Page
+    x:Class="WpfPaging.Pages.MainMenu"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:WpfPaging.Pages"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodels="clr-namespace:WpfPaging.ViewModels"
+    Title="MainMenu"
+    d:DesignHeight="800"
+    d:DesignWidth="1200"
+    DataContext="{Binding MainMenuViewModel, Source={StaticResource ViewModelLocator}}"
+    FontSize="50"
+    mc:Ignorable="d">
+    <Border Padding="10">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel>
+            <TextBlock Text="Page log" TextAlignment="Center" />
+                <StackPanel Orientation="Horizontal">
+                    <Button Command="{Binding ChangePage}" Content="Житлові" />
+                    <Button Command="{Binding ChangePage2}" Content="Комерційні" />
+                    <Button Command="{Binding ChangePage2}" Content="Test3" />
+                    <Button Command="{Binding ChangePage2}" Content="Test4" />
+                    <Button Command="{Binding ChangePage2}" Content="Test5" />
+                </StackPanel>
+          
+            <Button Command="{Binding AppendLog}" Content="AppendLog" />
+        </StackPanel>
+
+        <ListView Grid.Row="1" ItemsSource="{Binding Logs}" />
+
+    </Grid>
+    </Border>
+</Page>
