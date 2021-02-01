@@ -1,28 +1,61 @@
 ﻿using DevExpress.Mvvm;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows.Input;
 using WpfPaging.Events;
 using WpfPaging.Messages;
 using WpfPaging.Pages;
 using WpfPaging.Services;
+using WpfPaging.DistrictObjects;
+
 
 namespace WpfPaging.ViewModels
 {
-   public class ApartmentsViewModel:BindableBase
+    public class ApartmentsViewModel : BindableBase
     {
         private readonly PageService _pageService;
         private readonly EventBus _eventBus;
         private readonly MessageBus _messageBus;
 
         public string LogText { get; set; }
+        public ObservableCollection<ApartmentBuilding> ApartmentBuildings { get; set; }
+        public ApartmentBuilding SelectedApartmentBuilding { get; set; }
+
+       
+       
+
+
+
+        public ICommand AddCommand => new AsyncCommand(async () =>
+        {
+            ApartmentBuilding apartmentBuilding = new ApartmentBuilding();
+            ApartmentBuildings.Insert(0, apartmentBuilding);
+            SelectedApartmentBuilding = apartmentBuilding;
+        }
+        );
+
+
+
+
+
+
+        /// <summary>
+        /// Команды и параметры для взаимодействия между окнами
+        /// </summary>
+        /// <param name="pageService"></param>
+        /// <param name="eventBus"></param>
+        /// <param name="messageBus"></param>
 
         public ApartmentsViewModel(PageService pageService, EventBus eventBus, MessageBus messageBus)
         {
             _pageService = pageService;
             _eventBus = eventBus;
             _messageBus = messageBus;
+            ApartmentBuildings = new ObservableCollection<ApartmentBuilding> { };
+           
+
         }
 
 
@@ -42,7 +75,6 @@ namespace WpfPaging.ViewModels
             await _eventBus.Publish(new LeaveFromFirstPageEvent());
         });
 
-
         // Комманда пересылает текст сообщения в главное меню.
         public ICommand SendLog => new AsyncCommand(async () =>
         {
@@ -50,5 +82,7 @@ namespace WpfPaging.ViewModels
             //await _messageBus.SendTo<object>(new TextMessage(LogText));
 
         });
+
+
     }
 }

@@ -18,6 +18,21 @@
             <Setter Property="Height" Value="20"/>
             <Setter Property="Background" Value="Peru"/>
         </Style>
+        <!-- Стиль для кнопок добавления-->
+        <Style  x:Key="AddButton" TargetType="Button">
+            <Setter Property="Width" Value="50"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Background" Value="Green"/>
+            <Setter Property="Margin" Value="3"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <!-- ДЛЯ КОНПОК УДАЛЕНИЯ-->
+        <Style x:Key="RemoveButton" TargetType="Button" BasedOn="{StaticResource AddButton}">
+            <Setter Property="Background" Value="Red"/>
+           
+        </Style>
         <!--Стили для заголовка страницы-->
         <Style TargetType="TextBlock" x:Key="PageTitle">
             <Setter Property="FontSize" Value="24"/>
@@ -29,7 +44,7 @@
             <Setter Property="Margin" Value="3, 3, 3, 6"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Width" Value="120"/>
-            <Setter Property="Height" Value="20"/>
+            <Setter Property="Height" Value="25"/>
             <Setter Property="BorderThickness" Value="2"/>
             <Setter Property="BorderBrush" Value="Peru"/>
         </Style>
@@ -48,7 +63,7 @@
             <Setter Property="Margin" Value="3, 3, 3, 6"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Width" Value="120"/>
-            <Setter Property="Height" Value="20"/>
+            <Setter Property="Height" Value="25"/>
         </Style>
     </Page.Resources>
     <Border Padding="10">
@@ -83,26 +98,110 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button Style="{StaticResource AddButton}" Command="{Binding AddCommand}" Content="+"/>
+                        <Button Style="{StaticResource RemoveButton}" Content="-"/>
+                    </StackPanel>
                     
+
                     <TextBlock Style="{StaticResource BlockField}">Генплановий №</TextBlock>
-                    <TextBox Style="{StaticResource TextField}"></TextBox>
+                    <TextBox Style="{StaticResource TextField}" Text="{Binding SelectedApartmentBuilding.PlanNumber}"></TextBox>
                     
                     <TextBlock Style="{StaticResource BlockField}">Поверхів:</TextBlock>
-                    <ComboBox Style="{StaticResource ComboField}"></ComboBox>
+                    <ComboBox Style="{StaticResource ComboField}" ItemsSource="{Binding Source={x:Static local:ApartmentDataBase.LevelsColl}}" Text="{Binding SelectedApartmentBuilding.Levels}"></ComboBox>
 
                     <TextBlock Style="{StaticResource BlockField}">Під'їздів:</TextBlock>
-                    <ComboBox Style="{StaticResource ComboField}"></ComboBox>
+                    <ComboBox Style="{StaticResource ComboField}" ItemsSource="{Binding Source={x:Static local:ApartmentDataBase.EntrancesColl}}" Text="{Binding SelectedApartmentBuilding.Entrances}"></ComboBox>
 
                     <TextBlock Style="{StaticResource BlockField}">Квартир на площ.:</TextBlock>
-                    <ComboBox Style="{StaticResource ComboField}"></ComboBox>
+                    <ComboBox Style="{StaticResource ComboField}" ItemsSource="{Binding Source={x:Static local:ApartmentDataBase.ApartmentsOnSiteColl}}" Text="{Binding SelectedApartmentBuilding.ApartmentsOnSite}"></ComboBox>
 
                     <TextBlock Style="{StaticResource BlockField}">Рівень електриф.:</TextBlock>
-                    <ComboBox Style="{StaticResource ComboField}"></ComboBox>
+                    <ComboBox Style="{StaticResource ComboField}" ItemsSource="{Binding Source={x:Static local:ApartmentDataBase.ElectrificationLevelColl}}" Text="{Binding SelectedApartmentBuilding.ElectrificationLevel}"></ComboBox>
 
                     <TextBlock Style="{StaticResource BlockField}">Катег. надійності:</TextBlock>
-                    <ComboBox Style="{StaticResource ComboField}"></ComboBox>
+                    <ComboBox Style="{StaticResource ComboField}" ItemsSource="{Binding Source={x:Static local:ApartmentDataBase.ReliabilityCathegoryColl}}" Text="{Binding SelectedApartmentBuilding.ReliabilityCathegory}"></ComboBox>
 
+                   
+                    
+                    <!-- Панель ввода информации о лифтах -->
+                    <CheckBox FontSize="14" Width="120" Name="HasElevators" Margin="5,8,5,3" Content="Є ліфт(и)"/>
+                    <StackPanel>
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=HasElevators, Path=IsChecked}" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Setter Property="IsEnabled" Value="False"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+                    <TextBlock Style="{StaticResource BlockField}">Ліфтів у під'їзді</TextBlock>
+                    <RadioButton Width="120" Name="OneElevator" Margin="5" Content="1 ліфт"/>
+                    <RadioButton  Width="120" Name="TwoElevators" Margin="5" Content="2 ліфти"/>
+                    <StackPanel>
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=OneElevator, Path=IsChecked}" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+                        <TextBlock Style="{StaticResource BlockField}">Рл1, кВт</TextBlock>
+                        <ComboBox Style="{StaticResource ComboField}" ItemsSource="{Binding Source={x:Static local:ApartmentDataBase.ElevatorsPowerColl}}" Text="{Binding SelectedApartmentBuilding.FirstElevatorPower}"/>
+                    </StackPanel>
+                    
+                    <StackPanel>
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=TwoElevators, Path=IsChecked}" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+                            <TextBlock Style="{StaticResource BlockField}">Pл1, кВт</TextBlock>
+                              <ComboBox Style="{StaticResource ComboField}" ItemsSource="{Binding Source={x:Static local:ApartmentDataBase.ElevatorsPowerColl}}" Text="{Binding SelectedApartmentBuilding.FirstElevatorPower}"/>
+                            <TextBlock Style="{StaticResource BlockField}">Pл2, кВт</TextBlock>
+                             <ComboBox Style="{StaticResource ComboField}" ItemsSource="{Binding Source={x:Static local:ApartmentDataBase.ElevatorsPowerColl}}" Text="{Binding SelectedApartmentBuilding.SecondElevatorPower}"/>
+                        </StackPanel>
+                    </StackPanel>
 
+                    <!-- Панель ввода информации о насосах-->
+                    <CheckBox Width="120" Name="HasPomp" Margin="5" Content="Є насос"/>
+                    <StackPanel>
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=HasPomp, Path=IsChecked}" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+                        <TextBlock Style="{StaticResource BlockField}">Рс-ту, кВт</TextBlock>
+                        <ComboBox Style="{StaticResource ComboField}" ItemsSource="{Binding Source={x:Static local:ApartmentDataBase.PompsPowerColl}}" Text="{Binding SelectedApartmentBuilding.PompPower}"/>
+                    </StackPanel>
+
+                   
+
+                </StackPanel>
+                <StackPanel Grid.Column="1">
+                    <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding ApartmentBuildings}" SelectedItem="{Binding SelectedApartmentBuilding}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Генплановий номер" Width="0.6*" Binding="{Binding Path=PlanNumber}"/>
+                            <DataGridTextColumn Header="Поверхів" Width="0.3*" Binding="{Binding Path=Levels}"/>
+                            <DataGridTextColumn Header="Під'їздів" Width="0.3*" Binding="{Binding Path=Entrances}"/>
+                            <DataGridTextColumn Header="Квартир на площадці" Width="0.5*" Binding="{Binding Path=ApartmentsOnSite}"/>
+                            <DataGridTextColumn Header="Рівень електрифікації" Width="0.6*" Binding="{Binding Path=ElectrificationLevel}"/>
+                            <DataGridTextColumn Header="Категорія надійності" Width="0.6*" Binding="{Binding Path=ReliabilityCathegory}"/>
+                        </DataGrid.Columns>
+                            
+                    </DataGrid>
                 </StackPanel>
                 
                 
