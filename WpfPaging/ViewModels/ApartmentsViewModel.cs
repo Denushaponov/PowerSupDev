@@ -9,7 +9,7 @@ using WpfPaging.Messages;
 using WpfPaging.Pages;
 using WpfPaging.Services;
 using WpfPaging.DistrictObjects;
-
+using GalaSoft.MvvmLight.Command;
 
 namespace WpfPaging.ViewModels
 {
@@ -23,7 +23,7 @@ namespace WpfPaging.ViewModels
         public ObservableCollection<ApartmentBuilding> ApartmentBuildings { get; set; }
         public ApartmentBuilding SelectedApartmentBuilding { get; set; }
 
-       
+    
        
 
 
@@ -36,9 +36,20 @@ namespace WpfPaging.ViewModels
         }
         );
 
+        
 
+        
+        public ICommand Remove
+        {
+            get 
+            {
+                return new DelegateCommand<ApartmentBuilding>((apartmentBuilding) =>
+                {
+                    ApartmentBuildings.Remove(apartmentBuilding);
 
-
+                }, (apartmentBuilding) => apartmentBuilding != null);
+                }
+        }
 
 
         /// <summary>
@@ -54,10 +65,8 @@ namespace WpfPaging.ViewModels
             _eventBus = eventBus;
             _messageBus = messageBus;
             ApartmentBuildings = new ObservableCollection<ApartmentBuilding> { };
-           
-
         }
-
+       
 
         // Команда выхода со страницы в главное меню
         public ICommand ChangePage2 => new AsyncCommand(async () =>
