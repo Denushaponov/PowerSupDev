@@ -17,10 +17,8 @@ namespace WpfPaging.DistrictObjects
         public double FirstElevatorPower { get; set; }
         public double SecondElevatorPower { get; set; }
         public double PompPower { get; set; }
-        public double TgFiApartments => GetElectrification();
-            
+        public bool HasElevators { get; set; }
 
-           
 
         public ApartmentBuilding()
         {
@@ -32,26 +30,9 @@ namespace WpfPaging.DistrictObjects
             ApartmentsOnSite = 0;
             ElectrificationLevel = 0;
             ReliabilityCathegory = 0;
-           
+
         }
 
-        public double GetElectrification ()
-        {
-            double x;
-            if (ElectrificationLevel == 1)
-            {
-                x = 0.29;
-            }
-            else if (ElectrificationLevel == 3)
-            {
-                x = 0.2;
-            }
-            else
-            {
-                x = 1;
-            }
-            return x;
-        }
 
 
 

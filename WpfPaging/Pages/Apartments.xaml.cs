@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevExpress.Mvvm;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -22,6 +23,11 @@ namespace WpfPaging.Pages
         {
             InitializeComponent();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            ApartmentBuildingsLoadsTab.IsSelected = true;
+        }
     }
 
     public class ApartmentDataBase
@@ -33,5 +39,7 @@ namespace WpfPaging.Pages
         public static IEnumerable<byte> ReliabilityCathegoryColl { get; } = new byte[] { 1, 2, 3 };
         public static IEnumerable<double> ElevatorsPowerColl { get; } = new double[] {0, 6, 7, 8, 9, 10, 11, 12 };
         public static IEnumerable<double> PompsPowerColl { get; } = new double[] {0, 8, 9, 10, 11, 12, 13, 14, 15 };
+
+       
     }
 }
