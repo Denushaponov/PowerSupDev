@@ -116,21 +116,21 @@
                     <!-- !!!! -->
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <Button Style="{StaticResource AddButton}" Command="{Binding AddCommand}" Content="+"/>
-                        <Button Style="{StaticResource RemoveButton}" Command="{Binding Remove}" CommandParameter="{Binding SelectedApartmentBuilding}" Content="-"/>
+                        <Button Style="{StaticResource RemoveButton}" Command="{Binding Remove}" CommandParameter="{Binding SelectedCommercialBuilding}" Content="-"/>
                     </StackPanel>
 
 
                     <TextBlock Style="{StaticResource BlockField}">Генплановий №</TextBlock>
-                    <TextBox Style="{StaticResource TextField}" Text="{Binding SelectedApartmentBuilding.PlanNumber}"></TextBox>
+                    <TextBox Style="{StaticResource TextField}" Text="{Binding SelectedCommercialBuilding.PlanNumber}"></TextBox>
 
                     <TextBlock Style="{StaticResource BlockField}">Тип споживача:</TextBlock>
-                    <ComboBox Style="{StaticResource ComboField}" ItemsSource="{Binding Source={x:Static local:ApartmentDataBase.LevelsColl}}" Text="{Binding SelectedApartmentBuilding.Levels}"></ComboBox>
+                    <ComboBox Style="{StaticResource ComboField}" ItemsSource="{Binding Source={x:Static local:CommercialsDataBase.CommercialTypeColl}}" Text="{Binding SelectedCommercialBuilding.TypeOfCommercial}"></ComboBox>
 
                     <TextBlock Style="{StaticResource BlockField}">Знач. характерис.</TextBlock>
-                    <TextBox Style="{StaticResource TextField}" Text="{Binding SelectedApartmentBuilding.Entrances}"></TextBox>
+                    <TextBox Style="{StaticResource TextField}" Text="{Binding SelectedCommercialBuilding.ValueOfCharacteristics}"></TextBox>
 
                     <TextBlock Style="{StaticResource BlockField}">Катег. надійності</TextBlock>
-                    <ComboBox Style="{StaticResource ComboField}" ItemsSource="{Binding Source={x:Static local:ApartmentDataBase.ApartmentsOnSiteColl}}" Text="{Binding SelectedApartmentBuilding.ApartmentsOnSite}"></ComboBox>
+                    <ComboBox Style="{StaticResource ComboField}" ItemsSource="{Binding Source={x:Static local:CommercialsDataBase.ReliabilityCathegoryColl}}" Text="{Binding SelectedCommercialBuilding.ReliabilityCathegory}"></ComboBox>
 
                      <!-- Панель ввода информации о лифтах -->
 
@@ -149,7 +149,7 @@
                             </Style>
                         </StackPanel.Style>
                         <TextBlock Style="{StaticResource BlockField}">Рівень електриф.:</TextBlock>
-                        <ComboBox Style="{StaticResource ComboField}" ItemsSource="{Binding Source={x:Static local:ApartmentDataBase.ElectrificationLevelColl}}" Text="{Binding SelectedApartmentBuilding.ElectrificationLevel}"></ComboBox>
+                        <ComboBox Style="{StaticResource ComboField}" ItemsSource="{Binding Source={x:Static local:CommercialsDataBase.ElectrificationLevelColl}}" Text="{Binding SelectedCommercialBuilding.ElectrificationLevel}"></ComboBox>
 
                     </StackPanel>
 
@@ -176,15 +176,16 @@
                                         <RowDefinition Height="1*"/>
                                     </Grid.RowDefinitions>
 
-                                    <DataGrid FontSize="12"  AutoGenerateColumns="False" ItemsSource="{Binding ApartmentBuildings}" SelectedItem="{Binding SelectedApartmentBuilding}">
+                                    <DataGrid FontSize="12"  AutoGenerateColumns="False" ItemsSource="{Binding CommercialBuildings}" SelectedItem="{Binding SelectedCommercialBuilding}">
                                         <DataGrid.Columns>
                                             <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Генплановий №" Width="0.6*" Binding="{Binding PlanNumber}"/>
-                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Тип споживача" Width="1*" Binding="{Binding Levels}"/>
-                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Характеристика" Width="0.4*" Binding="{Binding Entrances}"/>
-                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Од. вим." Width="0.3*" Binding="{Binding Entrances}"/>
-                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Категорія надійності" Width="0.8*" Binding="{Binding ApartmentsOnSite}"/>
-                                            
-                                            
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Тип споживача" Width="1*" Binding="{Binding TypeOfCommercial}"/>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Характеристика" Width="0.4*" Binding="{Binding ValueOfCharacteristics}"/>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Од. вим." Width="0.3*" Binding="{Binding MeasurmentUnit}"/>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Категорія надійності" Width="0.45*" Binding="{Binding ReliabilityCathegory}"/>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Рівень електрифікації (*якщо є)" Width="0.6*" Binding="{Binding ElectrificationLevel}"/>
+
+
 
                                             <!-- КОЛОНКА С КНОПКАМИ УДАЛИТЬ ДЛЯ КАЖДОГО РЯДА 
                             
@@ -208,7 +209,7 @@
                             <TabItem.Header>
                                 <TextBlock Style="{StaticResource BlockField}" Width="200" Text="Характеристика комерційних"/>
                             </TabItem.Header>
-                            <DataGrid FontSize="12" AutoGenerateColumns="False" ItemsSource="{Binding LoadsOfApartmentBuildings}"  CanUserResizeColumns="False">
+                            <DataGrid FontSize="12" AutoGenerateColumns="False"  CanUserResizeColumns="False">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn IsReadOnly="True" Header="Генплановий номер" Width="0.35*" Binding="{Binding PlanNumber}"/>
                                     <DataGridTextColumn  IsReadOnly="True" Header="Тип споживача" Width="1*" Binding="{Binding TotalApartments}"/>
