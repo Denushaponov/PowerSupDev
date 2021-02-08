@@ -17,7 +17,8 @@ namespace WpfPaging.DistrictObjects
         public double FirstElevatorPower { get; set; }
         public double SecondElevatorPower { get; set; }
         public double PompPower { get; set; }
-        public bool HasElevators { get; set; }
+        public double ElevatorsPerEntrance => CountElevatorsPerEntrance();
+        public double PompsNumber => CountPomps();
 
 
         public ApartmentBuilding()
@@ -30,6 +31,27 @@ namespace WpfPaging.DistrictObjects
             ApartmentsOnSite = 0;
             ElectrificationLevel = 0;
             ReliabilityCathegory = 0;
+
+        }
+
+        public double CountElevatorsPerEntrance() 
+        {
+            double i;
+            if (FirstElevatorPower != 0 && SecondElevatorPower != 0)
+            { i = 2; }
+            else if (FirstElevatorPower != 0 || SecondElevatorPower != 0)
+            { i = 1; }
+            else i = 0;
+            return i;
+        }
+
+        public double CountPomps()
+        {
+            double i;
+            if (PompPower != 0)
+            { i = 1; }
+            else i = 0;
+            return i;
 
         }
 

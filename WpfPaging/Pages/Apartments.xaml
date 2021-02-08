@@ -9,6 +9,7 @@
       d:DesignHeight="800" d:DesignWidth="1200"
       Title="Apartments">
     <Page.Resources>
+
         <!-- Стили для кнопок меню -->
         <Style TargetType="Button" x:Key="MenuControls">
             <Setter Property="BorderThickness" Value="0"/>
@@ -27,7 +28,7 @@
             <Setter Property="Margin" Value="3"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
-        </Style>
+             </Style>
         <!-- ДЛЯ КОНПОК УДАЛЕНИЯ-->
         <Style x:Key="RemoveButton" TargetType="Button" BasedOn="{StaticResource AddButton}">
             <Setter Property="Background" Value="Red"/>
@@ -74,16 +75,16 @@
                 <RowDefinition Height="6*"/>
             </Grid.RowDefinitions>
             <!--Заголовок-->
-            <StackPanel Background="PeachPuff" Orientation="Vertical" VerticalAlignment="Center">
+            <StackPanel Background="Bisque" Orientation="Vertical" VerticalAlignment="Center">
                 <TextBlock Text="Житлові будинки: вхідні дані" TextAlignment="Center" Style="{StaticResource PageTitle}"/>
 
                 <!--Меню переключатели-->
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,15">
                     <Button Style="{StaticResource MenuControls}" Command="{Binding ChangePage2}" Content="Меню" />
-                    <Button Style="{StaticResource MenuControls}" Command="{Binding ChangePage}" Content="Житлові" />
+                    <Button Style="{StaticResource MenuControls}" Command="{Binding ChangePage}" Content="Комерційні" />
                     <TextBox Width="100" HorizontalAlignment="Center" Text="{Binding LogText, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Center" />
                     <Button Style="{StaticResource MenuControls}" Command="{Binding SendLog}" Content="Send log" />
-                    <Button Style="{StaticResource MenuControls}" Command="{Binding AddApart}" IsEnabled="True" Content="Developing" Width="100"></Button>
+                    <Button Style="{StaticResource MenuControls}" IsEnabled="False" Content="Developing" Width="100"></Button>
                 </StackPanel>
 
                 <!--Делю рабочую область на две колонки-->
@@ -97,7 +98,18 @@
                     <ColumnDefinition Width="7*"/>
                 </Grid.ColumnDefinitions>
 
-                <StackPanel>
+                <StackPanel x:Name="UserInputPanel">
+                    <StackPanel.Style>
+                    <Style TargetType="StackPanel">
+                        <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=UserDataTab, Path=IsSelected}" Value="False">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Setter Property="IsEnabled" Value="False"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                    </StackPanel.Style>
+                    <!-- !!!! -->
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <Button Style="{StaticResource AddButton}" Command="{Binding AddCommand}" Content="+"/>
                         <Button Style="{StaticResource RemoveButton}" Command="{Binding Remove}" CommandParameter="{Binding SelectedApartmentBuilding}" Content="-"/>
@@ -126,7 +138,7 @@
 
                     <!-- Панель ввода информации о лифтах -->
 
-                    <CheckBox IsChecked="False" Command="{Binding ClearElevators}" Content="Є ліфт(и)" FontSize="14" Width="120" Name="HasElevators" Margin="5,8,5,3" >
+                    <CheckBox IsChecked="False" Command="{Binding ClearAllElevators}" Content="Є ліфт(и)" FontSize="14" Width="120" Name="HasElevators" Margin="5,8,5,3" >
 
                     </CheckBox>
                     <StackPanel>
@@ -141,8 +153,8 @@
                             </Style>
                         </StackPanel.Style>
                         <TextBlock Style="{StaticResource BlockField}">Ліфтів у під'їзді</TextBlock>
-                        <RadioButton Width="120" Name="OneElevator" Margin="5" Content="1 ліфт"/>
-                        <RadioButton  Width="120" Name="TwoElevators" Margin="5" Content="2 ліфти"/>
+                        <RadioButton Width="120" Name="OneElevator" IsChecked="True" Command="{Binding ClearSecondElevator}" Margin="5" Content="1 ліфт"/>
+                        <RadioButton  Width="120" Name="TwoElevators"  Margin="5" Content="2 ліфти"/>
                         <StackPanel>
                             <StackPanel.Style>
                                 <Style TargetType="StackPanel">
@@ -200,9 +212,9 @@
 
 
                     <TabControl>
-                        <TabItem x:Name="UserDataTab">
+                        <TabItem x:Name="UserDataTab" IsSelected="True">
                             <TabItem.Header>
-                                <TextBlock Style="{StaticResource BlockField}" Text="Вхідні дані"></TextBlock>
+                            <TextBlock Style="{StaticResource BlockField}">Вхідні дані</TextBlock>
                             </TabItem.Header>
                             <!-- Таблица показывает начальные данные которые вносит пользователь-->
                             <StackPanel Grid.Column="1">
@@ -213,16 +225,19 @@
                                         <RowDefinition Height="1*"/>
                                     </Grid.RowDefinitions>
 
-                                    <DataGrid  Grid.Row="0" AutoGenerateColumns="False" ItemsSource="{Binding ApartmentBuildings}" SelectedItem="{Binding SelectedApartmentBuilding}">
+                                    <DataGrid  AutoGenerateColumns="False" ItemsSource="{Binding ApartmentBuildings}" SelectedItem="{Binding SelectedApartmentBuilding}">
                                         <DataGrid.Columns>
-                                            <DataGridTextColumn IsReadOnly="True" Header="Генплановий номер" Width="0.6*" Binding="{Binding PlanNumber}"/>
-                                            <DataGridTextColumn  IsReadOnly="True" Header="Поверхів" Width="0.3*" Binding="{Binding Levels}"/>
-                                            <DataGridTextColumn  IsReadOnly="True" Header="Під'їздів" Width="0.3*" Binding="{Binding Entrances}"/>
-                                            <DataGridTextColumn  IsReadOnly="True" Header="Квартир на площадці" Width="0.5*" Binding="{Binding ApartmentsOnSite}"/>
-                                            <DataGridTextColumn  IsReadOnly="True" Header="Рівень електрифікації" Width="0.6*" Binding="{Binding ElectrificationLevel}"/>
-                                            <DataGridTextColumn  IsReadOnly="True" Header="Категорія надійності" Width="0.6*" Binding="{Binding ReliabilityCathegory}"/>
-                                            <DataGridTextColumn  IsReadOnly="True" Header="Tgfi" Width="0.6*" Binding="{Binding TgFiApartments}"/>
-                                            <DataGridTextColumn  IsReadOnly="True" Header="Elevator" Width="0.6*" Binding="{Binding PompPower}"/>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Генплановий №" Width="0.6*" Binding="{Binding PlanNumber}"/>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Поверхів" Width="0.4*" Binding="{Binding Levels}"/>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Під'їздів" Width="0.4*" Binding="{Binding Entrances}"/>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Квартир на площадці" Width="0.8*" Binding="{Binding ApartmentsOnSite}"/>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Рівень електрифікації" Width="0.8*" Binding="{Binding ElectrificationLevel}"/>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Категорія надійності" Width="0.8*" Binding="{Binding ReliabilityCathegory}"/>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Ліфтів на під'їзд" Width="0.6*" Binding="{Binding ElevatorsPerEntrance}"/>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Pліфт1" Width="0.3*" Binding="{Binding FirstElevatorPower}"/>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Pліфт2" Width="0.3*" Binding="{Binding SecondElevatorPower}"/>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Насос у будинку" Width="0.6*" Binding="{Binding PompsNumber}"/>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Pст-у (насос)" Width="0.6*" Binding="{Binding PompPower}"/>
 
                                             <!-- КОЛОНКА С КНОПКАМИ УДАЛИТЬ ДЛЯ КАЖДОГО РЯДА 
                             
@@ -237,7 +252,7 @@
                              -->
                                         </DataGrid.Columns>
                                     </DataGrid>
-                                    <Button Grid.Row="1" Style="{StaticResource AddButton}" HorizontalAlignment="Right" Height="25" VerticalAlignment="Bottom" Click="Button_Click">Далее</Button>
+                                    <Button Grid.Row="1" Style="{StaticResource AddButton}" Command="{Binding CopyAppartmentBuildings}"  HorizontalAlignment="Right" Height="25" VerticalAlignment="Bottom" Click="Button_Click">Далее</Button>
                                 </Grid>
                             </StackPanel>
                         </TabItem>
@@ -246,16 +261,19 @@
                             <TabItem.Header>
                                 <TextBlock Style="{StaticResource BlockField}" Width="200" Text="Навантаження будинків"/>
                             </TabItem.Header>
-                            <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding ApartmentBuildings}" SelectedItem="{Binding SelectedApartmentBuilding}">
+                            <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding LoadsOfApartmentBuildings}"  CanUserResizeColumns="False">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn IsReadOnly="True" Header="Генплановий номер" Width="0.6*" Binding="{Binding PlanNumber}"/>
-                                    <DataGridTextColumn  IsReadOnly="True" Header="Поверхів" Width="0.3*" Binding="{Binding Levels}"/>
-                                    <DataGridTextColumn  IsReadOnly="True" Header="Під'їздів" Width="0.3*" Binding="{Binding Entrances}"/>
-                                    <DataGridTextColumn  IsReadOnly="True" Header="Квартир на площадці" Width="0.5*" Binding="{Binding ApartmentsOnSite}"/>
-                                    <DataGridTextColumn  IsReadOnly="True" Header="Рівень електрифікації" Width="0.6*" Binding="{Binding ElectrificationLevel}"/>
-                                    <DataGridTextColumn  IsReadOnly="True" Header="Категорія надійності" Width="0.6*" Binding="{Binding ReliabilityCathegory}"/>
-                                    <DataGridTextColumn  IsReadOnly="True" Header="Tgfi" Width="0.6*" Binding="{Binding TgFiApartments}"/>
-                                    <DataGridTextColumn  IsReadOnly="True" Header="Elevator" Width="0.6*" Binding="{Binding FirstElevatorPower}"/>
+                                    <DataGridTextColumn  IsReadOnly="True" Header="Число квартир" Width="0.3*" Binding="{Binding TotalApartments}"/>
+                                    <DataGridTextColumn  IsReadOnly="True" Header="Pжп кВт/житло" Width="0.3*"/>
+                                    <DataGridTextColumn  IsReadOnly="True" Header="Рж, кВт" Width="0.3*" />
+                                    <DataGridTextColumn  IsReadOnly="True" Header="SUM Pлі, кВт" Width="0.3*"/>
+                                    <DataGridTextColumn  IsReadOnly="True" Header="Кпоп.лі" Width="0.2*" />
+                                    <DataGridTextColumn  IsReadOnly="True" Header="Рс-ту, кВт" Width="0.25*"/>
+                                    <DataGridTextColumn  IsReadOnly="True" Header="Кпс-ту" Width="0.25*" />
+                                    <DataGridTextColumn  IsReadOnly="True" Header="Рсил, кВт" Width="0.25*" />
+                                    <DataGridTextColumn  IsReadOnly="True" Header="Ржб кВт" Width="0.25*" />
+                                    <DataGridTextColumn  IsReadOnly="True" Header="Sжб кВА" Width="0.25*"/>
 
                                     <!-- КОЛОНКА С КНОПКАМИ УДАЛИТЬ ДЛЯ КАЖДОГО РЯДА 
                             

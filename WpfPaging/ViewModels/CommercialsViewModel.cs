@@ -30,6 +30,13 @@ namespace WpfPaging.ViewModels
             await _eventBus.Publish(new LeaveFromFirstPageEvent());
         });
 
+        public ICommand ToApartmentsPage => new AsyncCommand(async () =>
+        {
+            _pageService.ChangePage(new Apartments());
+
+            await _eventBus.Publish(new LeaveFromFirstPageEvent());
+        });
+
         public ICommand SendLog => new AsyncCommand(async () =>
         {
             await _messageBus.SendTo<MainMenuViewModel>(new TextMessage(LogText));

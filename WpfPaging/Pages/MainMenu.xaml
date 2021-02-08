@@ -6,34 +6,51 @@
     xmlns:local="clr-namespace:WpfPaging.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="clr-namespace:WpfPaging.ViewModels"
-    Title="MainMenu"
+    Title="Page1"
     d:DesignHeight="800"
     d:DesignWidth="1200"
     DataContext="{Binding MainMenuViewModel, Source={StaticResource ViewModelLocator}}"
     FontSize="50"
     mc:Ignorable="d">
-    <Border Padding="10">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+    <Page.Resources>
+        <!--Кнопки-->
+        <Style TargetType="Button" x:Name="MainMenuButton">
+            <Setter Property="Width" Value="300"/>
+            <Setter Property="FontSize" Value="40"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Background" Value="Peru"/>
+        </Style>
+        <!--Заголовок-->
+        <Style TargetType="TextBlock" x:Name="MainTitle">
+            <Setter Property="FontSize" Value="50"/>
+            <Setter Property="Margin" Value="0, 30,0,20"/>
+            <Setter Property="Background" Value="Bisque"/>
+        </Style>
 
-        <StackPanel>
-            <TextBlock Text="Page log" TextAlignment="Center" />
-                <StackPanel Orientation="Horizontal">
+    </Page.Resources>
+    <Border Padding="10">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <StackPanel>
+                <TextBlock Text="Головне меню" TextAlignment="Center" />
+                <StackPanel Orientation="Vertical">
                     <Button Command="{Binding ChangePage}" Content="Житлові" />
                     <Button Command="{Binding ChangePage2}" Content="Комерційні" />
-                    <Button Command="{Binding ChangePage2}" Content="Test3" />
-                    <Button Command="{Binding ChangePage2}" Content="Test4" />
-                    <Button Command="{Binding ChangePage2}" Content="Test5" />
+                    <Button Command="{Binding ChangePage2}" Content="Test3" IsEnabled="False" />
+                    <Button Command="{Binding ChangePage2}" Content="Test4" IsEnabled="False" />
+                    <Button Command="{Binding ChangePage2}" Content="Test5" IsEnabled="False" />
                 </StackPanel>
-          
-            <Button Command="{Binding AppendLog}" Content="AppendLog" />
-        </StackPanel>
 
-        <ListView Grid.Row="1" ItemsSource="{Binding Logs}" />
+                <Button Command="{Binding AppendLog}" Content="AppendLog" />
+            </StackPanel>
 
-    </Grid>
+            <ListView Grid.Row="1" ItemsSource="{Binding Logs}" />
+
+        </Grid>
     </Border>
+    
 </Page>

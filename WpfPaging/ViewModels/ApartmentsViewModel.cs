@@ -24,7 +24,7 @@ namespace WpfPaging.ViewModels
         public ObservableCollection<ApartmentBuilding> ApartmentBuildings { get; set; }
         public ApartmentBuilding SelectedApartmentBuilding { get; set; }
 
-        public ObservableCollection<LoadsApartmentBuilding> Appart { get; set; }
+        public ObservableCollection<LoadsApartmentBuilding> LoadsOfApartmentBuildings { get; set; }
 
         
         // Метод который копирует данные из обьекта одного класса в другой
@@ -41,32 +41,34 @@ namespace WpfPaging.ViewModels
                     l.FirstElevatorPower = apartmentBuilding.FirstElevatorPower;
                     l.SecondElevatorPower = apartmentBuilding.SecondElevatorPower;
                     l.PompPower = apartmentBuilding.PompPower;
-                    Appart.Add(l);
+                    
+                    LoadsOfApartmentBuildings.Add(l);
         }
 
 
         // Команда которая для кадого жилого здания в коллекции жилых зданий вызывает метод копирующий обьект
         // и не даст пользователю создать двойной дубликат исходной коллекции
-        public ICommand AddApart => new DelegateCommand(() =>
+        public ICommand CopyAppartmentBuildings => new DelegateCommand(() =>
         {
-            Appart.Clear();
-            if (ApartmentBuildings.Count > Appart.Count)
+            LoadsOfApartmentBuildings.Clear();
+            if (ApartmentBuildings.Count > LoadsOfApartmentBuildings.Count)
             {
                 foreach (var o in ApartmentBuildings)
                 { CopyApartmentBuilding(o); }
             }
         });
 
-        // Создаю комманду которая очистит параметры лифта 
-        public ICommand ClearElevators => new DelegateCommand(() =>
+        // Создаю комманду которая очистит параметры лифтов
+        public ICommand ClearAllElevators => new DelegateCommand(() =>
         {
-            
-            if (SelectedApartmentBuilding.HasElevators == false)
-            {
-                SelectedApartmentBuilding.FirstElevatorPower = 0;
-                SelectedApartmentBuilding.SecondElevatorPower = 0;
-            }
-            else return;
+             SelectedApartmentBuilding.FirstElevatorPower = 0;
+             SelectedApartmentBuilding.SecondElevatorPower = 0;
+       });
+
+        // Создаю команду которая удалит один лифт
+        public ICommand ClearSecondElevator => new DelegateCommand(() =>
+        {
+            SelectedApartmentBuilding.SecondElevatorPower = 0;
         });
 
         // Создаю комманду которая очистит поля насосы
@@ -115,7 +117,7 @@ namespace WpfPaging.ViewModels
             _eventBus = eventBus;
             _messageBus = messageBus;
             ApartmentBuildings = new ObservableCollection<ApartmentBuilding> { };
-            Appart = new ObservableCollection<LoadsApartmentBuilding> { };
+            LoadsOfApartmentBuildings = new ObservableCollection<LoadsApartmentBuilding> { };
         }
        
 
@@ -130,7 +132,7 @@ namespace WpfPaging.ViewModels
         // Комманда перехода на страницу Жилые здания
         public ICommand ChangePage => new AsyncCommand(async () =>
         {
-            _pageService.ChangePage(new Apartments());
+            _pageService.ChangePage(new Commercials());
 
             await _eventBus.Publish(new LeaveFromFirstPageEvent());
         });

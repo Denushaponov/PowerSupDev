@@ -22,12 +22,18 @@ namespace WpfPaging.Pages
         public Apartments()
         {
             InitializeComponent();
+           
+
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             ApartmentBuildingsLoadsTab.IsSelected = true;
         }
+
+     
+
+        
     }
 
     public class ApartmentDataBase

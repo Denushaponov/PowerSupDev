@@ -6,41 +6,234 @@
     xmlns:local="clr-namespace:WpfPaging.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="clr-namespace:WpfPaging.ViewModels"
-    Title="Page1"
+    Title="Commercials"
     d:DesignHeight="800"
     d:DesignWidth="1200"
     DataContext="{Binding CommercialsViewModel, Source={StaticResource ViewModelLocator}}"
     FontSize="50"
     mc:Ignorable="d">
     <Page.Resources>
-        <Style x:Key="inTabText">
-            <Setter Property="Control.FontFamily" Value="TimesNewRoman" />
-            <Setter Property="ItemsControl.FontSize" Value="12"/>
-            <Setter Property="ItemsControl.FontWeight" Value="Normal"/>
+
+        <!-- Стили для кнопок меню -->
+        <Style TargetType="Button" x:Key="MenuControls">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Margin" Value="3"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Width" Value="120"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Background" Value="Peru"/>
         </Style>
-        <Style x:Key="inTabTextBox">
-            <Setter Property="ItemsControl.Margin" Value="5"/>
-            <Setter Property="ItemsControl.FontWeight" Value="Normal"/>
+        <!-- Стиль для кнопок добавления-->
+        <Style  x:Key="AddButton" TargetType="Button">
+            <Setter Property="Width" Value="50"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Background" Value="Green"/>
+            <Setter Property="Margin" Value="3"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
-        <Style x:Key="addRemoveButton">
-            <Setter Property="ItemsControl.Margin" Value="5, 15, 5, 5"/>
-            <Setter Property="ItemsControl.Width" Value="120"/>
-            <Setter Property="ItemsControl.Height" Value="30"/>
+        <!-- ДЛЯ КОНПОК УДАЛЕНИЯ-->
+        <Style x:Key="RemoveButton" TargetType="Button" BasedOn="{StaticResource AddButton}">
+            <Setter Property="Background" Value="Red"/>
+
+        </Style>
+        <!--Стили для заголовка страницы-->
+        <Style TargetType="TextBlock" x:Key="PageTitle">
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="Margin" Value="0, 12, 0, 8"/>
+        </Style>
+        <!-- Для текстбоксов-->
+        <Style TargetType="TextBox" x:Key="TextField">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Margin" Value="3, 3, 3, 6"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Width" Value="120"/>
+            <Setter Property="Height" Value="25"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="Peru"/>
+        </Style>
+        <!-- Для Текстблоков в области ввода данных-->
+        <Style TargetType="TextBlock" x:Key="BlockField">
+
+            <Setter Property="Margin" Value="3, 6, 3, 3"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Width" Value="120"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Background" Value="White"/>
+        </Style>
+        <!-- Для комбобоксов -->
+        <Style TargetType="ComboBox" x:Key="ComboField">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Margin" Value="3, 3, 3, 6"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Width" Value="120"/>
+            <Setter Property="Height" Value="25"/>
         </Style>
     </Page.Resources>
     <Border Padding="10">
-
+        <!-- Делю страницу на два ряда чтобы отделить пункты меню от рабочей области-->
         <Grid>
-            <StackPanel>
-            <TextBlock Text="Page 1" TextAlignment="Center" />
-                <Button Command="{Binding ChangePage}" Content="Назад" />
-                <TextBox Text="{Binding LogText, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Center" />
-            <Button Command="{Binding SendLog}" Content="Send log" />
-                <Button Content="Exit" Width="100"></Button>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="6*"/>
+            </Grid.RowDefinitions>
+            <!--Заголовок-->
+            <StackPanel Background="Bisque" Orientation="Vertical" VerticalAlignment="Center">
+                <TextBlock Text="Комерційні будівлі: вхідні дані" TextAlignment="Center" Style="{StaticResource PageTitle}"/>
+
+                <!--Меню переключатели-->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,15">
+                    <Button Style="{StaticResource MenuControls}" Command="{Binding ChangePage}" Content="Меню" />
+                    <Button Style="{StaticResource MenuControls}" Command="{Binding ToApartmentsPage}" Content="Житлові" />
+                    <TextBox Width="100" HorizontalAlignment="Center" Text="{Binding LogText, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Center" />
+                    <Button Style="{StaticResource MenuControls}" Command="{Binding SendLog}" Content="Send log" />
+                    <Button Style="{StaticResource MenuControls}" IsEnabled="False" Content="Developing" Width="100"></Button>
+                </StackPanel>
+
+                <!--Делю рабочую область на две колонки-->
             </StackPanel>
+            <Grid Grid.Row="1">
+
+                <Grid.ColumnDefinitions>
+                    <!--Для панели ввода данных-->
+                    <ColumnDefinition Width="1*"/>
+                    <!--Для таблицы-->
+                    <ColumnDefinition Width="7*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel x:Name="UserInputPanel">
+                    <StackPanel.Style>
+                        <Style TargetType="StackPanel">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=UserDataTab, Path=IsSelected}" Value="False">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Style>
+                    <!-- !!!! -->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button Style="{StaticResource AddButton}" Command="{Binding AddCommand}" Content="+"/>
+                        <Button Style="{StaticResource RemoveButton}" Command="{Binding Remove}" CommandParameter="{Binding SelectedApartmentBuilding}" Content="-"/>
+                    </StackPanel>
 
 
+                    <TextBlock Style="{StaticResource BlockField}">Генплановий №</TextBlock>
+                    <TextBox Style="{StaticResource TextField}" Text="{Binding SelectedApartmentBuilding.PlanNumber}"></TextBox>
 
+                    <TextBlock Style="{StaticResource BlockField}">Тип споживача:</TextBlock>
+                    <ComboBox Style="{StaticResource ComboField}" ItemsSource="{Binding Source={x:Static local:ApartmentDataBase.LevelsColl}}" Text="{Binding SelectedApartmentBuilding.Levels}"></ComboBox>
+
+                    <TextBlock Style="{StaticResource BlockField}">Знач. характерис.</TextBlock>
+                    <TextBox Style="{StaticResource TextField}" Text="{Binding SelectedApartmentBuilding.Entrances}"></TextBox>
+
+                    <TextBlock Style="{StaticResource BlockField}">Катег. надійності</TextBlock>
+                    <ComboBox Style="{StaticResource ComboField}" ItemsSource="{Binding Source={x:Static local:ApartmentDataBase.ApartmentsOnSiteColl}}" Text="{Binding SelectedApartmentBuilding.ApartmentsOnSite}"></ComboBox>
+
+                     <!-- Панель ввода информации о лифтах -->
+
+                    <CheckBox IsChecked="False" Content="Електрифікація" FontSize="14" Width="120" Name="IsElectrificated" Margin="5,8,5,3" >
+
+                    </CheckBox>
+                    <StackPanel>
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=IsElectrificated, Path=IsChecked}" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Setter Property="IsEnabled" Value="False"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+                        <TextBlock Style="{StaticResource BlockField}">Рівень електриф.:</TextBlock>
+                        <ComboBox Style="{StaticResource ComboField}" ItemsSource="{Binding Source={x:Static local:ApartmentDataBase.ElectrificationLevelColl}}" Text="{Binding SelectedApartmentBuilding.ElectrificationLevel}"></ComboBox>
+
+                    </StackPanel>
+
+                    
+
+                </StackPanel>
+
+                <!-- Таблица вывода информации о жилых домах-->
+
+                <StackPanel Grid.Column="1">
+
+
+                    <TabControl>
+                        <TabItem x:Name="UserDataTab" IsSelected="True">
+                            <TabItem.Header>
+                                <TextBlock Style="{StaticResource BlockField}">Вхідні дані</TextBlock>
+                            </TabItem.Header>
+                            <!-- Таблица показывает начальные данные которые вносит пользователь-->
+                            <StackPanel Grid.Column="1">
+                                <!-- Колонки-->
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="600"/>
+                                        <RowDefinition Height="1*"/>
+                                    </Grid.RowDefinitions>
+
+                                    <DataGrid FontSize="12"  AutoGenerateColumns="False" ItemsSource="{Binding ApartmentBuildings}" SelectedItem="{Binding SelectedApartmentBuilding}">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Генплановий №" Width="0.6*" Binding="{Binding PlanNumber}"/>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Тип споживача" Width="1*" Binding="{Binding Levels}"/>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Характеристика" Width="0.4*" Binding="{Binding Entrances}"/>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Од. вим." Width="0.3*" Binding="{Binding Entrances}"/>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Категорія надійності" Width="0.8*" Binding="{Binding ApartmentsOnSite}"/>
+                                            
+                                            
+
+                                            <!-- КОЛОНКА С КНОПКАМИ УДАЛИТЬ ДЛЯ КАЖДОГО РЯДА 
+                            
+                            <DataGridTemplateColumn Width="20" CanUserResize="False">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Background="Red" Height="20" Width="20" Content="x" HorizontalAlignment="Center"></Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            
+                             -->
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                    <Button Grid.Row="1" Style="{StaticResource AddButton}"  HorizontalAlignment="Right" Height="25" VerticalAlignment="Bottom" Click="Button_Click">Далее</Button>
+                                </Grid>
+                            </StackPanel>
+                        </TabItem>
+
+                        <TabItem x:Name="CommercialLoadsTab">
+                            <TabItem.Header>
+                                <TextBlock Style="{StaticResource BlockField}" Width="200" Text="Характеристика комерційних"/>
+                            </TabItem.Header>
+                            <DataGrid FontSize="12" AutoGenerateColumns="False" ItemsSource="{Binding LoadsOfApartmentBuildings}"  CanUserResizeColumns="False">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn IsReadOnly="True" Header="Генплановий номер" Width="0.35*" Binding="{Binding PlanNumber}"/>
+                                    <DataGridTextColumn  IsReadOnly="True" Header="Тип споживача" Width="1*" Binding="{Binding TotalApartments}"/>
+                                    <DataGridTextColumn  IsReadOnly="True" Header="Рп кВт/од." Width="0.3*"/>
+                                    <DataGridTextColumn  IsReadOnly="True" Header="Рсб, кВт" Width="0.3*" />
+                                    <DataGridTextColumn  IsReadOnly="True" Header="tgφ" Width="0.3*"/>
+                                    <DataGridTextColumn  IsReadOnly="True" Header="Qcб" Width="0.2*" />
+                                    <DataGridTextColumn  IsReadOnly="True" Header="Sсб" Width="0.25*"/>
+                                    <!-- КОЛОНКА С КНОПКАМИ УДАЛИТЬ ДЛЯ КАЖДОГО РЯДА 
+                            
+                            <DataGridTemplateColumn Width="20" CanUserResize="False">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Background="Red" Height="20" Width="20" Content="x" HorizontalAlignment="Center"></Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            
+                             -->
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </TabItem>
+                    </TabControl>
+                </StackPanel>
+            </Grid>
         </Grid>
     </Border>
 </Page>

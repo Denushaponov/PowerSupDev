@@ -8,11 +8,11 @@ namespace WpfPaging.DistrictObjects
     public class LoadsApartmentBuilding:ApartmentBuilding
     {
         
-       // public double TgFiApartments => GetElectrification();
-       // public double TotalApartments => ApartmentsOnSite * Entrances;
+         public double TotalApartments => ApartmentsOnSite * Entrances * Levels;
 
 
-        public double GetElectrification()
+
+        public double GetTgFiApartments()
         {
             double x;
             if (ElectrificationLevel == 1)

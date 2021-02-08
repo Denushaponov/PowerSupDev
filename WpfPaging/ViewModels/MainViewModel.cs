@@ -17,8 +17,7 @@ namespace WpfPaging.ViewModels
 
 
             _pageService.OnPageChanged += (page) => PageSource = page;
-            _pageService.ChangePage(new Apartments());
-            _pageService.ChangePage(new Commercials());
+            _pageService.ChangePage(new MainMenu());
         }
     }
 }
