@@ -50,6 +50,11 @@ namespace WpfPaging.ViewModels
             }
         }
 
+        public ICommand ClearElectrification => new DelegateCommand(() =>
+        {
+            SelectedCommercialBuilding.ElectrificationLevel = 0;
+        });
+
 
 
 

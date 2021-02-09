@@ -134,7 +134,7 @@
 
                      <!-- Панель ввода информации о лифтах -->
 
-                    <CheckBox IsChecked="False" Content="Електрифікація" FontSize="14" Width="120" Name="IsElectrificated" Margin="5,8,5,3" >
+                    <CheckBox IsChecked="False" Command="{Binding ClearElectrification}" Content="Електрифікація" FontSize="14" Width="120" Name="IsElectrificated" Margin="5,8,5,3" >
 
                     </CheckBox>
                     <StackPanel>
@@ -178,9 +178,9 @@
 
                                     <DataGrid FontSize="12"  AutoGenerateColumns="False" ItemsSource="{Binding CommercialBuildings}" SelectedItem="{Binding SelectedCommercialBuilding}">
                                         <DataGrid.Columns>
-                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Генплановий №" Width="0.6*" Binding="{Binding PlanNumber}"/>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Генплановий №" Width="0.3*" Binding="{Binding PlanNumber}"/>
                                             <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Тип споживача" Width="1*" Binding="{Binding TypeOfCommercial}"/>
-                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Характеристика" Width="0.4*" Binding="{Binding ValueOfCharacteristics}"/>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Характеристика" Width="0.3*" Binding="{Binding ValueOfCharacteristics}"/>
                                             <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Од. вим." Width="0.3*" Binding="{Binding MeasurmentUnit}"/>
                                             <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Категорія надійності" Width="0.45*" Binding="{Binding ReliabilityCathegory}"/>
                                             <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Рівень електрифікації (*якщо є)" Width="0.6*" Binding="{Binding ElectrificationLevel}"/>
