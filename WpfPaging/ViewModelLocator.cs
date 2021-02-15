@@ -16,6 +16,7 @@ namespace WpfPaging
             services.AddScoped<CommercialsViewModel>();
             services.AddScoped<ApartmentsViewModel>();
             services.AddScoped<MainMenuViewModel>();
+            services.AddScoped<DistrictViewModel>();
 
             services.AddSingleton<PageService>();
             services.AddSingleton<EventBus>();
@@ -35,5 +36,6 @@ namespace WpfPaging
         public MainMenuViewModel MainMenuViewModel => _provider.GetRequiredService<MainMenuViewModel>();
         public CommercialsViewModel CommercialsViewModel => _provider.GetRequiredService<CommercialsViewModel>();
         public ApartmentsViewModel ApartmentsViewModel => _provider.GetRequiredService<ApartmentsViewModel>();
+        public DistrictViewModel DistrictViewModel => _provider.GetRequiredService<DistrictViewModel>();
     }
 }

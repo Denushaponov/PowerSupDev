@@ -225,7 +225,7 @@
                                         <RowDefinition Height="1*"/>
                                     </Grid.RowDefinitions>
 
-                                    <DataGrid  AutoGenerateColumns="False" ItemsSource="{Binding ApartmentBuildings}" SelectedItem="{Binding SelectedApartmentBuilding}">
+                                    <DataGrid  AutoGenerateColumns="False" ItemsSource="{Binding District.ApartmentBuildings}" SelectedItem="{Binding SelectedApartmentBuilding}">
                                         <DataGrid.Columns>
                                             <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Генплановий №" Width="0.6*" Binding="{Binding PlanNumber}"/>
                                             <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Поверхів" Width="0.4*" Binding="{Binding Levels}"/>

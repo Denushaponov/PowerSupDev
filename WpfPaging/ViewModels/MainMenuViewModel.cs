@@ -53,6 +53,12 @@ namespace WpfPaging.ViewModels
 
         });
 
+        public ICommand GoToDistricts => new DelegateCommand(() =>
+        {
+            _pageService.ChangePage(new DisrictsMenu());
+
+        });
+
 
 
     }

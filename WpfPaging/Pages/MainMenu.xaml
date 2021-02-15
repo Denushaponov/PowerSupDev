@@ -42,7 +42,7 @@
                     <Button Command="{Binding ChangePage2}" Content="Комерційні" />
                     <Button Command="{Binding ChangePage2}" Content="Test3" IsEnabled="False" />
                     <Button Command="{Binding ChangePage2}" Content="Test4" IsEnabled="False" />
-                    <Button Command="{Binding ChangePage2}" Content="Test5" IsEnabled="False" />
+                    <Button Command="{Binding GoToDistricts}" Content="To Districts" IsEnabled="True" />
                 </StackPanel>
 
                 <Button Command="{Binding AppendLog}" Content="AppendLog" />

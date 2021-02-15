@@ -1,5 +1,6 @@
 ﻿using DevExpress.Mvvm;
 using System.Windows.Controls;
+using System.Windows.Input;
 using WpfPaging.Pages;
 using WpfPaging.Services;
 
@@ -19,5 +20,11 @@ namespace WpfPaging.ViewModels
             _pageService.OnPageChanged += (page) => PageSource = page;
             _pageService.ChangePage(new MainMenu());
         }
+
+        public ICommand GoBack => new DelegateCommand(() =>
+        {
+            _pageService.GoBack();
+        }, () => _pageService.CanGoBack);
+
     }
 }

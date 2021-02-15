@@ -1,6 +1,7 @@
 ﻿using DevExpress.Mvvm;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 
 namespace WpfPaging.DistrictObjects
@@ -18,9 +19,10 @@ namespace WpfPaging.DistrictObjects
         public double SecondElevatorPower { get; set; }
         public double PompPower { get; set; }
         public double ElevatorsPerEntrance => CountElevatorsPerEntrance();
+        public ObservableCollection<PowerPlants> PowerPlants { get; set; } = new ObservableCollection<PowerPlants>();
+     
         public double PompsNumber => CountPomps();
-
-
+       
         public ApartmentBuilding()
         {
             PlanNumber = 0;
