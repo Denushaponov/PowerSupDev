@@ -11,6 +11,7 @@ using WpfPaging.Services;
 using WpfPaging.DistrictObjects;
 using GalaSoft.MvvmLight.Command;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace WpfPaging.ViewModels
 {
@@ -20,8 +21,7 @@ namespace WpfPaging.ViewModels
         private readonly EventBus _eventBus;
         private readonly MessageBus _messageBus;
 
-        public string LogText { get; set; }
-  public ObservableCollection<ApartmentBuilding> ApartmentBuildings { get; set; }
+        public District SelectedDistrict { get; set; } = new District();
         public ApartmentBuilding SelectedApartmentBuilding { get; set; }
 
         public ObservableCollection<LoadsApartmentBuilding> LoadsOfApartmentBuildings { get; set; }
@@ -37,7 +37,7 @@ namespace WpfPaging.ViewModels
         public ICommand AddCommand => new AsyncCommand(async () =>
         {
             ApartmentBuilding apartmentBuilding = new ApartmentBuilding();
-            ApartmentBuildings.Insert(0, apartmentBuilding);
+            SelectedDistrict.Building.ApartmentBuildings.Insert(0, apartmentBuilding);
             SelectedApartmentBuilding = apartmentBuilding;
         }
         );
@@ -48,7 +48,7 @@ namespace WpfPaging.ViewModels
             {
                 return new DelegateCommand<ApartmentBuilding>((apartmentBuilding) =>
                 {
-                   ApartmentBuildings.Remove(apartmentBuilding);
+                    SelectedDistrict.Building.ApartmentBuildings.Remove(apartmentBuilding);
 
                 }, (apartmentBuilding) => apartmentBuilding != null);
                 }
@@ -69,10 +69,24 @@ namespace WpfPaging.ViewModels
             _pageService = pageService;
             _eventBus = eventBus;
             _messageBus = messageBus;
-            ApartmentBuildings = new ObservableCollection<ApartmentBuilding> { };
-            LoadsOfApartmentBuildings = new ObservableCollection<LoadsApartmentBuilding> { };
+
+            SelectedDistrict.Building.ApartmentBuildings = new ObservableCollection<ApartmentBuilding> { };
+
+            _messageBus.Receive<DistrictMessage>(this, async message =>
+            {
+                SelectedDistrict = message.SharedDistrict;
+            });
+
+           
         }
-       
+
+        public ICommand SendApartmentBuildings => new AsyncCommand(async () =>
+        {
+            await _messageBus.SendTo<DistrictMenuViewModel>(new DistrictMessage(SelectedDistrict));
+           
+
+        });
+
 
         // Команда выхода со страницы в главное меню
         public ICommand ChangePage2 => new AsyncCommand(async () =>
@@ -90,14 +104,7 @@ namespace WpfPaging.ViewModels
             await _eventBus.Publish(new LeaveFromFirstPageEvent());
         });
 
-        // Комманда пересылает текст сообщения в главное меню.
-        public ICommand SendLog => new AsyncCommand(async () =>
-        {
-            await _messageBus.SendTo<MainMenuViewModel>(new TextMessage(LogText));
-            //await _messageBus.SendTo<object>(new TextMessage(LogText));
-
-        });
-
+        
 
     }
 }

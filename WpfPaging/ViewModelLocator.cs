@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using LiteDB;
+using Microsoft.Extensions.DependencyInjection;
 using WpfPaging.Services;
 using WpfPaging.ViewModels;
 
@@ -14,9 +15,12 @@ namespace WpfPaging
 
             services.AddTransient<MainViewModel>();
             services.AddScoped<CommercialsViewModel>();
-            services.AddScoped<ApartmentsViewModel>();
-            services.AddScoped<MainMenuViewModel>();
-            services.AddScoped<DistrictViewModel>();
+            services.AddTransient<ApartmentsViewModel>();
+            services.AddTransient<MainMenuViewModel>();
+            services.AddScoped<DistrictMenuViewModel>();
+
+            services.AddTransient<Repository>();
+           services.AddSingleton(new LiteDatabase("Data/empty.db"));
 
             services.AddSingleton<PageService>();
             services.AddSingleton<EventBus>();
@@ -36,6 +40,7 @@ namespace WpfPaging
         public MainMenuViewModel MainMenuViewModel => _provider.GetRequiredService<MainMenuViewModel>();
         public CommercialsViewModel CommercialsViewModel => _provider.GetRequiredService<CommercialsViewModel>();
         public ApartmentsViewModel ApartmentsViewModel => _provider.GetRequiredService<ApartmentsViewModel>();
-        public DistrictViewModel DistrictViewModel => _provider.GetRequiredService<DistrictViewModel>();
+        public DistrictMenuViewModel DistrictViewModel => _provider.GetRequiredService<DistrictMenuViewModel>();
+      
     }
 }
