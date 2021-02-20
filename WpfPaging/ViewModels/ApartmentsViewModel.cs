@@ -21,27 +21,31 @@ namespace WpfPaging.ViewModels
         private readonly EventBus _eventBus;
         private readonly MessageBus _messageBus;
 
+        /// <summary>
+        /// Выбранный микрорайон (в DistrictMenuVM), присылается для изменений
+        /// </summary>
         public District SelectedDistrict { get; set; } = new District();
+
         public ApartmentBuilding SelectedApartmentBuilding { get; set; }
 
-        public ObservableCollection<LoadsApartmentBuilding> LoadsOfApartmentBuildings { get; set; }
-
-
-        // Создаю комманду которая очистит параметры лифтов
-        
-        
-       
-
-
-
+        /// <summary>
+        /// Комманда добавления нового жилого дома
+        /// </summary>
         public ICommand AddCommand => new AsyncCommand(async () =>
         {
             ApartmentBuilding apartmentBuilding = new ApartmentBuilding();
             SelectedDistrict.Building.ApartmentBuildings.Insert(0, apartmentBuilding);
             SelectedApartmentBuilding = apartmentBuilding;
+        
         }
         );
 
+      
+ 
+
+        /// <summary>
+        /// Комманда удаления выбранного жилого дома
+        /// </summary>
         public ICommand Remove
         {
             get 
@@ -51,12 +55,10 @@ namespace WpfPaging.ViewModels
                     SelectedDistrict.Building.ApartmentBuildings.Remove(apartmentBuilding);
 
                 }, (apartmentBuilding) => apartmentBuilding != null);
-                }
+            }
         }
 
        
-
-
         /// <summary>
         /// Команды и параметры для взаимодействия между окнами
         /// </summary>
@@ -72,39 +74,24 @@ namespace WpfPaging.ViewModels
 
             SelectedDistrict.Building.ApartmentBuildings = new ObservableCollection<ApartmentBuilding> { };
 
+            // Получение данных о микрорайоне
             _messageBus.Receive<DistrictMessage>(this, async message =>
             {
+                // присваивание присланного из DistrictMenuVM микрорайона в качестве выбранного
                 SelectedDistrict = message.SharedDistrict;
             });
 
            
         }
 
+        /// <summary>
+        /// Отправка микрорайона с отредактированной коллекцией ApartmentBuildings
+        /// </summary>
         public ICommand SendApartmentBuildings => new AsyncCommand(async () =>
         {
             await _messageBus.SendTo<DistrictMenuViewModel>(new DistrictMessage(SelectedDistrict));
-           
-
+            await _eventBus.Publish(new SaveEvent());
         });
-
-
-        // Команда выхода со страницы в главное меню
-        public ICommand ChangePage2 => new AsyncCommand(async () =>
-        {
-            _pageService.ChangePage(new MainMenu());
-
-            await _eventBus.Publish(new LeaveFromFirstPageEvent());
-        });
-
-        // Комманда перехода на страницу Жилые здания
-        public ICommand ChangePage => new AsyncCommand(async () =>
-        {
-            _pageService.ChangePage(new Commercials());
-
-            await _eventBus.Publish(new LeaveFromFirstPageEvent());
-        });
-
-        
 
     }
 }

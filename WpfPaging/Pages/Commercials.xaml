@@ -85,10 +85,6 @@
                 <!--Меню переключатели-->
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,15">
                     <Button Style="{StaticResource MenuControls}" Command="{Binding ChangePage}" Content="Меню" />
-                    <Button Style="{StaticResource MenuControls}" Command="{Binding ToApartmentsPage}" Content="Житлові" />
-                    <TextBox Width="100" HorizontalAlignment="Center" Text="{Binding LogText, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Center" />
-                    <Button Style="{StaticResource MenuControls}" Command="{Binding SendLog}" Content="Send log" />
-                    <Button Style="{StaticResource MenuControls}" IsEnabled="False" Content="Developing" Width="100"></Button>
                 </StackPanel>
 
                 <!--Делю рабочую область на две колонки-->
@@ -176,7 +172,7 @@
                                         <RowDefinition Height="1*"/>
                                     </Grid.RowDefinitions>
 
-                                    <DataGrid FontSize="12"  AutoGenerateColumns="False" ItemsSource="{Binding CommercialBuildings}" SelectedItem="{Binding SelectedCommercialBuilding}">
+                                    <DataGrid FontSize="12"  AutoGenerateColumns="False" ItemsSource="{Binding SelectedDistrict.Building.CommercialBuildings}" SelectedItem="{Binding SelectedCommercialBuilding}">
                                         <DataGrid.Columns>
                                             <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Генплановий №" Width="0.3*" Binding="{Binding PlanNumber}"/>
                                             <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Тип споживача" Width="1*" Binding="{Binding TypeOfCommercial}"/>
@@ -200,7 +196,7 @@
                              -->
                                         </DataGrid.Columns>
                                     </DataGrid>
-                                    <Button Grid.Row="1" Style="{StaticResource AddButton}"  HorizontalAlignment="Right" Height="25" VerticalAlignment="Bottom" Click="Button_Click">Далее</Button>
+                                    <Button Grid.Row="1" Style="{StaticResource AddButton}" Command="{Binding SendCommercialBuildings}"  HorizontalAlignment="Right" Height="25" VerticalAlignment="Bottom" Click="Button_Click">Далее</Button>
                                 </Grid>
                             </StackPanel>
                         </TabItem>

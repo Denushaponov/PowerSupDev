@@ -14,7 +14,7 @@ namespace WpfPaging
             var services = new ServiceCollection();
 
             services.AddTransient<MainViewModel>();
-            services.AddScoped<CommercialsViewModel>();
+            services.AddTransient<CommercialsViewModel>();
             services.AddTransient<ApartmentsViewModel>();
             services.AddTransient<MainMenuViewModel>();
             services.AddScoped<DistrictMenuViewModel>();
