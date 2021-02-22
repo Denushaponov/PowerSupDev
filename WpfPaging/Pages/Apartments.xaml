@@ -80,7 +80,7 @@
 
                 <!--Меню переключатели-->
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,15">
-                    <Button Style="{StaticResource MenuControls}" Content="Меню" />
+                    <Button Style="{StaticResource MenuControls}" Content="Save csv" Command="{Binding InitialApartmentDataToExcel}" CommandParameter="{Binding ElementName=ApartmentsEntryDG}" />
                     </StackPanel>
 
                 <!--Делю рабочую область на две колонки-->
@@ -135,9 +135,10 @@
                     <!-- Панель ввода информации о лифтах -->
 
                     <TextBlock Style="{StaticResource BlockField }" Text="Ліфти на під'їзд"></TextBlock>
-                    <ListBox Name="DistrictsList" BorderThickness="0"  MaxHeight="200" SelectedItem="{Binding SelectedDistrict}" >
+                    <Button Grid.Column="1" Content="Додати" Width="80" Margin="0, 3, 5, 3" Background="LightGreen" Command="{Binding AddElevatorCommand}"/>
+                    <ListBox Name="ElevatorsList" BorderThickness="0" HorizontalAlignment="Center" Width="140" MaxHeight="150" ItemsSource="{Binding SelectedApartmentBuilding.PowerPlants.Elevators}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
                         <ListBox.ItemTemplate>
-                            <DataTemplate x:Name="DistrictElement">
+                            <DataTemplate x:Name="ElevatorElement">
 
                                 <Border BorderThickness="1" BorderBrush="DarkGray" CornerRadius="5" Margin="5">
 
@@ -147,10 +148,12 @@
                                             <ColumnDefinition Width="auto"/>
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
+                                            <TextBlock Grid.Column="1" Style="{StaticResource BlockField}" Text="Pл=" Width="30"></TextBlock>
+                                            <TextBox Grid.Column="1" Margin="0, 3, 0, 3" BorderThickness="1" Width="40" FontSize="14" Text="{Binding Load}" HorizontalAlignment="Left"/>
+                                        </StackPanel>
 
-                                        <TextBox BorderThickness="0" Width="100" Grid.Column="0" FontSize="14" Margin="10, 3, 200, 3" Text="{Binding Title}" HorizontalAlignment="Left"/>
-                                        <Button Grid.Column="1" Content="Зберегти" Width="80" Margin="0, 3, 5, 3" Background="Fuchsia" Command="{Binding RelativeSource= {RelativeSource AncestorType=Page}, Path=DataContext.SaveDistrict}"/>
-                                        <Button Grid.Column="2" Width="80" HorizontalAlignment="Right" Content="Видалити" Margin="0, 3, 5, 3 " Command="{Binding RelativeSource= {RelativeSource AncestorType=Page}, Path=DataContext.RemoveDistrict}" CommandParameter="{Binding}"/>
+                                        <Button Grid.Column="2" Width="20" Background="Red" HorizontalAlignment="Right" Content="×" Margin="0, 3, 5, 3 " Command="{Binding RelativeSource= {RelativeSource AncestorType=Page}, Path=DataContext.RemoveElevator}" CommandParameter="{Binding}"/>
 
                                     </Grid>
                                 </Border>
@@ -160,21 +163,32 @@
 
 
                     <!-- Панель ввода информации о насосах-->
-                    <CheckBox IsChecked="False" Command="{Binding ClearPomps}" Width="120" Name="HasPomp" Margin="5" Content="Є насос"/>
-                    <StackPanel>
-                        <StackPanel.Style>
-                            <Style TargetType="StackPanel">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ElementName=HasPomp, Path=IsChecked}" Value="False">
-                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </StackPanel.Style>
-                        <TextBlock Style="{StaticResource BlockField}">Рс-ту, кВт</TextBlock>
-                        <ComboBox Style="{StaticResource ComboField}" ItemsSource="{Binding Source={x:Static local:ApartmentDataBase.PompsPowerColl}}" Text="{Binding SelectedApartmentBuilding.PompPower}"/>
+                    <TextBlock Style="{StaticResource BlockField }" Text="Насоси на під'їзд"></TextBlock>
+                    <Button Grid.Column="1" Content="Додати" Width="80" Margin="0, 3, 5, 3" Background="LightGreen" Command="{Binding AddPompCommand}"/>
+                    <ListBox Name="PompsList" BorderThickness="0" HorizontalAlignment="Center" Width="140" MaxHeight="150" ItemsSource="{Binding SelectedApartmentBuilding.PowerPlants.Pomps}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
+                        <ListBox.ItemTemplate>
+                            <DataTemplate x:Name="PompElement">
 
-                    </StackPanel>
+                                <Border BorderThickness="1" BorderBrush="DarkGray" CornerRadius="5" Margin="5">
+
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition Width="auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
+                                            <TextBlock Grid.Column="1" Style="{StaticResource BlockField}" Text="Pсту=" Width="30"></TextBlock>
+                                            <TextBox Grid.Column="1" Margin="3, 3, 0, 3" BorderThickness="1" Width="40" FontSize="14" Text="{Binding Load}" HorizontalAlignment="Left"/>
+                                        </StackPanel>
+
+                                        <Button Grid.Column="2" Width="20" Background="Red" HorizontalAlignment="Right" Content="×" Margin="0, 3, 5, 3 " Command="{Binding RelativeSource= {RelativeSource AncestorType=Page}, Path=DataContext.RemovePomp}" CommandParameter="{Binding}"/>
+
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
 
 
                 </StackPanel>
@@ -198,7 +212,7 @@
                                         <RowDefinition Height="1*"/>
                                     </Grid.RowDefinitions>
 
-                                    <DataGrid  AutoGenerateColumns="False" ItemsSource="{Binding  SelectedDistrict.Building.ApartmentBuildings}" SelectedItem="{Binding SelectedApartmentBuilding}">
+                                    <DataGrid x:Name="ApartmentsEntryDG"  AutoGenerateColumns="False" ItemsSource="{Binding  SelectedDistrict.Building.ApartmentBuildings}" SelectedItem="{Binding SelectedApartmentBuilding}">
                                         <DataGrid.Columns>
                                             <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Генплановий №" Width="0.6*" Binding="{Binding PlanNumber}"/>
                                             <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Поверхів" Width="0.4*" Binding="{Binding Levels}"/>
@@ -206,7 +220,7 @@
                                             <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Квартир на площадці" Width="0.8*" Binding="{Binding ApartmentsOnSite}"/>
                                             <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Рівень електрифікації" Width="0.8*" Binding="{Binding ElectrificationLevel}"/>
                                             <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Категорія надійності" Width="0.8*" Binding="{Binding ReliabilityCathegory}"/>
-                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Ліфтів на під'їзд" Width="0.6*" Binding="{Binding ElevatorsPerEntrance}"/>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Ліфтів на під'їзд" Width="0.6*" Binding="{Binding PowerPlants.Elevators.Count}"/>
                                             <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Pліфт1" Width="0.3*" Binding="{Binding FirstElevatorPower}"/>
                                             <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Pліфт2" Width="0.3*" Binding="{Binding SecondElevatorPower}"/>
                                             <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Насос у будинку" Width="0.6*" Binding="{Binding PompsNumber}"/>

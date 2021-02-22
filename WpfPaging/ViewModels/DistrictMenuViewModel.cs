@@ -1,11 +1,14 @@
 ﻿using DevExpress.Mvvm;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using WpfPaging.DistrictObjects;
 using WpfPaging.Events;
@@ -34,6 +37,10 @@ namespace WpfPaging.ViewModels
         /// Выбранный микрорайон
         /// </summary>
         public District SelectedDistrict { get; set; } = new District();
+
+       ExportData ExportPathInfo { get; set; }
+
+
 
         public DistrictMenuViewModel(PageService pageService, EventBus eventBus, MessageBus messageBus, Repository repository)
         {
@@ -68,6 +75,12 @@ namespace WpfPaging.ViewModels
             _messageBus.Receive<DistrictMessage>(this, async message =>
             {
                 SelectedDistrict = message.SharedDistrict;
+            });
+
+            _messageBus.Receive<ExportPathMessage>(this, async message =>
+            {
+                ExportPathInfo = message.Export;
+                CopyAsCsvHandler(ExportPathInfo.Dg, ExportPathInfo.CsvFileName, ExportPathInfo.ExcelFileName);
             });
 
             /// При получении измененного микрорайона = после нажатия пользователя на кнопку сохранить, срабатывает 
@@ -147,6 +160,44 @@ namespace WpfPaging.ViewModels
             await _messageBus.SendTo<CommercialsViewModel>(new DistrictMessage(SelectedDistrict));
             
         });
+
+
+
+        public void CopyAsCsvHandler(DataGrid dg, string csvFileName, string excelFileName)
+        {
+            dg.SelectAllCells();
+            dg.ClipboardCopyMode = DataGridClipboardCopyMode.IncludeHeader;
+            ApplicationCommands.Copy.Execute(null, dg);
+            dg.UnselectAllCells();
+            string result = (string)Clipboard.GetData(DataFormats.CommaSeparatedValue);
+            if (File.Exists(csvFileName))
+            {
+                File.Delete(csvFileName);
+            }
+            //string csvFileName = "CSV\\test.csv";
+            File.AppendAllText(csvFileName, result, UnicodeEncoding.UTF8);
+
+            //string excelFileName = @"Excel/FL_insurance_sample.xlsx";
+            if (File.Exists(excelFileName))
+            {
+                File.Delete(excelFileName);
+            }
+            string worksheetsName = "TEST";
+
+            bool firstRowIsHeader = false;
+
+            var format = new ExcelTextFormat();
+            format.Delimiter = ',';
+            format.EOL = "\r";              // DEFAULT IS "\r\n";
+                                            // format.TextQualifier = '"';
+
+            using (ExcelPackage package = new ExcelPackage(new FileInfo(excelFileName)))
+            {
+                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add(worksheetsName);
+                worksheet.Cells["A1"].LoadFromText(new FileInfo(csvFileName), format, OfficeOpenXml.Table.TableStyles.Medium27, firstRowIsHeader);
+                package.Save();
+            }
+        }
 
 
 

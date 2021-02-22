@@ -19,7 +19,7 @@ namespace WpfPaging.DistrictObjects
         public double SecondElevatorPower { get; set; }
         public double PompPower { get; set; }
         public double ElevatorsPerEntrance => CountElevatorsPerEntrance();
-        public ObservableCollection<PowerPlants> PowerPlants { get; set; } = new ObservableCollection<PowerPlants>();
+        public PowerPlants PowerPlants { get; set; } = new PowerPlants();
      
         public double PompsNumber => CountPomps();
        

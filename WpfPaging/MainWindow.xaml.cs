@@ -1,5 +1,7 @@
-﻿using System;
+﻿using OfficeOpenXml;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +24,7 @@ namespace WpfPaging
     {
         public MainWindow()
         {
+            ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
             InitializeComponent();
         }
     }
