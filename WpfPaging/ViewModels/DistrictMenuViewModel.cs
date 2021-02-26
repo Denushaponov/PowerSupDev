@@ -66,7 +66,7 @@ namespace WpfPaging.ViewModels
               }, TaskContinuationOptions.OnlyOnRanToCompletion);
            
             // Добавляю начальный микрорайон чтобы пользователь видел куда вводить его  название
-            Districts.Add( new District { Title = "Введіть назву" });
+            Districts.Add( new District { Title = "Додайте та-або оберіть мікрорайон" });
 
             // Устанавливаю выбранный по умолчанию микрорайон, чтобы меню было сразу открытым
             SelectedDistrict = Districts[0];
@@ -80,7 +80,7 @@ namespace WpfPaging.ViewModels
             _messageBus.Receive<ExportPathMessage>(this, async message =>
             {
                 ExportPathInfo = message.Export;
-                CopyAsCsvHandler(ExportPathInfo.Dg, ExportPathInfo.CsvFileName, ExportPathInfo.ExcelFileName);
+                ExportAsExcelHandler(ExportPathInfo.Dg, ExportPathInfo.CsvFileName, ExportPathInfo.ExcelFileName);
             });
 
             /// При получении измененного микрорайона = после нажатия пользователя на кнопку сохранить, срабатывает 
@@ -163,7 +163,7 @@ namespace WpfPaging.ViewModels
 
 
 
-        public void CopyAsCsvHandler(DataGrid dg, string csvFileName, string excelFileName)
+        public void ExportAsExcelHandler(DataGrid dg, string csvFileName, string excelFileName)
         {
             dg.SelectAllCells();
             dg.ClipboardCopyMode = DataGridClipboardCopyMode.IncludeHeader;
@@ -174,15 +174,13 @@ namespace WpfPaging.ViewModels
             {
                 File.Delete(csvFileName);
             }
-            //string csvFileName = "CSV\\test.csv";
+            
             File.AppendAllText(csvFileName, result, UnicodeEncoding.UTF8);
-
-            //string excelFileName = @"Excel/FL_insurance_sample.xlsx";
             if (File.Exists(excelFileName))
             {
                 File.Delete(excelFileName);
             }
-            string worksheetsName = "TEST";
+            string worksheetsName = "Сторінка 1";
 
             bool firstRowIsHeader = false;
 
@@ -197,6 +195,8 @@ namespace WpfPaging.ViewModels
                 worksheet.Cells["A1"].LoadFromText(new FileInfo(csvFileName), format, OfficeOpenXml.Table.TableStyles.Medium27, firstRowIsHeader);
                 package.Save();
             }
+            File.Delete(csvFileName);
+            MessageBox.Show("Таблицю " + excelFileName + " збережено");
         }
 
 

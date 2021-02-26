@@ -15,41 +15,27 @@
     <Page.Resources>
         <!--Кнопки-->
         <Style TargetType="Button" x:Name="MainMenuButton">
-            <Setter Property="Width" Value="300"/>
-            <Setter Property="FontSize" Value="40"/>
+            <Setter Property="Width" Value="250"/>
+            <Setter Property="FontSize" Value="24"/>
             <Setter Property="Margin" Value="10"/>
-            <Setter Property="Background" Value="Peru"/>
+            <Setter Property="Background" Value="LightGreen"/>
+            <Setter Property="Height" Value="50"/>
         </Style>
         <!--Заголовок-->
         <Style TargetType="TextBlock" x:Name="MainTitle">
             <Setter Property="FontSize" Value="50"/>
             <Setter Property="Margin" Value="0, 30,0,20"/>
-            <Setter Property="Background" Value="Bisque"/>
+            <Setter Property="Background" Value="Yellow"/>
         </Style>
 
     </Page.Resources>
     <Border Padding="10">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
+        <Grid Background="AliceBlue">
 
-            <StackPanel>
-                <TextBlock Text="Головне меню" TextAlignment="Center" />
-                <StackPanel Orientation="Vertical">
-                    <Button Command="{Binding ChangePage}" Content="Житлові" />
-                    <Button Command="{Binding ChangePage2}" Content="Комерційні" />
-                    <Button Command="{Binding ChangePage2}" Content="Test3" IsEnabled="False" />
-                    <Button Command="{Binding ChangePage2}" Content="Test4" IsEnabled="False" />
-                    <Button Command="{Binding GoToDistricts}" Content="To Districts" IsEnabled="True" />
-                </StackPanel>
-
-                <Button Command="{Binding AppendLog}" Content="AppendLog" />
+            <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <TextBlock Text="Щирі вітання!" FontWeight="Bold" TextAlignment="Center" VerticalAlignment="Center" />
+                <Button Command="{Binding GoToDistricts}" Content="Розпочати роботу" IsEnabled="True" />
             </StackPanel>
-
-            <ListView Grid.Row="1" ItemsSource="{Binding Logs}" />
-
         </Grid>
     </Border>
     

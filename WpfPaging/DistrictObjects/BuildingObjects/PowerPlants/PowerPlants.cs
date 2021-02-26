@@ -6,9 +6,16 @@ using System.Text;
 
 namespace WpfPaging.DistrictObjects
 {
-    public class PowerPlants:BindableBase
+    public class PowerPlants : BindableBase
     {
         public ObservableCollection<Pomp> Pomps { get; set; } = new ObservableCollection<Pomp>();
+        public ObservableCollection<Elevator> ElevatorsPerEntrance { get; set; } = new ObservableCollection<Elevator>();
+
         public ObservableCollection<Elevator> Elevators { get; set; } = new ObservableCollection<Elevator>();
+
+       
     }
+
+   
+
 }

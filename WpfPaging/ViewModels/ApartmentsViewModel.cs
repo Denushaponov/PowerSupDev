@@ -92,7 +92,7 @@ namespace WpfPaging.ViewModels
         public ICommand AddElevatorCommand => new AsyncCommand(async () =>
         {
             Elevator elevator = new Elevator();
-            SelectedApartmentBuilding.PowerPlants.Elevators.Insert(0, elevator);
+            SelectedApartmentBuilding.PowerPlants.ElevatorsPerEntrance.Insert(0, elevator);
         }
        );
 
@@ -105,7 +105,7 @@ namespace WpfPaging.ViewModels
             {
                 return new DelegateCommand<Elevator>((elevator) =>
                 {
-                    SelectedApartmentBuilding.PowerPlants.Elevators.Remove(elevator);
+                    SelectedApartmentBuilding.PowerPlants.ElevatorsPerEntrance.Remove(elevator);
 
                 }, (elevator) => elevator != null);
             }
@@ -161,7 +161,7 @@ namespace WpfPaging.ViewModels
                     ExportData export = new ExportData();
                     export.Dg = dg;
                     export.CsvFileName = "CSV\\InitialDataApartmentBuildings.csv";
-                    export.ExcelFileName = "Excel\\Вхідні_Дані_Житлові_будинки.xlsx";
+                    export.ExcelFileName = "Excel\\" + SelectedDistrict.Title + "_Вхідні_Дані_Житлові_будинки.xlsx";
                     await _messageBus.SendTo<DistrictMenuViewModel>(new ExportPathMessage(export)); 
                 });
             }
