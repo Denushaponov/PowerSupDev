@@ -36,7 +36,26 @@ namespace WpfPaging.ViewModels
         /// <summary>
         /// Выбранный микрорайон
         /// </summary>
-        public District SelectedDistrict { get; set; } = new District();
+       // private District _selectedDistrict = new District();
+        public District SelectedDistrict { get; set; } 
+
+        private Visibility _menuVisibility;
+        public Visibility MenuVisibility { 
+            get { return _menuVisibility; }
+            set
+            {
+                value = Visibility.Visible;
+                if (SelectedDistrict.Title != null)
+                { 
+                    value = Visibility.Visible;
+                }
+                else 
+                {
+                    value = Visibility.Hidden;
+                }
+                _menuVisibility = value;
+            }
+        }
 
        ExportData ExportPathInfo { get; set; }
 
@@ -49,6 +68,9 @@ namespace WpfPaging.ViewModels
             _eventBus = eventBus;
             _messageBus = messageBus;
             _repository = repository;
+
+            // Показ или не показ меню
+           
 
             // Событие вызова метода сохранения м-района в репозитории
             _eventBus.Subscribe<OnSave<District>>(OnSaveDistrict);
@@ -65,11 +87,7 @@ namespace WpfPaging.ViewModels
                   Districts = new ObservableCollection<District>(s.Result);
               }, TaskContinuationOptions.OnlyOnRanToCompletion);
            
-            // Добавляю начальный микрорайон чтобы пользователь видел куда вводить его  название
-            Districts.Add( new District { Title = "Додайте та-або оберіть мікрорайон" });
-
-            // Устанавливаю выбранный по умолчанию микрорайон, чтобы меню было сразу открытым
-            SelectedDistrict = Districts[0];
+            
 
             // Получаю микрорайон с изменениями от других моделей представления
             _messageBus.Receive<DistrictMessage>(this, async message =>

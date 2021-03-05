@@ -245,33 +245,30 @@
                             <TabItem.Header>
                                 <TextBlock Style="{StaticResource BlockField}" Width="200" Text="Навантаження будинків"/>
                             </TabItem.Header>
-                            <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding LoadsOfApartmentBuildings}"  CanUserResizeColumns="False">
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn IsReadOnly="True" Header="Генплановий номер" Width="0.6*" Binding="{Binding PlanNumber}"/>
-                                    <DataGridTextColumn  IsReadOnly="True" Header="Число квартир" Width="0.3*" Binding="{Binding TotalApartments}"/>
-                                    <DataGridTextColumn  IsReadOnly="True" Header="Pжп кВт/житло" Width="0.3*"/>
-                                    <DataGridTextColumn  IsReadOnly="True" Header="Рж, кВт" Width="0.3*" />
-                                    <DataGridTextColumn  IsReadOnly="True" Header="SUM Pлі, кВт" Width="0.3*"/>
-                                    <DataGridTextColumn  IsReadOnly="True" Header="Кпоп.лі" Width="0.2*" />
-                                    <DataGridTextColumn  IsReadOnly="True" Header="Рс-ту, кВт" Width="0.25*"/>
-                                    <DataGridTextColumn  IsReadOnly="True" Header="Кпс-ту" Width="0.25*" />
-                                    <DataGridTextColumn  IsReadOnly="True" Header="Рсил, кВт" Width="0.25*" />
-                                    <DataGridTextColumn  IsReadOnly="True" Header="Ржб кВт" Width="0.25*" />
-                                    <DataGridTextColumn  IsReadOnly="True" Header="Sжб кВА" Width="0.25*"/>
+                            <ListBox Name="Elevators" BorderThickness="0" HorizontalAlignment="Center" Width="140" MaxHeight="150" ItemsSource="{Binding SelectedApartmentBuilding.PowerPlants.Elevators}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate x:Name="Elevator">
 
-                                    <!-- КОЛОНКА С КНОПКАМИ УДАЛИТЬ ДЛЯ КАЖДОГО РЯДА 
-                            
-                            <DataGridTemplateColumn Width="20" CanUserResize="False">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Button Background="Red" Height="20" Width="20" Content="x" HorizontalAlignment="Center"></Button>
+                                        <Border BorderThickness="1" BorderBrush="DarkGray" CornerRadius="5" Margin="5">
+
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="auto"/>
+                                                    <ColumnDefinition Width="auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
+                                                    <TextBlock Grid.Column="1" Style="{StaticResource BlockField}" Text="Pл=" Width="30"></TextBlock>
+                                                    <TextBox Grid.Column="1" Margin="0, 3, 0, 3" BorderThickness="1" Width="40" FontSize="14" Text="{Binding Load}" HorizontalAlignment="Left"/>
+                                                </StackPanel>
+
+                                                <Button Grid.Column="2" Width="20" Background="Red" HorizontalAlignment="Right" Content="×" Margin="0, 3, 5, 3 " Command="{Binding RelativeSource= {RelativeSource AncestorType=Page}, Path=DataContext.RemoveElevator}" CommandParameter="{Binding}"/>
+
+                                            </Grid>
+                                        </Border>
                                     </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            
-                             -->
-                                </DataGrid.Columns>
-                            </DataGrid>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
                         </TabItem>
                     </TabControl>
                 </StackPanel>

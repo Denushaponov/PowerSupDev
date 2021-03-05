@@ -10,7 +10,20 @@ namespace WpfPaging.DistrictObjects
     {
         public byte PlanNumber { get; set; }
         public double Levels { get; set; }
-        public double Entrances { get; set; } 
+        private double _entrances;
+        public double Entrances
+        {
+            get { return _entrances; }
+            set
+            {
+                if (_entrances != value)
+                {
+                    _entrances = value;
+                    PowerPlants.RefreshElevators(value);
+                }
+            }
+        }
+
         public double ApartmentsOnSite { get; set; }
         public byte ElectrificationLevel { get; set; }
         public double ApartmentTgFi { get; set; }
@@ -19,10 +32,6 @@ namespace WpfPaging.DistrictObjects
 
         public PowerPlants PowerPlants { get; set; } = new PowerPlants();
         
-
-
-      
-       
         public ApartmentBuilding()
         {
             PlanNumber = 0;
@@ -38,17 +47,8 @@ namespace WpfPaging.DistrictObjects
         }
 
        
-
-        public double CountPomps()
-        {
-            double i;
-            if (PompPower != 0)
-            { i = 1; }
-            else i = 0;
-            return i;
-
-        }
-
+        
+        
 
 
 

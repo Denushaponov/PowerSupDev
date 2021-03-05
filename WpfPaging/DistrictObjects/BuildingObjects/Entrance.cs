@@ -8,6 +8,8 @@ namespace WpfPaging.DistrictObjects.BuildingObjects
 {
     public class Entrance:BindableBase
     {
-      public ObservableCollection<Elevator> ElevatorsPerEntrance { get; set; }
+        public int EntranceNumber { get; set; }
+        public ObservableCollection<Elevator> ElevatorsPerEntrance { get; set; } = new ObservableCollection<Elevator>();
+
     }
 }

@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WpfPaging.ViewModels;
 
 namespace WpfPaging.Pages
 {
@@ -31,9 +32,6 @@ namespace WpfPaging.Pages
             ApartmentBuildingsLoadsTab.IsSelected = true;
         }
 
-     
-
-        
     }
 
     public class ApartmentDataBase

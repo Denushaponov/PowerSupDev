@@ -31,7 +31,7 @@ namespace WpfPaging.ViewModels
         public District SelectedDistrict { get; set; } = new District();
 
         public ApartmentBuilding SelectedApartmentBuilding { get; set; } = new ApartmentBuilding();
-
+        
         
         public Elevator SelectedElevator { get; set; }
 
@@ -53,7 +53,7 @@ namespace WpfPaging.ViewModels
             _messageBus = messageBus;
 
             SelectedDistrict.Building.ApartmentBuildings = new ObservableCollection<ApartmentBuilding> { };
-            
+            SelectedApartmentBuilding.PowerPlants.ElevatorsPerEntrance = new ObservableCollection<Elevator> { };
             // Получение данных о микрорайоне
             _messageBus.Receive<DistrictMessage>(this, async message =>
             {
@@ -91,8 +91,9 @@ namespace WpfPaging.ViewModels
         /// </summary>
         public ICommand AddElevatorCommand => new AsyncCommand(async () =>
         {
+
             Elevator elevator = new Elevator();
-            SelectedApartmentBuilding.PowerPlants.ElevatorsPerEntrance.Insert(0, elevator);
+            SelectedApartmentBuilding.PowerPlants.GetElevators(SelectedApartmentBuilding.Entrances, elevator);
         }
        );
 
@@ -106,7 +107,8 @@ namespace WpfPaging.ViewModels
                 return new DelegateCommand<Elevator>((elevator) =>
                 {
                     SelectedApartmentBuilding.PowerPlants.ElevatorsPerEntrance.Remove(elevator);
-
+                    for (byte i =0; i<SelectedApartmentBuilding.Entrances; i++)
+                    SelectedApartmentBuilding.PowerPlants.Elevators.Remove(elevator);
                 }, (elevator) => elevator != null);
             }
         }
