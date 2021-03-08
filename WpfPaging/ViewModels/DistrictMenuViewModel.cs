@@ -39,23 +39,7 @@ namespace WpfPaging.ViewModels
        // private District _selectedDistrict = new District();
         public District SelectedDistrict { get; set; } 
 
-        private Visibility _menuVisibility;
-        public Visibility MenuVisibility { 
-            get { return _menuVisibility; }
-            set
-            {
-                value = Visibility.Visible;
-                if (SelectedDistrict.Title != null)
-                { 
-                    value = Visibility.Visible;
-                }
-                else 
-                {
-                    value = Visibility.Hidden;
-                }
-                _menuVisibility = value;
-            }
-        }
+      
 
        ExportData ExportPathInfo { get; set; }
 

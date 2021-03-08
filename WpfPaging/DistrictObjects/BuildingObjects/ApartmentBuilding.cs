@@ -25,9 +25,9 @@ namespace WpfPaging.DistrictObjects
         }
 
         public double ApartmentsOnSite { get; set; }
-        public byte ElectrificationLevel { get; set; }
+        public double ElectrificationLevel { get; set; }
         public double ApartmentTgFi { get; set; }
-        public byte ReliabilityCathegory { get; set; }
+        public double ReliabilityCathegory { get; set; }
         public double PompPower { get; set; }
 
         public PowerPlants PowerPlants { get; set; } = new PowerPlants();

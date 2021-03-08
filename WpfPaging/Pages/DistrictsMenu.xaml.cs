@@ -20,18 +20,19 @@ namespace WpfPaging.Pages
     {
         public DisrictsMenu()
         {
+            
             InitializeComponent();
         }
 
-      //  private void Button_Click(object sender, RoutedEventArgs e)
-      //  {
-      //      if (MenuPanel.Visibility == Visibility.Hidden&&TextBoxTitleEdit.Text!=""&&TextBoxTitleEdit.Text!="Введіть назву")
-      //      {
-      //          MenuPanel.Visibility = Visibility.Visible;
-      //      }
-      //      else
-      //      MenuPanel.Visibility = Visibility.Hidden;
-      //
-      //  }
+       private void Button_Click(object sender, RoutedEventArgs e)
+       {
+           if (MenuPanel.Visibility == Visibility.Hidden&&TextBoxTitleEdit.Text!=""&&TextBoxTitleEdit.Text!="Введіть назву")
+           {
+               MenuPanel.Visibility = Visibility.Visible;
+           }
+           else
+           MenuPanel.Visibility = Visibility.Hidden;
+      
+       }
     }
 }

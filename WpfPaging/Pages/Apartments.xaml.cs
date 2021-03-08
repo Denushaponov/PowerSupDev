@@ -39,8 +39,8 @@ namespace WpfPaging.Pages
         public static IEnumerable<double> LevelsColl { get; } = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 16, 24 };
         public static IEnumerable<double> EntrancesColl { get; } = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
         public static IEnumerable<double> ApartmentsOnSiteColl { get; } = new double[] { 2, 3, 4, 5, 6, 7, 8 };
-        public static IEnumerable<byte> ElectrificationLevelColl { get; } = new byte[] { 1, 3 };
-        public static IEnumerable<byte> ReliabilityCathegoryColl { get; } = new byte[] { 1, 2, 3 };
+        public static IEnumerable<double> ElectrificationLevelColl { get; } = new double[] { 1, 3 };
+        public static IEnumerable<double> ReliabilityCathegoryColl { get; } = new double[] { 1, 2, 3 };
         public static IEnumerable<double> ElevatorsPowerColl { get; } = new double[] {0, 6, 7, 8, 9, 10, 11, 12 };
         public static IEnumerable<double> PompsPowerColl { get; } = new double[] {0, 8, 9, 10, 11, 12, 13, 14, 15 };
 
