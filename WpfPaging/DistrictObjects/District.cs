@@ -12,6 +12,14 @@ namespace WpfPaging.DistrictObjects
         public string Title { get; set; }
         public Building Building { get; set; } = new Building();
 
+       public void CalculateApartmentBuildings() 
+        {
+         foreach (var ab in Building.ApartmentBuildings)
+            {
+                ab.ExecuteCalculation();
+            }
+        }
+
     }
 
 }

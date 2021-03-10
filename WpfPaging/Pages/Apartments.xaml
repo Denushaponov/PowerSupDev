@@ -234,8 +234,8 @@
                              -->
                                         </DataGrid.Columns>
                                     </DataGrid>
-                                    
-                                    <Button Grid.Row="1" Style="{StaticResource AddButton}" Command="{Binding SendApartmentBuildings}"  HorizontalAlignment="Right" Height="25" VerticalAlignment="Bottom" Click="Button_Click">Далее</Button>
+
+                                    <Button Grid.Row="1" Style="{StaticResource AddButton}" Command="{Binding ExecuteCalculation}"  HorizontalAlignment="Right" Height="25" VerticalAlignment="Bottom" Click="Button_Click">Далее</Button>
                                     <Button Grid.Row="1" Style="{StaticResource MenuControls}" Content="Зберегти в Excel" Command="{Binding InitialApartmentDataToExcel}" CommandParameter="{Binding ElementName=InitialDataApartmentBuildings}" />
                                 </Grid>
                             </StackPanel>
@@ -245,30 +245,35 @@
                             <TabItem.Header>
                                 <TextBlock Style="{StaticResource BlockField}" Width="200" Text="Навантаження будинків"/>
                             </TabItem.Header>
-                            <ListBox Name="Elevators" BorderThickness="0" HorizontalAlignment="Center" Width="140" MaxHeight="150" ItemsSource="{Binding SelectedApartmentBuilding.PowerPlants.Elevators}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate x:Name="Elevator">
+                            <DataGrid x:Name="DataApartmentBuildingsCalculated"  AutoGenerateColumns="False" ItemsSource="{Binding  SelectedDistrict.Building.ApartmentBuildings}" SelectedItem="{Binding SelectedApartmentBuilding}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Генплановий №" Width="0.6*" Binding="{Binding PlanNumber}"/>
+                                    <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Число квартир" Width="0.5*" Binding="{Binding TotalApartments}"/>
+                                    <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Pпит.кв." Width="0.2*" Binding="{Binding ApartmentSpecificLoad}"/>
+                                    <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Рпит.буд" Width="0.25*" Binding="{Binding BuildingSpecificLoad}"/>
+                                    <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Кпоп.ліфт" Width="0.25*" Binding="{Binding ElevatorsCofficientOfAsk}"/>
+                                    <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="ΣPліфт" Width="0.25*" Binding="{Binding ElevatorsTotalLoad}"/>
+                                    <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Кпоп.с-ту" Width="0.25*" Binding="{Binding PompsCoefficientOfAsk}"/>
+                                    <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="ΣPсту" Width="0.25*" Binding="{Binding PompsTotalLoad}"/>
+                                    <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Рсил" Width="0.25*" Binding="{Binding PowerPlants.Elevators.Count}"/>
+                                    <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Ржб" Width="0.25*" Binding="{Binding PowerPlants.Elevators.Count}"/>
+                                    <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Qжб" Width="0.25*" Binding="{Binding PowerPlants.Elevators.Count}"/>
+                                    <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Sжб" Width="0.25*" Binding="{Binding PowerPlants.Elevators.Count}"/>
 
-                                        <Border BorderThickness="1" BorderBrush="DarkGray" CornerRadius="5" Margin="5">
 
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*"/>
-                                                    <ColumnDefinition Width="auto"/>
-                                                    <ColumnDefinition Width="auto"/>
-                                                </Grid.ColumnDefinitions>
-                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
-                                                    <TextBlock Grid.Column="1" Style="{StaticResource BlockField}" Text="Pл=" Width="30"></TextBlock>
-                                                    <TextBox Grid.Column="1" Margin="0, 3, 0, 3" BorderThickness="1" Width="40" FontSize="14" Text="{Binding Load}" HorizontalAlignment="Left"/>
-                                                </StackPanel>
-
-                                                <Button Grid.Column="2" Width="20" Background="Red" HorizontalAlignment="Right" Content="×" Margin="0, 3, 5, 3 " Command="{Binding RelativeSource= {RelativeSource AncestorType=Page}, Path=DataContext.RemoveElevator}" CommandParameter="{Binding}"/>
-
-                                            </Grid>
-                                        </Border>
+                                    <!-- КОЛОНКА С КНОПКАМИ УДАЛИТЬ ДЛЯ КАЖДОГО РЯДА 
+                            
+                            <DataGridTemplateColumn Width="20" CanUserResize="False">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Background="Red" Height="20" Width="20" Content="x" HorizontalAlignment="Center"></Button>
                                     </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            
+                             -->
+                                </DataGrid.Columns>
+                            </DataGrid>
                         </TabItem>
                     </TabControl>
                 </StackPanel>

@@ -133,6 +133,13 @@ namespace WpfPaging.ViewModels
             }
         }
 
+        public ICommand ExecuteCalculation => new AsyncCommand(async () =>
+        {
+            SelectedDistrict.CalculateApartmentBuildings();
+        }
+        );
+        
+
 
 
         /// <summary>
