@@ -78,7 +78,7 @@
 
         <Grid Grid.Row="1">
             <StackPanel>
-            <ListBox ItemsSource="{Binding Districts}" Name="DistrictsList" BorderThickness="0" Width="500" MaxHeight="200" SelectedItem="{Binding SelectedDistrict}" >
+            <ListBox ItemsSource="{Binding Districts}" Name="DistrictsList" BorderThickness="0" Width="500" MaxHeight="200" SelectedItem="{Binding SelectedDistrict}" SelectionChanged="DistrictsList_SelectionChanged" >
                 <ListBox.ItemTemplate>
                     <DataTemplate x:Name="DistrictElement">
                         
@@ -92,7 +92,7 @@
                                 </Grid.ColumnDefinitions>
                                     
                                 <TextBlock  Width="100" Grid.Column="0" FontSize="14" Margin="10, 3, 200, 3" Text="{Binding Title}" HorizontalAlignment="Left"/>
-                                    <Button Grid.Column="2" Width="80" HorizontalAlignment="Right" Content="Видалити" Margin="0, 3, 5, 3 " Command="{Binding RelativeSource= {RelativeSource AncestorType=Page}, Path=DataContext.RemoveDistrict}" CommandParameter="{Binding}"/>
+                                    <Button Grid.Column="2" Width="80" HorizontalAlignment="Right" Content="Видалити" Margin="0, 3, 5, 3 " Command="{Binding RelativeSource= {RelativeSource AncestorType=Page}, Path=DataContext.RemoveDistrict}" CommandParameter="{Binding}" Click="DetectChangesInList"  />
                                 </Grid>
                         </Border>
                     </DataTemplate>

@@ -108,14 +108,18 @@ namespace WpfPaging.ViewModels
 
         private  Task OnSaveDistrict(OnSave<District> arg)
         {
+            byte i=0;
+            //// !!!! здесь ловит гуид
             foreach (var d in Districts)
             {
-            if (arg.Id==d.Id)
-             {
-                    Districts.Remove(d);
-                    Districts.Add(arg.Entity);
+                 
+              if (arg.Id==d.Id)
+              {
                     
-               }
+                    Districts.Remove(d);
+                    Districts.Insert(i, arg.Entity); 
+                }
+              i++;
             }
            
          
@@ -125,7 +129,7 @@ namespace WpfPaging.ViewModels
         public  ICommand RemoveDistrict => new AsyncCommand<District>(async(district) =>
         {
            await _repository.Remove<District>(district.Id);
-            Districts.Remove(district);
+           
         }, (district) => district != null);
 
         public ICommand AddDistrict => new DelegateCommand(() =>

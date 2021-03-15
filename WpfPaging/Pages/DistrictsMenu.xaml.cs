@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevExpress.Mvvm;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -16,7 +17,7 @@ namespace WpfPaging.Pages
     /// <summary>
     /// Логика взаимодействия для DisrictMenu.xaml
     /// </summary>
-    public partial class DisrictsMenu : Page
+    public partial class DisrictsMenu : Page 
     {
         public DisrictsMenu()
         {
@@ -34,5 +35,24 @@ namespace WpfPaging.Pages
            MenuPanel.Visibility = Visibility.Hidden;
       
        }
+
+        private void DistrictsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+            if (DistrictsList.Items.Count > 0&& DistrictsList.SelectedItem!=null)
+            {
+                MenuPanel.Visibility = Visibility.Visible;
+            }
+            else if (DistrictsList.SelectedItem==null || DistrictsList.Items.Count<1)
+                MenuPanel.Visibility = Visibility.Hidden;
+        }
+
+        private void DetectChangesInList(object sender, RoutedEventArgs e)
+        {
+            MenuPanel.Visibility = Visibility.Hidden;
+           
+            if (DistrictsList.SelectedItem == null || DistrictsList.Items.Count < 1)
+                MenuPanel.Visibility = Visibility.Hidden;
+        }
     }
 }

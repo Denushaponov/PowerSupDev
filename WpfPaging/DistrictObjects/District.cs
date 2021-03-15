@@ -8,7 +8,7 @@ namespace WpfPaging.DistrictObjects
 {
     public class District : BindableBase
     {
-        public Guid Id { get; set; } = new Guid();
+        public Guid Id { get; set; } = Guid.NewGuid();
         public string Title { get; set; }
         public Building Building { get; set; } = new Building();
 

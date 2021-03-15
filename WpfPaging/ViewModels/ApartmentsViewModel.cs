@@ -176,8 +176,23 @@ namespace WpfPaging.ViewModels
             }
         }
 
-   
-       
+        public ICommand CalculatedApartmentBuildingsToExcel
+        {
+            get
+            {
+                return new AsyncCommand<DataGrid>(async (dg) =>
+                {
+                    ExportData export = new ExportData();
+                    export.Dg = dg;
+                    export.CsvFileName = "CSV\\CalculatedApartmentBuildings.csv";
+                    export.ExcelFileName = "Excel\\" + SelectedDistrict.Title + "_розраховані_дані_житлові_будинки.xlsx";
+                    await _messageBus.SendTo<DistrictMenuViewModel>(new ExportPathMessage(export));
+                });
+            }
+        }
+
+
+
     }
 
 
