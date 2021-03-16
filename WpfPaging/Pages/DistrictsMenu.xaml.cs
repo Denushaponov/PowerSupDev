@@ -39,11 +39,11 @@ namespace WpfPaging.Pages
         private void DistrictsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
-            if (DistrictsList.Items.Count > 0&& DistrictsList.SelectedItem!=null)
+            if (DistrictsList.Items.Count > 0&& DistrictsList.SelectedItem!=null&&MenuPanel!=null)
             {
                 MenuPanel.Visibility = Visibility.Visible;
             }
-            else if (DistrictsList.SelectedItem==null || DistrictsList.Items.Count<1)
+            else if (DistrictsList.SelectedItem==null || DistrictsList.Items.Count<1 && MenuPanel != null)
                 MenuPanel.Visibility = Visibility.Hidden;
         }
 

@@ -25,8 +25,26 @@ namespace WpfPaging.DistrictObjects
         }
 
         public double ApartmentsOnSite { get; set; }
-        public double ElectrificationLevel { get; set; }
-        public double ApartmentTgFi { get; set; }
+        private double _electrificationLevel;
+        public double ElectrificationLevel
+        {
+            get { return _electrificationLevel; }
+            set
+            {
+                _electrificationLevel = value;
+                if (value == 3)
+                {
+                    ApartmentTgFi = 0.2;
+                }
+                else if (value == 1) ApartmentTgFi = 0.29;
+                else ApartmentTgFi = 1;
+            }
+        }
+
+  
+        public double ApartmentTgFi {get; set;}
+
+        
         public double ReliabilityCathegory { get; set; }
 
         public PowerPlants PowerPlants { get; set; } = new PowerPlants();

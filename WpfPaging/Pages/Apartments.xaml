@@ -267,7 +267,7 @@
                                             <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Рсил" Width="0.25*" Binding="{Binding PowerPlantsActiveLoad}"/>
                                             <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Ржб" Width="0.25*" Binding="{Binding BuildingActiveLoad}"/>
                                             <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Qжб" Width="0.25*" Binding="{Binding BuildingReactiveLoad}"/>
-                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Sжб" Width="0.25*" Binding="{Binding BuildingFullLoad}"/>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Sжб" Width="0.25*" Binding="{Binding ApartmentTgFi}"/>
 
 
                                             <!-- КОЛОНКА С КНОПКАМИ УДАЛИТЬ ДЛЯ КАЖДОГО РЯДА 
