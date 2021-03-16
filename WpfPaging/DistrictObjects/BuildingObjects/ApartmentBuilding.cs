@@ -53,24 +53,24 @@ namespace WpfPaging.DistrictObjects
 
         public double TotalApartments { get; set; }
         public double ApartmentSpecificLoad { get; set; }
-        public double BuildingSpecificLoad { get; set; }
+        public double BuildingSpecificActiveLoad { get; set; }
+        public double BuildingSpecificReactiveLoad { get; set; }
 
         public double ElevatorsCofficientOfAsk { get; set; }
         public double ElevatorsActiveLoad { get; set; }
  
         public double ElevatorsReactiveLoad { get; set; }
-        public double ElevatorsFullLoad { get; set; }
+       
 
         public double PompsCoefficientOfAsk { get; set; }
         // Удельная нагрузка насосов - сумма введннных пользователем
-        public double PompsSpecificActiveLoad { get; set; }
         public double PompsActiveLoad { get; set; }
         public double PompsReactiveLoad { get; set; }
-        public double PompsFullLoad { get; set; }
+        
 
         public double PowerPlantsActiveLoad { get; set; }
         public double PowerPlantsReactiveLoad { get; set; }
-        public double PowerPlantsFullLoad { get; set; }
+       
 
         public double BuildingActiveLoad { get; set; }
         public double BuildingReactiveLoad { get; set; }
@@ -99,7 +99,8 @@ namespace WpfPaging.DistrictObjects
             GetElevatorsCoefficientOfAsk();
             CalcElevatorsLoad();
             CalcPomps();
-            CalcPowerPlantsActiveLoad();
+            CalcPowerPlantsLoad();
+            CalcBuildingLoads();
         }
 
         public void CalculateApartments()
@@ -114,7 +115,7 @@ namespace WpfPaging.DistrictObjects
 
         public void CalculateBuildingSpecificLoad()
         {
-            BuildingSpecificLoad = Math.Round(TotalApartments * ApartmentSpecificLoad, 2);
+            BuildingSpecificActiveLoad = Math.Round(TotalApartments * ApartmentSpecificLoad, 2);
             
         }
 
@@ -130,7 +131,7 @@ namespace WpfPaging.DistrictObjects
             {
                 totalLoad += e.Load;
             }
-            ElevatorsActiveLoad = totalLoad * ElevatorsCofficientOfAsk;
+            ElevatorsActiveLoad = Math.Round( totalLoad * ElevatorsCofficientOfAsk, 2);
             ElevatorsReactiveLoad = ElevatorsActiveLoad * DbnApartmentBuildings.tgFi.Elevators;
         }
 
@@ -150,13 +151,25 @@ namespace WpfPaging.DistrictObjects
             }
             double pompPercentage = 100*pompsSpecificLoad/(elevatorsSpecificLoad+pompsSpecificLoad);
             PompsCoefficientOfAsk = DbnApartmentBuildings.GetPompsCoefficientofAsk(PowerPlants.Pomps.Count, pompPercentage, DbnApartmentBuildings.PompsCoefOfAsk);
-            PompsSpecificActiveLoad = PompsCoefficientOfAsk * pompsSpecificLoad;
+            PompsActiveLoad = Math.Round(PompsCoefficientOfAsk * pompsSpecificLoad, 2);
+            PompsReactiveLoad = PompsActiveLoad * DbnApartmentBuildings.tgFi.Pomps;
         }
 
-        public void CalcPowerPlantsActiveLoad()
+        public void CalcPowerPlantsLoad()
         {
-            PowerPlantsActiveLoad = PompsSpecificActiveLoad + ElevatorsActiveLoad;
+            PowerPlantsActiveLoad = PompsActiveLoad + ElevatorsActiveLoad;
+            PowerPlantsReactiveLoad = PompsReactiveLoad + ElevatorsReactiveLoad;
         }
+
+        public void CalcBuildingLoads()
+        {
+            BuildingSpecificReactiveLoad = BuildingSpecificActiveLoad * ApartmentTgFi;
+            BuildingActiveLoad = Math.Round(BuildingSpecificActiveLoad + 0.9 * PowerPlantsActiveLoad,2);
+            BuildingReactiveLoad = Math.Round(BuildingSpecificReactiveLoad + 0.9*PowerPlantsReactiveLoad, 2);
+            BuildingFullLoad = Math.Round(Math.Sqrt(Math.Pow(BuildingActiveLoad, 2)+Math.Pow(BuildingReactiveLoad, 2)), 2);
+        }
+
+
 
        
 
