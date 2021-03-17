@@ -14,5 +14,18 @@ namespace WpfPaging.DistrictObjects
         public byte ReliabilityCathegory { get; set; }
         public byte ElectrificationLevel { get; set; }
 
+        public CommercialBuilding()
+        {
+        }
+
+        // Конструктор для ДБН данных
+        public CommercialBuilding(string typeOfCommercial, double valueOfCharacteristics, string measurementUnit, byte reliability, byte electrification)
+        {
+            TypeOfCommercial = typeOfCommercial;
+            ValueOfCharacteristics = valueOfCharacteristics;
+            MeasurmentUnit = measurementUnit;
+            ReliabilityCathegory = reliability;
+            ElectrificationLevel = electrification;
+        }
     }
 }

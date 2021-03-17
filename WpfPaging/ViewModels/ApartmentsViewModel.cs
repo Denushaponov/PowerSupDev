@@ -182,6 +182,7 @@ namespace WpfPaging.ViewModels
             {
                 return new AsyncCommand<DataGrid>(async (dg) =>
                 {
+                    File.Delete("Excel\\" + SelectedDistrict.Title + "_розраховані_дані_житлові_будинки.xlsx"); 
                     ExportData export = new ExportData();
                     export.Dg = dg;
                     export.CsvFileName = "CSV\\CalculatedApartmentBuildings.csv";

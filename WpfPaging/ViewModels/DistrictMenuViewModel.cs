@@ -193,7 +193,7 @@ namespace WpfPaging.ViewModels
             var format = new ExcelTextFormat();
             format.Delimiter = ',';
             format.EOL = "\r";              // DEFAULT IS "\r\n";
-                                            // format.TextQualifier = '"';
+            format.TextQualifier = '"';
 
             using (ExcelPackage package = new ExcelPackage(new FileInfo(excelFileName)))
             {
