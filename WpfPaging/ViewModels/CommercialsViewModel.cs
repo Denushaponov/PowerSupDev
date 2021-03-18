@@ -79,6 +79,12 @@ namespace WpfPaging.ViewModels
             await _eventBus.Publish(new SaveEvent());
         });
 
-      
+        public ICommand ExecuteCalculation => new AsyncCommand(async () =>
+        {
+            SelectedDistrict.CalculateCommercialBuildings();
+        }
+       );
+
+
     }
 }

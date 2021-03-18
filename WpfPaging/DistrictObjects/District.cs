@@ -20,6 +20,14 @@ namespace WpfPaging.DistrictObjects
             }
         }
 
+        public void CalculateCommercialBuildings()
+        {
+            foreach (var cb in Building.CommercialBuildings)
+            {
+                cb.CalculateCommercialBuildings();
+            }
+        }
+
     }
 
 }
