@@ -46,6 +46,7 @@ namespace WpfPaging.DistrictObjects
 
         public CommercialBuilding()
         {
+
         }
 
        
@@ -69,13 +70,14 @@ namespace WpfPaging.DistrictObjects
                         SpecificActiveLoad = c.SpecificActiveLoad;
                         CosFi = c.CosFi;
                         TgFi = c.TgFi;
-                    }
-               
-                i = c.ValueOfCharacteristics;
-
+                      
+                    
+                }
+                if (c.TypeOfCommercial == TypeOfCommercial) i = c.ValueOfCharacteristics;
 
             }
             i = 0;
+
         }
     }
 }
