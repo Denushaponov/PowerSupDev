@@ -29,11 +29,61 @@ namespace WpfPaging.Pages
             CommercialLoadsTab.IsSelected = true;
         }
 
+        /// <summary>
+        /// Событие отслеживает особенныых потребителей , для которых необходимо внести специальные значения
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TypeOfCommercialsBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (TypeOfCommercialsBox.SelectedItem != null)
+            {
+                if (TypeOfCommercialsBox.SelectedItem.ToString() == "Професіонально-технічні навчальні заклади з їдальнями")
+                {
+                    CosFiTextBox.Visibility = Visibility.Visible;
+                    CosFiTextBox.Background = Brushes.Yellow;
+                    CosFiText.Visibility = Visibility.Visible;
+                    CosFiText.Background = Brushes.Yellow;
+                    TgFiTextBox.Visibility = Visibility.Visible;
+                    TgFiTextBox.Background = Brushes.Yellow;
+                    TgFiText.Visibility = Visibility.Visible;
+                    TgFiText.Background = Brushes.Yellow;
+                    MessageBox.Show("ВВЕДІТЬ ВРУЧНУ ЗНАЧЕННЯ cosφ ТА tgφ СПОЖИВАЧА, У ПОЛЕ ЩО ПІДСВІЧЕНЕ ЖОВТИМ ЗЛІВА");
+                    LoadBox.Visibility = Visibility.Collapsed;
+                    LoadText.Visibility = Visibility.Collapsed;
+                }
+              
+                else
+                {
+                    CosFiTextBox.Visibility = Visibility.Collapsed;
+                    CosFiText.Visibility = Visibility.Collapsed;
+                    TgFiTextBox.Visibility = Visibility.Collapsed;
+                    TgFiText.Visibility = Visibility.Collapsed;
 
+                    if (TypeOfCommercialsBox.SelectedItem.ToString() == "Громадські будівлі багатофункціонального призначення")
+                    {
+
+                        LoadBox.Visibility = Visibility.Visible;
+                        LoadText.Visibility = Visibility.Visible;
+                        LoadText.Background = Brushes.Yellow;
+                        LoadBox.Background = Brushes.Yellow;
+                        MessageBox.Show("ВВЕДІТЬ ВРУЧНУ ЗНАЧЕННЯ ПИТОМОГО НАВАНТАЖЕННЯ СПОЖИВАЧА У ПОЛЕ ЩО ПІДСВІЧЕНЕ ЖОВТИМ ЗЛІВА");
+                    }
+
+                    else
+                    {
+                        LoadBox.Visibility = Visibility.Collapsed;
+                        LoadText.Visibility = Visibility.Collapsed;
+                    }
+                }
+            }
+        }
     }
 
     public class CommercialsDataBase
     {
+       
+
         public static IEnumerable<string> CommercialTypeColl { get; } = new string[] 
         {
             "Підприємства громадського харчування повністю електрифіковані", "Підприємства громадського харчування частково електрифіковані",
@@ -41,7 +91,7 @@ namespace WpfPaging.Pages
             "Підприємства роздрібної торгівлі промтоварні без кондиціонування повітря", "Підприємства роздрібної торгівлі промтоварні з кондиціонуванням повітря",
             "Підприємства роздрібної торгівлі універсами без кондиціонування повітря", "Підприємства роздрібної торгівлі універсами з кондиціонуванням повітря",
             "Загальноосвітні школи з електрифікованими їдальнями та спортзалами", "Загальноосвітні школи без електрифікованих їдалень, із спортзалами",
-            "Загальноосвітні школи з буфетами, без спортзалів", "Загальноосвітні школи без буфетів і спортзалів", "Професіонально-технічні навчальні заклади",
+            "Загальноосвітні школи з буфетами, без спортзалів", "Загальноосвітні школи без буфетів і спортзалів", "Професіонально-технічні навчальні заклади з їдальнями",
             "Дошкільні навчальні заклади з електрифікованими харчоблоками", "Дошкільні навчальні заклади з газовими плитами",
             "Школи-інтернати", "Будинки-інтернати для інвалідів та людей похилого віку",
             "Заклади охорони здоров'я лікарні хірургічного профілю з електрифікованими харчоблоками", "Заклади охорони здоров'я хірургічні корпуси (без харчоблоків)",
