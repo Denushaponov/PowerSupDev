@@ -41,10 +41,6 @@ namespace WpfPaging.ViewModels
 
       
 
-       ExportData ExportPathInfo { get; set; }
-
-
-
         public DistrictMenuViewModel(PageService pageService, EventBus eventBus, MessageBus messageBus, Repository repository)
         {
 
@@ -79,11 +75,7 @@ namespace WpfPaging.ViewModels
                 SelectedDistrict = message.SharedDistrict;
             });
 
-            _messageBus.Receive<ExportPathMessage>(this, async message =>
-            {
-                ExportPathInfo = message.Export;
-                ExportAsExcelHandler(ExportPathInfo.Dg, ExportPathInfo.CsvFileName, ExportPathInfo.ExcelFileName);
-            });
+            
 
             /// При получении измененного микрорайона = после нажатия пользователя на кнопку сохранить, срабатывает 
             ///событие которое вызывает метод сохранения выбранного микрорайона в репозитории
@@ -166,46 +158,6 @@ namespace WpfPaging.ViewModels
             await _messageBus.SendTo<CommercialsViewModel>(new DistrictMessage(SelectedDistrict));
             
         });
-
-
-
-        public void ExportAsExcelHandler(DataGrid dg, string csvFileName, string excelFileName)
-        {
-            dg.SelectAllCells();
-            dg.ClipboardCopyMode = DataGridClipboardCopyMode.IncludeHeader;
-            ApplicationCommands.Copy.Execute(null, dg);
-            dg.UnselectAllCells();
-            string result = (string)Clipboard.GetData(DataFormats.CommaSeparatedValue);
-            if (File.Exists(csvFileName))
-            {
-                File.Delete(csvFileName);
-            }
-            
-            File.AppendAllText(csvFileName, result, UnicodeEncoding.UTF8);
-            if (File.Exists(excelFileName))
-            {
-                File.Delete(excelFileName);
-            }
-            string worksheetsName = "Сторінка 1";
-
-            bool firstRowIsHeader = false;
-
-            var format = new ExcelTextFormat();
-            format.Delimiter = ',';
-            format.EOL = "\r";              // DEFAULT IS "\r\n";
-            format.TextQualifier = '"';
-
-            using (ExcelPackage package = new ExcelPackage(new FileInfo(excelFileName)))
-            {
-                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add(worksheetsName);
-                worksheet.Cells["A1"].LoadFromText(new FileInfo(csvFileName), format, OfficeOpenXml.Table.TableStyles.Medium27, firstRowIsHeader);
-                package.Save();
-            }
-            File.Delete(csvFileName);
-            MessageBox.Show("Таблицю " + excelFileName + " збережено");
-        }
-
-
 
 
 

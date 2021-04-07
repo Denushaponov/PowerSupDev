@@ -167,11 +167,10 @@ namespace WpfPaging.ViewModels
             {
                 return new AsyncCommand<DataGrid>(async (dg) =>
                 {
-                    ExportData export = new ExportData();
-                    export.Dg = dg;
-                    export.CsvFileName = "CSV/InitialDataApartmentBuildings.csv";
-                    export.ExcelFileName = "Excel/" + SelectedDistrict.Title + "_Вхідні_Дані_Житлові_будинки.xlsx";
-                    await _messageBus.SendTo<DistrictMenuViewModel>(new ExportPathMessage(export)); 
+                   
+                    string CsvFileName = "CSV/InitialDataApartmentBuildings.csv";
+                    string ExcelFileName = "Excel/" + SelectedDistrict.Title + "_Вхідні_Дані_Житлові_будинки.xlsx";
+                    ExportAsExcelHandler(dg, CsvFileName, ExcelFileName);
                 });
             }
         }
@@ -183,13 +182,47 @@ namespace WpfPaging.ViewModels
                 return new AsyncCommand<DataGrid>(async (dg) =>
                 {
                     File.Delete("Excel\\" + SelectedDistrict.Title + "_розраховані_дані_житлові_будинки.xlsx"); 
-                    ExportData export = new ExportData();
-                    export.Dg = dg;
-                    export.CsvFileName = "CSV\\CalculatedApartmentBuildings.csv";
-                    export.ExcelFileName = "Excel\\" + SelectedDistrict.Title + "_розраховані_дані_житлові_будинки.xlsx";
-                    await _messageBus.SendTo<DistrictMenuViewModel>(new ExportPathMessage(export));
+                    string CsvFileName = "CSV\\CalculatedApartmentBuildings.csv";
+                    string ExcelFileName = "Excel\\" + SelectedDistrict.Title + "_розраховані_дані_житлові_будинки.xlsx";
+                    ExportAsExcelHandler(dg, CsvFileName, ExcelFileName);
                 });
             }
+        }
+
+        public void ExportAsExcelHandler(DataGrid dg, string csvFileName, string excelFileName)
+        {
+            dg.SelectAllCells();
+            dg.ClipboardCopyMode = DataGridClipboardCopyMode.IncludeHeader;
+            ApplicationCommands.Copy.Execute(null, dg);
+            dg.UnselectAllCells();
+            string result = (string)Clipboard.GetData(DataFormats.CommaSeparatedValue);
+            if (File.Exists(csvFileName))
+            {
+                File.Delete(csvFileName);
+            }
+
+            File.AppendAllText(csvFileName, result, UnicodeEncoding.UTF8);
+            if (File.Exists(excelFileName))
+            {
+                File.Delete(excelFileName);
+            }
+            string worksheetsName = "Сторінка 1";
+
+            bool firstRowIsHeader = false;
+
+            var format = new ExcelTextFormat();
+            format.Delimiter = ',';
+            format.EOL = "\r";              // DEFAULT IS "\r\n";
+            format.TextQualifier = '"';
+
+            using (ExcelPackage package = new ExcelPackage(new FileInfo(excelFileName)))
+            {
+                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add(worksheetsName);
+                worksheet.Cells["A1"].LoadFromText(new FileInfo(csvFileName), format, OfficeOpenXml.Table.TableStyles.Medium27, firstRowIsHeader);
+                package.Save();
+            }
+            File.Delete(csvFileName);
+            MessageBox.Show("Таблицю " + excelFileName + " збережено");
         }
 
 
