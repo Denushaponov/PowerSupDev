@@ -169,8 +169,8 @@ namespace WpfPaging.ViewModels
                 {
                     ExportData export = new ExportData();
                     export.Dg = dg;
-                    export.CsvFileName = "CSV\\InitialDataApartmentBuildings.csv";
-                    export.ExcelFileName = "Excel\\" + SelectedDistrict.Title + "_Вхідні_Дані_Житлові_будинки.xlsx";
+                    export.CsvFileName = "CSV/InitialDataApartmentBuildings.csv";
+                    export.ExcelFileName = "Excel/" + SelectedDistrict.Title + "_Вхідні_Дані_Житлові_будинки.xlsx";
                     await _messageBus.SendTo<DistrictMenuViewModel>(new ExportPathMessage(export)); 
                 });
             }

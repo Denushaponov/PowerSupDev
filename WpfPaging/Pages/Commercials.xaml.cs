@@ -48,7 +48,7 @@ namespace WpfPaging.Pages
                     TgFiTextBox.Background = Brushes.Yellow;
                     TgFiText.Visibility = Visibility.Visible;
                     TgFiText.Background = Brushes.Yellow;
-                    MessageBox.Show("ВВЕДІТЬ ВРУЧНУ ЗНАЧЕННЯ cosφ ТА tgφ СПОЖИВАЧА, У ПОЛЕ ЩО ПІДСВІЧЕНЕ ЖОВТИМ ЗЛІВА");
+                    MessageBox.Show("УТОЧНІТЬ ВРУЧНУ ЗНАЧЕННЯ cosφ ТА tgφ СПОЖИВАЧА, У ПОЛЕ ЩО ПІДСВІЧЕНЕ ЖОВТИМ ЗЛІВА");
                     LoadBox.Visibility = Visibility.Collapsed;
                     LoadText.Visibility = Visibility.Collapsed;
                 }
@@ -67,7 +67,7 @@ namespace WpfPaging.Pages
                         LoadText.Visibility = Visibility.Visible;
                         LoadText.Background = Brushes.Yellow;
                         LoadBox.Background = Brushes.Yellow;
-                        MessageBox.Show("ВВЕДІТЬ ВРУЧНУ ЗНАЧЕННЯ ПИТОМОГО НАВАНТАЖЕННЯ СПОЖИВАЧА У ПОЛЕ ЩО ПІДСВІЧЕНЕ ЖОВТИМ ЗЛІВА");
+                        MessageBox.Show("УТОЧНІТЬ ВРУЧНУ ЗНАЧЕННЯ ПИТОМОГО НАВАНТАЖЕННЯ СПОЖИВАЧА У ПОЛЕ ЩО ПІДСВІЧЕНЕ ЖОВТИМ ЗЛІВА");
                     }
 
                     else
