@@ -25,10 +25,6 @@
     </Content>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Excel\" />
-  </ItemGroup>
-
 
 
 </Project>
