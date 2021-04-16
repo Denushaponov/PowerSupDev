@@ -136,6 +136,8 @@ namespace WpfPaging.ViewModels
         public ICommand ExecuteCalculation => new AsyncCommand(async () =>
         {
             SelectedDistrict.CalculateApartmentBuildings();
+            await _messageBus.SendTo<DistrictMenuViewModel>(new DistrictMessage(SelectedDistrict));
+            await _eventBus.Publish(new SaveEvent());
         }
         );
         
@@ -167,10 +169,9 @@ namespace WpfPaging.ViewModels
             {
                 return new AsyncCommand<DataGrid>(async (dg) =>
                 {
-                   
-                    string CsvFileName = "CSV/InitialDataApartmentBuildings.csv";
-                    string ExcelFileName = "Excel/" + SelectedDistrict.Title + "_Вхідні_Дані_Житлові_будинки.xlsx";
-                    ExportAsExcelHandler(dg, CsvFileName, ExcelFileName);
+                    if (File.Exists(@"Excel/" + SelectedDistrict.Title + "_Вхідні_Дані_Житлові_будинки.xlsx"))
+                        File.Delete(@"Excel/" + SelectedDistrict.Title + "_Вхідні_Дані_Житлові_будинки.xlsx");
+                    ExportAsExcelHandler(dg, @"CSV/InitialDataApartmentBuildings.csv", @"Excel/" + SelectedDistrict.Title + "_Вхідні_Дані_Житлові_будинки.xlsx");
                 });
             }
         }
@@ -181,31 +182,38 @@ namespace WpfPaging.ViewModels
             {
                 return new AsyncCommand<DataGrid>(async (dg) =>
                 {
-                    File.Delete("Excel\\" + SelectedDistrict.Title + "_розраховані_дані_житлові_будинки.xlsx"); 
-                    string CsvFileName = "CSV\\CalculatedApartmentBuildings.csv";
-                    string ExcelFileName = "Excel\\" + SelectedDistrict.Title + "_розраховані_дані_житлові_будинки.xlsx";
-                    ExportAsExcelHandler(dg, CsvFileName, ExcelFileName);
+                    if (File.Exists(@"Excel/" + SelectedDistrict.Title + "_Розраховані_Дані_Житлові_Будинки.xlsx"))
+                    File.Delete(@"Excel/" + SelectedDistrict.Title + "_Розраховані_Дані_Житлові_Будинки.xlsx");
+                    ExportAsExcelHandler(dg, @"CSV\\CalculatedApartmentBuildings.csv", @"Excel\\" + SelectedDistrict.Title + "_Розраховані_Дані_Житлові_Будинки.xlsx");
                 });
             }
         }
 
         public void ExportAsExcelHandler(DataGrid dg, string csvFileName, string excelFileName)
         {
+            if (Directory.Exists("CSV") != true)
+                Directory.CreateDirectory("CSV");
+            if (Directory.Exists("Excel") != true)
+                Directory.CreateDirectory("Excel");
+
             dg.SelectAllCells();
             dg.ClipboardCopyMode = DataGridClipboardCopyMode.IncludeHeader;
             ApplicationCommands.Copy.Execute(null, dg);
             dg.UnselectAllCells();
             string result = (string)Clipboard.GetData(DataFormats.CommaSeparatedValue);
+
             if (File.Exists(csvFileName))
             {
                 File.Delete(csvFileName);
             }
 
-            File.AppendAllText(csvFileName, result, UnicodeEncoding.UTF8);
+
+            File.AppendAllText(csvFileName, result, Encoding.UTF8);
             if (File.Exists(excelFileName))
             {
                 File.Delete(excelFileName);
             }
+
             string worksheetsName = "Сторінка 1";
 
             bool firstRowIsHeader = false;
@@ -223,7 +231,10 @@ namespace WpfPaging.ViewModels
             }
             File.Delete(csvFileName);
             MessageBox.Show("Таблицю " + excelFileName + " збережено");
+
         }
+
+
 
 
 

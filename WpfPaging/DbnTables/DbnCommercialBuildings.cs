@@ -70,19 +70,6 @@ namespace WpfPaging.DbnTables
             new DbnCommercialBuilding("Гаражі (стоянки) індивідуального автотранспорту стаціонарні відкриті стоянки", 50000, 0.05, "кВт на місце", 0.9, 0.48),
             new DbnCommercialBuilding("Гаражі (стоянки) індивідуального автотранспорту закриті гаражі-бокси", 50000, 0.12, "кВт на місце", 0.9, 0.48),
             new DbnCommercialBuilding("Гаражі (стоянки) індивідуального автотранспорту закриті багатоповерхові та підземні гаражі", 50000, 0.22, "кВт на місце", 0.87, 0.57),
-
-
-
-
-
-
-
-
-
-
-
-
-
             };
             
         }
@@ -95,6 +82,7 @@ namespace WpfPaging.DbnTables
             public string MeasurmentUnit { get; set; }
             public double CosFi { get; set; }
             public double TgFi { get; set; }
+            
        
 
             public DbnCommercialBuilding(string type, double valueOf, double load, string measurmentUnit, double cosFi, double tgFi)
@@ -107,7 +95,8 @@ namespace WpfPaging.DbnTables
                 TgFi = tgFi;
             }
 
-            
+           
+
         }
 
         

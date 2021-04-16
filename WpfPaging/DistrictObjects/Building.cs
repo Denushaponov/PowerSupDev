@@ -10,5 +10,7 @@ namespace WpfPaging.DistrictObjects
     {
         public ObservableCollection<ApartmentBuilding> ApartmentBuildings { get; set; } = new ObservableCollection<ApartmentBuilding>();
         public ObservableCollection<CommercialBuilding> CommercialBuildings { get; set; } = new ObservableCollection<CommercialBuilding>();
+
+        //public ObservableCollection<ApartmentBuilding> ApartmentBuildingsAsOne { get; set; } = new ObservableCollection<ApartmentBuilding>();
     }
 }

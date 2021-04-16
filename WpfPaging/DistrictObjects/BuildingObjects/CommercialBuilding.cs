@@ -40,20 +40,38 @@ namespace WpfPaging.DistrictObjects
         public double TgFi { get; set; }
         public byte ReliabilityCathegory { get; set; }
         public byte ElectrificationLevel { get; set; }
+        public double ActiveLoad { get; set; }
+        public double ReactiveLoad { get; set; }
+        public double FullLoad { get; set; }
 
         // База дынных
         public DbnTables.DbnCommercialBuildings DbnCommercialBuildings;
 
         public CommercialBuilding()
         {
-
+          
         }
-
-       
 
         public void CalculateCommercialBuildings()
         {
-            
+            CalculateActiveLoad();
+            CalculateReactiveLoad();
+            CalculateFullLoad();
+        }
+
+        public void CalculateActiveLoad()
+        {
+            ActiveLoad = Math.Round(ValueOfCharacteristics * SpecificActiveLoad, 2);
+        }
+
+        public void CalculateReactiveLoad()
+        {
+            ReactiveLoad = Math.Round(ActiveLoad * TgFi, 2);
+        }
+
+        public void CalculateFullLoad()
+        {
+           FullLoad = Math.Round(Math.Sqrt(Math.Pow(ActiveLoad, 2) + Math.Pow(ReactiveLoad, 2)), 2);
         }
 
         public void FindAppropriateCommercial()
@@ -74,9 +92,10 @@ namespace WpfPaging.DistrictObjects
                     
                 }
                 if (c.TypeOfCommercial == TypeOfCommercial) i = c.ValueOfCharacteristics;
-
+                else
+                    i = 0;
             }
-            i = 0;
+            
 
         }
     }

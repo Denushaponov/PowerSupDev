@@ -15,8 +15,6 @@ namespace WpfPaging.ViewModels
         public MainViewModel(PageService pageService)
         {
             _pageService = pageService;
-
-
             _pageService.OnPageChanged += (page) => PageSource = page;
             _pageService.ChangePage(new MainMenu());
         }

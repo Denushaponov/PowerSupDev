@@ -182,14 +182,14 @@
                                         <RowDefinition Height="1*"/>
                                     </Grid.RowDefinitions>
 
-                                    <DataGrid FontSize="12"  AutoGenerateColumns="False" ItemsSource="{Binding SelectedDistrict.Building.CommercialBuildings}" SelectedItem="{Binding SelectedCommercialBuilding}">
+                                    <DataGrid FontSize="12" Name="InitialDataCommercialBuildings"  AutoGenerateColumns="False" ItemsSource="{Binding SelectedDistrict.Building.CommercialBuildings}" SelectedItem="{Binding SelectedCommercialBuilding}">
                                         <DataGrid.Columns>
                                             <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Генплановий №" Width="0.3*" Binding="{Binding PlanNumber}"/>
                                             <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Тип споживача" Width="1*" Binding="{Binding TypeOfCommercial}"/>
                                             <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Характеристика" Width="0.3*" Binding="{Binding ValueOfCharacteristics}"/>
                                             <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Од. вим." Width="0.3*" Binding="{Binding MeasurmentUnit}"/>
-                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Категорія надійності Cos" Width="0.45*" Binding="{Binding CosFi}"/>
-                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Рівень електрифікації (*якщо є)" Width="0.6*" Binding="{Binding SpecificActiveLoad}"/>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Категорія надійності" Width="0.45*" Binding="{Binding ReliabilityCathegory}"/>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Рівень електрифікації (*якщо є)" Width="0.6*" Binding="{Binding ElectrificationLevel}"/>
 
 
 
@@ -206,8 +206,10 @@
                              -->
                                         </DataGrid.Columns>
                                     </DataGrid>
-                                    <Button Grid.Row="1" Width="50" Height="15" Content="!!!" Command="{Binding ExecuteCalculation}"/>
-                                    <Button Grid.Row="1" Style="{StaticResource AddButton}" Command="{Binding SendCommercialBuildings}"  HorizontalAlignment="Right" Height="25" VerticalAlignment="Bottom" Click="Button_Click">Далее</Button>
+                                    
+                                    <Button Grid.Row="1" Style="{StaticResource AddButton}" Command="{Binding ExecuteCalculation}"  HorizontalAlignment="Right" Height="25" VerticalAlignment="Bottom" Click="Button_Click">Далее</Button>
+                                    <Button Grid.Row="1" Style="{StaticResource MenuControls}" Content="Зберегти в Excel" Command="{Binding InitialCommercialBuildingsDataToExcel}" CommandParameter="{Binding ElementName=InitialDataCommercialBuildings}" />
+
                                 </Grid>
                             </StackPanel>
                         </TabItem>
@@ -216,16 +218,21 @@
                             <TabItem.Header>
                                 <TextBlock Style="{StaticResource BlockField}" Width="200" Text="Характеристика комерційних"/>
                             </TabItem.Header>
-                            <DataGrid FontSize="12" AutoGenerateColumns="False"  CanUserResizeColumns="False">
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn IsReadOnly="True" Header="Генплановий номер" Width="0.35*" Binding="{Binding PlanNumber}"/>
-                                    <DataGridTextColumn  IsReadOnly="True" Header="Тип споживача" Width="1*" Binding="{Binding TotalApartments}"/>
-                                    <DataGridTextColumn  IsReadOnly="True" Header="Рп кВт/од." Width="0.3*"/>
-                                    <DataGridTextColumn  IsReadOnly="True" Header="Рсб, кВт" Width="0.3*" />
-                                    <DataGridTextColumn  IsReadOnly="True" Header="tgφ" Width="0.3*"/>
-                                    <DataGridTextColumn  IsReadOnly="True" Header="Qcб" Width="0.2*" />
-                                    <DataGridTextColumn  IsReadOnly="True" Header="Sсб" Width="0.25*"/>
-                                    <!-- КОЛОНКА С КНОПКАМИ УДАЛИТЬ ДЛЯ КАЖДОГО РЯДА 
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="600"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <DataGrid FontSize="12" Name="CalculatedDataCommercialBuildings" AutoGenerateColumns="False" ItemsSource="{Binding SelectedDistrict.Building.CommercialBuildings}" SelectedItem="{Binding SelectedCommercialBuilding}"  CanUserResizeColumns="False">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn IsReadOnly="True" Header="Генплановий номер" Width="0.35*" Binding="{Binding PlanNumber}"/>
+                                        <DataGridTextColumn  IsReadOnly="True" Header="Тип споживача" Width="1*" Binding="{Binding TypeOfCommercial}"/>
+                                        <DataGridTextColumn  IsReadOnly="True" Header="Рп кВт/од." Binding="{Binding SpecificActiveLoad}" Width="0.3*"/>
+                                        <DataGridTextColumn  IsReadOnly="True" Header="Рсб, кВт" Width="0.3*" Binding="{Binding ActiveLoad}"/>
+                                        <DataGridTextColumn  IsReadOnly="True" Header="tgφ" Width="0.3*" Binding="{Binding TgFi}"/>
+                                        <DataGridTextColumn  IsReadOnly="True" Header="Qcб" Width="0.2*" Binding="{Binding ReactiveLoad}" />
+                                        <DataGridTextColumn  IsReadOnly="True" Header="Sсб" Width="0.25*" Binding="{Binding FullLoad}"/>
+                                        <!-- КОЛОНКА С КНОПКАМИ УДАЛИТЬ ДЛЯ КАЖДОГО РЯДА 
                             
                             <DataGridTemplateColumn Width="20" CanUserResize="False">
                                 <DataGridTemplateColumn.CellTemplate>
@@ -236,8 +243,10 @@
                             </DataGridTemplateColumn>
                             
                              -->
-                                </DataGrid.Columns>
-                            </DataGrid>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                                <Button Grid.Row="1" Style="{StaticResource MenuControls}" Content="Зберегти в Excel" Command="{Binding CalculatedCommercialBuildingsDataToExcel}" CommandParameter="{Binding ElementName=CalculatedDataCommercialBuildings}" />
+                            </Grid>
                         </TabItem>
                     </TabControl>
                 </StackPanel>

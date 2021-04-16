@@ -7,6 +7,11 @@ using WpfPaging.Pages;
 using WpfPaging.Services;
 using WpfPaging.DistrictObjects;
 using System.Collections.ObjectModel;
+using System.Windows.Controls;
+using System.IO;
+using System.Windows;
+using System.Text;
+using OfficeOpenXml;
 
 namespace WpfPaging.ViewModels
 {
@@ -82,8 +87,83 @@ namespace WpfPaging.ViewModels
         public ICommand ExecuteCalculation => new AsyncCommand(async () =>
         {
             SelectedDistrict.CalculateCommercialBuildings();
+            await _messageBus.SendTo<DistrictMenuViewModel>(new DistrictMessage(SelectedDistrict));
+            await _eventBus.Publish(new SaveEvent());
         }
        );
+
+        public ICommand InitialCommercialBuildingsDataToExcel
+        {
+            get
+            {
+                return new AsyncCommand<DataGrid>(async (dg) =>
+                {
+                    if (File.Exists(@"Excel/" + SelectedDistrict.Title + "_Вхідні_Дані_Комерційні_Будівлі.xlsx"))
+                        File.Delete(@"Excel/" + SelectedDistrict.Title + "_Вхідні_Дані_Комерційні_Будівлі.xlsx");
+                    ExportAsExcelHandler(dg, @"CSV/InitialDataCommercialBuildings.csv", @"Excel/" + SelectedDistrict.Title + "_Вхідні_Дані_Комерційні_Будівлі.xlsx");
+                });
+            }
+        }
+
+        public ICommand CalculatedCommercialBuildingsDataToExcel
+        {
+            get
+            {
+                return new AsyncCommand<DataGrid>(async (dg) =>
+                {
+                    if (File.Exists(@"Excel/" + SelectedDistrict.Title + "_Розраховані_Дані_Комерційні_Будівлі.xlsx"))
+                        File.Delete(@"Excel/" + SelectedDistrict.Title + "_Розраховані_Дані_Комерційні_Будівлі.xlsx");
+                    ExportAsExcelHandler(dg, @"CSV\\CalculatedCommercialBuildings.csv", @"Excel\\" + SelectedDistrict.Title + "_Розраховані_Дані_Комерційні_Будівлі.xlsx");
+                });
+            }
+        }
+
+
+
+        public void ExportAsExcelHandler(DataGrid dg, string csvFileName, string excelFileName)
+        {
+            if (Directory.Exists("CSV") != true)
+                Directory.CreateDirectory("CSV");
+            if (Directory.Exists("Excel") != true)
+                Directory.CreateDirectory("Excel");
+
+            dg.SelectAllCells();
+            dg.ClipboardCopyMode = DataGridClipboardCopyMode.IncludeHeader;
+            ApplicationCommands.Copy.Execute(null, dg);
+            dg.UnselectAllCells();
+            string result = (string)Clipboard.GetData(DataFormats.CommaSeparatedValue);
+
+            if (File.Exists(csvFileName))
+            {
+                File.Delete(csvFileName);
+            }
+
+
+            File.AppendAllText(csvFileName, result, Encoding.UTF8);
+            if (File.Exists(excelFileName))
+            {
+                File.Delete(excelFileName);
+            }
+
+            string worksheetsName = "Сторінка 1";
+
+            bool firstRowIsHeader = false;
+
+            var format = new ExcelTextFormat();
+            format.Delimiter = ',';
+            format.EOL = "\r";              // DEFAULT IS "\r\n";
+            format.TextQualifier = '"';
+
+            using (ExcelPackage package = new ExcelPackage(new FileInfo(excelFileName)))
+            {
+                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add(worksheetsName);
+                worksheet.Cells["A1"].LoadFromText(new FileInfo(csvFileName), format, OfficeOpenXml.Table.TableStyles.Medium27, firstRowIsHeader);
+                package.Save();
+            }
+            File.Delete(csvFileName);
+            MessageBox.Show("Таблицю " + excelFileName + " збережено");
+
+        }
 
 
     }
