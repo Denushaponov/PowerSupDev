@@ -144,6 +144,14 @@ namespace WpfPaging.ViewModels
             await _repository.Save(SelectedDistrict, SelectedDistrict.Id);
         });
 
+        /// <summary>
+        /// Комманда при нажатии на кнопку получить объединённые жилые дома
+        /// </summary>
+        public ICommand ToUnitedApartmentBuildings => new AsyncCommand(async () =>
+        {
+            SelectedDistrict.Building.UniteApartmentBuildings();
+        });
+
 
         public ICommand GoForApartmentBuildings => new AsyncCommand(async () =>
         {

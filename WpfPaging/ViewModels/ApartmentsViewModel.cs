@@ -136,6 +136,7 @@ namespace WpfPaging.ViewModels
         public ICommand ExecuteCalculation => new AsyncCommand(async () =>
         {
             SelectedDistrict.CalculateApartmentBuildings();
+            SelectedDistrict.Building.UniteApartmentBuildings();
             await _messageBus.SendTo<DistrictMenuViewModel>(new DistrictMessage(SelectedDistrict));
             await _eventBus.Publish(new SaveEvent());
         }
@@ -185,6 +186,19 @@ namespace WpfPaging.ViewModels
                     if (File.Exists(@"Excel/" + SelectedDistrict.Title + "_Розраховані_Дані_Житлові_Будинки.xlsx"))
                     File.Delete(@"Excel/" + SelectedDistrict.Title + "_Розраховані_Дані_Житлові_Будинки.xlsx");
                     ExportAsExcelHandler(dg, @"CSV\\CalculatedApartmentBuildings.csv", @"Excel\\" + SelectedDistrict.Title + "_Розраховані_Дані_Житлові_Будинки.xlsx");
+                });
+            }
+        }
+
+        public ICommand UnitedApartmentBuildingsToExcel
+        {
+            get
+            {
+                return new AsyncCommand<DataGrid>(async (dg) =>
+                {
+                    if (File.Exists(@"Excel/" + SelectedDistrict.Title + "_Житлові_Будинки_Як_Один.xlsx"))
+                        File.Delete(@"Excel/" + SelectedDistrict.Title + "_Житлові_Будинки_Як_Один.xlsx");
+                    ExportAsExcelHandler(dg, @"CSV\\UnitedApartmentBuildings.csv", @"Excel\\" + SelectedDistrict.Title + "_Житлові_Будинки_Як_Один.xlsx");
                 });
             }
         }

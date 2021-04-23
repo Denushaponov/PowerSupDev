@@ -40,12 +40,12 @@ namespace WpfPaging.DbnTables
             if (electrification == 1)
             {
                 result = Interpolate(apartmentArr, firstCathegoryLoadsArr, (int)apartmentsNumber);
-
+                if (apartmentsNumber >= 1000) result = 0.6;
             }
             else
             {
                 result = Interpolate(apartmentArr, thirdCathegoryLoadsArr, (int)apartmentsNumber);
-
+                if (apartmentsNumber >= 1000) result = 1.1;
             }
             Console.WriteLine($"Результат: {result} кВт");
             result = Math.Round(result, 2);
@@ -71,6 +71,7 @@ namespace WpfPaging.DbnTables
             {
                 if (elevators > 24)
                 { result = 0.35; return result; }
+                // Добавил выбор максимального числа
                 result = Interpolate(elevatorsArr, lowerThan12, (int)elevators);
             }
 
@@ -78,6 +79,7 @@ namespace WpfPaging.DbnTables
             {
                 if (elevators > 24)
                 { result = 0.4; return result; }
+                // Добавил выбор макс числа
                 result = Interpolate(elevatorsArr, equalTo12OrHigher, (int)elevators);
             }
             Console.WriteLine($"Результат: {result} кВт");

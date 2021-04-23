@@ -76,7 +76,7 @@
             </Grid.RowDefinitions>
             <!--Заголовок-->
             <StackPanel Background="Bisque" Orientation="Vertical" VerticalAlignment="Center">
-                <TextBlock Text="Житлові будинки: вхідні дані" TextAlignment="Center" Style="{StaticResource PageTitle}"/>
+                <TextBlock Text="Житлові будинки" TextAlignment="Center" Style="{StaticResource PageTitle}"/>
 
                 <!--Меню переключатели-->
                
@@ -287,6 +287,45 @@
                                 </Grid>
                             </StackPanel>
                         </TabItem>
+
+                        <TabItem x:Name="UnitedApartmentBuildingsTab">
+                            <TabItem.Header>
+                                <TextBlock Style="{StaticResource BlockField}" Width="200" Text="Навантаження будинків"/>
+                            </TabItem.Header>
+
+                            <StackPanel Grid.Column="1">
+                                <!-- Колонки-->
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="600"/>
+                                        <RowDefinition Height="1*"/>
+                                    </Grid.RowDefinitions>
+
+                                    <DataGrid x:Name="UnitedApartmentBuildingsGrid"  AutoGenerateColumns="False" ItemsSource="{Binding  SelectedDistrict.Building.UnitedApartmentBuildings.UnitedApartmentBuildingsCollection}">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Генплановий №" Width="0.6*" Binding="{Binding PlanNumber}"/>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Число квартир" Width="0.5*" Binding="{Binding TotalApartments}"/>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Pпит.кв." Width="0.2*" Binding="{Binding ApartmentSpecificLoad}"/>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Рпит.буд" Width="0.25*" Binding="{Binding BuildingSpecificActiveLoad}"/>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Кпоп.ліфт" Width="0.25*" Binding="{Binding ElevatorsCofficientOfAsk}"/>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="ΣPліфт" Width="0.25*" Binding="{Binding ElevatorsActiveLoad}"/>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Кпоп.с-ту" Width="0.25*" Binding="{Binding PompsCoefficientOfAsk}"/>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="ΣPсту" Width="0.25*" Binding="{Binding PompsActiveLoad}"/>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Рсил" Width="0.25*" Binding="{Binding PowerPlantsActiveLoad}"/>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Ржб" Width="0.25*" Binding="{Binding BuildingActiveLoad}"/>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Qжб" Width="0.25*" Binding="{Binding BuildingReactiveLoad}"/>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Sжб" Width="0.25*" Binding="{Binding BuildingFullLoad}"/>
+
+
+                                         
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                    <Button Grid.Row="1" Style="{StaticResource MenuControls}" Content="Зберегти в Excel" Command="{Binding CalculatedApartmentBuildingsToExcel}" CommandParameter="{Binding ElementName=CalculatedApartmentBuildings}" />
+                                </Grid>
+                            </StackPanel>
+                        </TabItem>
+
+
                     </TabControl>
                 </StackPanel>
             </Grid>
