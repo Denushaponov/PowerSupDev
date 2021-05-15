@@ -320,7 +320,7 @@
                                          
                                         </DataGrid.Columns>
                                     </DataGrid>
-                                    <Button Grid.Row="1" Style="{StaticResource MenuControls}" Content="Зберегти в Excel" Command="{Binding CalculatedApartmentBuildingsToExcel}" CommandParameter="{Binding ElementName=CalculatedApartmentBuildings}" />
+                                    <Button Grid.Row="1" Style="{StaticResource MenuControls}" Content="Зберегти в Excel" Command="{Binding UnitedApartmentBuildingsToExcel}" CommandParameter="{Binding ElementName=CalculatedApartmentBuildings}" />
                                 </Grid>
                             </StackPanel>
                         </TabItem>

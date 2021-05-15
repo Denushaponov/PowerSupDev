@@ -98,9 +98,8 @@ namespace WpfPaging.ViewModels
             {
                 return new AsyncCommand<DataGrid>(async (dg) =>
                 {
-                    if (File.Exists(@"Excel/" + SelectedDistrict.Title + "_Вхідні_Дані_Комерційні_Будівлі.xlsx"))
-                        File.Delete(@"Excel/" + SelectedDistrict.Title + "_Вхідні_Дані_Комерційні_Будівлі.xlsx");
-                    ExportAsExcelHandler(dg, @"CSV/InitialDataCommercialBuildings.csv", @"Excel/" + SelectedDistrict.Title + "_Вхідні_Дані_Комерційні_Будівлі.xlsx");
+                    
+                    ExportAsExcelHandler(dg, "Вхідні дані");
                 });
             }
         }
@@ -111,21 +110,28 @@ namespace WpfPaging.ViewModels
             {
                 return new AsyncCommand<DataGrid>(async (dg) =>
                 {
-                    if (File.Exists(@"Excel/" + SelectedDistrict.Title + "_Розраховані_Дані_Комерційні_Будівлі.xlsx"))
-                        File.Delete(@"Excel/" + SelectedDistrict.Title + "_Розраховані_Дані_Комерційні_Будівлі.xlsx");
-                    ExportAsExcelHandler(dg, @"CSV\\CalculatedCommercialBuildings.csv", @"Excel\\" + SelectedDistrict.Title + "_Розраховані_Дані_Комерційні_Будівлі.xlsx");
+                    
+                    ExportAsExcelHandler(dg, "Результат розрахунків");
                 });
             }
         }
 
 
 
-        public void ExportAsExcelHandler(DataGrid dg, string csvFileName, string excelFileName)
+        public void ExportAsExcelHandler(DataGrid dg, string worksheetsName)
         {
+            string directoryName = "Excel/" + SelectedDistrict.Title + "/";
+            string csvFileName = "CSV/" + "tempData.csv";
+            string excelFileName = @"" + directoryName + "Комерційні_будівлі_мікрорайону" + ".xlsx";
             if (Directory.Exists("CSV") != true)
                 Directory.CreateDirectory("CSV");
             if (Directory.Exists("Excel") != true)
                 Directory.CreateDirectory("Excel");
+            if (Directory.Exists(directoryName) != true)
+            {
+                Directory.CreateDirectory(directoryName);
+            }
+
 
             dg.SelectAllCells();
             dg.ClipboardCopyMode = DataGridClipboardCopyMode.IncludeHeader;
@@ -140,12 +146,6 @@ namespace WpfPaging.ViewModels
 
 
             File.AppendAllText(csvFileName, result, Encoding.UTF8);
-            if (File.Exists(excelFileName))
-            {
-                File.Delete(excelFileName);
-            }
-
-            string worksheetsName = "Сторінка 1";
 
             bool firstRowIsHeader = false;
 
@@ -156,12 +156,23 @@ namespace WpfPaging.ViewModels
 
             using (ExcelPackage package = new ExcelPackage(new FileInfo(excelFileName)))
             {
-                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add(worksheetsName);
-                worksheet.Cells["A1"].LoadFromText(new FileInfo(csvFileName), format, OfficeOpenXml.Table.TableStyles.Medium27, firstRowIsHeader);
-                package.Save();
+                try
+                {
+                    package.Workbook.Worksheets.Delete(worksheetsName);
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add(worksheetsName);
+                    worksheet.Cells["A1"].LoadFromText(new FileInfo(csvFileName), format, OfficeOpenXml.Table.TableStyles.Medium27, firstRowIsHeader);
+                    package.Save();
+                }
+                catch
+                {
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add(worksheetsName);
+                    worksheet.Cells["A1"].LoadFromText(new FileInfo(csvFileName), format, OfficeOpenXml.Table.TableStyles.Medium27, firstRowIsHeader);
+                    package.Save();
+                }
+
             }
             File.Delete(csvFileName);
-            MessageBox.Show("Таблицю " + excelFileName + " збережено");
+            MessageBox.Show("Таблицю" + excelFileName + " збережено");
 
         }
 
