@@ -39,13 +39,25 @@ namespace WpfPaging.DbnTables
 
             if (electrification == 1)
             {
-                result = Interpolate(apartmentArr, firstCathegoryLoadsArr, (int)apartmentsNumber);
-                if (apartmentsNumber >= 1000) result = 0.6;
+                try
+                {
+                    result = Interpolate(apartmentArr, firstCathegoryLoadsArr, (int)apartmentsNumber);
+                }
+                catch
+                {
+                    if (apartmentsNumber >= 1000) result = 0.6;
+                }
             }
             else
             {
-                result = Interpolate(apartmentArr, thirdCathegoryLoadsArr, (int)apartmentsNumber);
-                if (apartmentsNumber >= 1000) result = 1.1;
+                try
+                {
+                    result = Interpolate(apartmentArr, thirdCathegoryLoadsArr, (int)apartmentsNumber);
+                }
+                catch
+                {
+                    if (apartmentsNumber >= 1000) result = 1.1;
+                }
             }
             Console.WriteLine($"Результат: {result} кВт");
             result = Math.Round(result, 2);
