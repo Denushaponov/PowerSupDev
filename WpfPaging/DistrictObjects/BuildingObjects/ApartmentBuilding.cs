@@ -8,6 +8,7 @@ namespace WpfPaging.DistrictObjects
 {
     public class ApartmentBuilding:BindableBase
     {
+        public Guid Id = new Guid();
         public byte PlanNumber { get; set; }
         public double Levels { get; set; }
         private double _entrances;

@@ -16,6 +16,8 @@ using System.Windows.Controls;
 using System.Windows;
 using System.IO;
 using OfficeOpenXml;
+using System.Collections.Specialized;
+using System.ComponentModel;
 
 namespace WpfPaging.ViewModels
 {
@@ -24,15 +26,40 @@ namespace WpfPaging.ViewModels
         private readonly PageService _pageService;
         private readonly EventBus _eventBus;
         private readonly MessageBus _messageBus;
+       
 
         /// <summary>
         /// Выбранный микрорайон (в DistrictMenuVM), присылается для изменений
         /// </summary>
-        public District SelectedDistrict { get; set; } = new District();
+        private District _selectedDistrict = new District();
+        public District SelectedDistrict
+        {
+            get { return _selectedDistrict; }
+            set
+            {
 
-        public ApartmentBuilding SelectedApartmentBuilding { get; set; } = new ApartmentBuilding();
-        
-        
+                _selectedDistrict = value;
+                foreach (var e in _selectedDistrict.Building.ApartmentBuildings)
+                {
+                    e.PropertyChanged += EntityPropertyChanged;
+                }
+              
+
+            }
+        }
+
+        private ApartmentBuilding _selectedApartmentBuilding = new ApartmentBuilding();
+        public ApartmentBuilding SelectedApartmentBuilding
+        {
+            get { return _selectedApartmentBuilding; }
+            set
+            {
+                _selectedApartmentBuilding = value;
+                
+            }
+        }
+
+
         public Elevator SelectedElevator { get; set; }
 
 
@@ -60,10 +87,12 @@ namespace WpfPaging.ViewModels
                 // присваивание присланного из DistrictMenuVM микрорайона в качестве выбранного
                 SelectedDistrict = message.SharedDistrict;
             });
-                       
+           
+
+
         }
-   
- 
+
+
 
         /// <summary>
         /// Отправка микрорайона с отредактированной коллекцией ApartmentBuildings
@@ -97,9 +126,9 @@ namespace WpfPaging.ViewModels
         }
        );
 
-/// <summary>
-///  Комманда удаления лифта выранного
-/// </summary>
+        /// <summary>
+        ///  Комманда удаления лифта выранного
+        /// </summary>
         public ICommand RemoveElevator
         {
             get
@@ -107,8 +136,8 @@ namespace WpfPaging.ViewModels
                 return new DelegateCommand<Elevator>((elevator) =>
                 {
                     SelectedApartmentBuilding.PowerPlants.ElevatorsPerEntrance.Remove(elevator);
-                    for (byte i =0; i<SelectedApartmentBuilding.Entrances; i++)
-                    SelectedApartmentBuilding.PowerPlants.Elevators.Remove(elevator);
+                    for (byte i = 0; i < SelectedApartmentBuilding.Entrances; i++)
+                        SelectedApartmentBuilding.PowerPlants.Elevators.Remove(elevator);
                 }, (elevator) => elevator != null);
             }
         }
@@ -141,7 +170,7 @@ namespace WpfPaging.ViewModels
             await _eventBus.Publish(new SaveEvent());
         }
         );
-        
+
 
 
 
@@ -158,6 +187,13 @@ namespace WpfPaging.ViewModels
 
                 }, (apartmentBuilding) => apartmentBuilding != null);
             }
+        }
+
+        public void EntityPropertyChanged(object sender, PropertyChangedEventArgs e)
+       {
+            if (SelectedDistrict.Building.Validate(SelectedApartmentBuilding.Id, SelectedApartmentBuilding.PlanNumber))
+                SelectedApartmentBuilding.PlanNumber = 0;
+               
         }
 
 
@@ -182,7 +218,7 @@ namespace WpfPaging.ViewModels
             {
                 return new AsyncCommand<DataGrid>(async (dg) =>
                 {
-                    
+
                     ExportAsExcelHandler(dg, "Розрахунок будинків");
                 });
             }
@@ -202,18 +238,18 @@ namespace WpfPaging.ViewModels
         public void ExportAsExcelHandler(DataGrid dg, string worksheetsName)
         {
             string directoryName = "Excel/" + SelectedDistrict.Title + "/";
-            string csvFileName = "CSV/"+"tempData.csv";
+            string csvFileName = "CSV/" + "tempData.csv";
             string excelFileName = @"" + directoryName + "Житлові_будинки_мікрорайону" + ".xlsx";
             if (Directory.Exists("CSV") != true)
                 Directory.CreateDirectory("CSV");
             if (Directory.Exists("Excel") != true)
                 Directory.CreateDirectory("Excel");
-            if (Directory.Exists(directoryName) !=true) 
-                {
+            if (Directory.Exists(directoryName) != true)
+            {
                 Directory.CreateDirectory(directoryName);
-                }
-            
-           
+            }
+
+
             dg.SelectAllCells();
             dg.ClipboardCopyMode = DataGridClipboardCopyMode.IncludeHeader;
             ApplicationCommands.Copy.Execute(null, dg);
@@ -224,7 +260,7 @@ namespace WpfPaging.ViewModels
             {
                 File.Delete(csvFileName);
             }
-           
+
 
             File.AppendAllText(csvFileName, result, Encoding.UTF8);
 
@@ -237,7 +273,8 @@ namespace WpfPaging.ViewModels
 
             using (ExcelPackage package = new ExcelPackage(new FileInfo(excelFileName)))
             {
-                try {
+                try
+                {
                     package.Workbook.Worksheets.Delete(worksheetsName);
                     ExcelWorksheet worksheet = package.Workbook.Worksheets.Add(worksheetsName);
                     worksheet.Cells["A1"].LoadFromText(new FileInfo(csvFileName), format, OfficeOpenXml.Table.TableStyles.Medium27, firstRowIsHeader);
@@ -249,17 +286,14 @@ namespace WpfPaging.ViewModels
                     worksheet.Cells["A1"].LoadFromText(new FileInfo(csvFileName), format, OfficeOpenXml.Table.TableStyles.Medium27, firstRowIsHeader);
                     package.Save();
                 }
-              
+
             }
             File.Delete(csvFileName);
             MessageBox.Show("Таблицю" + excelFileName + " збережено");
 
         }
-
-
-
-
-
+       
+        
     }
 
 

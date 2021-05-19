@@ -12,6 +12,7 @@ using System.IO;
 using System.Windows;
 using System.Text;
 using OfficeOpenXml;
+using System.ComponentModel;
 
 namespace WpfPaging.ViewModels
 {
@@ -21,11 +22,26 @@ namespace WpfPaging.ViewModels
         private readonly EventBus _eventBus;
         private readonly MessageBus _messageBus;
 
-     
+
         /// <summary>
         /// Микрорайон который присылается, редактируется и отсылается
         /// </summary>
-        public District SelectedDistrict { get; set; } = new District();
+        private District _selectedDistrict = new District();
+        public District SelectedDistrict
+        {
+            get { return _selectedDistrict; }
+            set
+            {
+
+                _selectedDistrict = value;
+                foreach (var e in _selectedDistrict.Building.ApartmentBuildings)
+                {
+                    e.PropertyChanged += EntityPropertyChanged;
+                }
+
+
+            }
+        }
 
         /// <summary>
         /// Выбранное коммерческое здание, которое редактируется
@@ -91,6 +107,13 @@ namespace WpfPaging.ViewModels
             await _eventBus.Publish(new SaveEvent());
         }
        );
+
+        public void EntityPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (SelectedDistrict.Building.Validate(SelectedCommercialBuilding.Id, SelectedCommercialBuilding.PlanNumber))
+                SelectedCommercialBuilding.PlanNumber = 0;
+
+        }
 
         public ICommand InitialCommercialBuildingsDataToExcel
         {
