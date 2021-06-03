@@ -20,20 +20,45 @@
             <Setter Property="Background" Value="Peru"/>
         </Style>
         <!-- Стиль для кнопок добавления-->
-        <Style  x:Key="AddButton" TargetType="Button">
-            <Setter Property="Width" Value="50"/>
+        <Style x:Key="AddButton" TargetType="Button">
+            <Setter Property="Width" Value="120"/>
             <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Height" Value="20"/>
-            <Setter Property="Background" Value="Green"/>
-            <Setter Property="Margin" Value="3"/>
+            <Setter Property="Height" Value="25"/>
+            <Setter Property="Background" Value="#FF36FF63"/>
+            <Setter Property="Margin" Value="5, 0, 5, 5"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
-             </Style>
+            <Setter Property="Padding" Value="0"/>
+        </Style>
         <!-- ДЛЯ КОНПОК УДАЛЕНИЯ-->
-        <Style x:Key="RemoveButton" TargetType="Button" BasedOn="{StaticResource AddButton}">
-            <Setter Property="Background" Value="Red"/>
+        <Style x:Key="RemoveButton" TargetType="Button" >
+            <Setter Property="Width" Value="120"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Height" Value="25"/>
+            <Setter Property="Background" Value="LightCoral"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="0"/>
 
         </Style>
+
+        <Style x:Key="CopyButton" TargetType="Button">
+           
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Height" Value="25"/>
+            <Setter Property="Background" Value="#FF7FE0FF"/>
+            <Setter Property="Margin" Value="3, 3,0,3"/>
+            <Setter Property="BorderBrush" Value="LightBlue"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Width" Value="85"/>
+            <Setter Property="Padding" Value="0"/>
+        </Style>
+
+        
+
         <!--Стили для заголовка страницы-->
         <Style TargetType="TextBlock" x:Key="PageTitle">
             <Setter Property="FontSize" Value="24"/>
@@ -65,6 +90,11 @@
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Width" Value="120"/>
             <Setter Property="Height" Value="25"/>
+        </Style>
+
+        <!-- Для ячеек -->
+        <Style TargetType="DataGridCell">
+            <Setter Property="TextBlock.TextAlignment" Value="Center" />
         </Style>
     </Page.Resources>
     <Border Padding="10">
@@ -103,14 +133,18 @@
                     </Style>
                     </StackPanel.Style>
                     <!-- !!!! -->
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Button Style="{StaticResource AddButton}" Command="{Binding AddCommand}" Content="+"/>
-                        <Button Style="{StaticResource RemoveButton}" Command="{Binding Remove}" CommandParameter="{Binding SelectedApartmentBuilding}" Content="-"/>
-                    </StackPanel>
+                    
+                        <Button Style="{StaticResource AddButton}" Command="{Binding AddCommand}" Content="Add"/>
+                        <Button Style="{StaticResource RemoveButton}" Command="{Binding Remove}" CommandParameter="{Binding SelectedApartmentBuilding}" Content="Remove"/>
 
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button Style="{StaticResource CopyButton}" Command="{Binding Copy}" CommandParameter="{Binding ElementName=CopyTextBox}">Копіювати</Button>
+                        <TextBox Width="31" Height="25" BorderBrush="LightBlue" TextAlignment="Center" Margin="0,3,3,3" Name="CopyTextBox"></TextBox>
+                    </StackPanel>
+                    
 
                     <TextBlock Style="{StaticResource BlockField}">Генплановий №</TextBlock>
-                    <TextBox Style="{StaticResource TextField}" Text="{Binding SelectedApartmentBuilding.PlanNumber, UpdateSourceTrigger=PropertyChanged, NotifyOnTargetUpdated=True}"></TextBox>
+                    <TextBox Style="{StaticResource TextField}" Text="{Binding SelectedApartmentBuilding.PlanNumber, UpdateSourceTrigger=LostFocus, NotifyOnTargetUpdated=True}"></TextBox>
 
                     <TextBlock Style="{StaticResource BlockField}">Поверхів:</TextBlock>
                     <ComboBox Style="{StaticResource ComboField}" ItemsSource="{Binding Source={x:Static local:ApartmentDataBase.LevelsColl}}" Text="{Binding SelectedApartmentBuilding.Levels}"></ComboBox>
@@ -209,8 +243,8 @@
                                         <RowDefinition Height="1*"/>
                                     </Grid.RowDefinitions>
 
-                                    <DataGrid x:Name="InitialDataApartmentBuildings"  AutoGenerateColumns="False" ItemsSource="{Binding  SelectedDistrict.Building.ApartmentBuildings}" SelectedItem="{Binding SelectedApartmentBuilding}">
-                                        <DataGrid.Columns>
+                                    <DataGrid x:Name="InitialDataApartmentBuildings"  AutoGenerateColumns="False" HorizontalAlignment="Center" ItemsSource="{Binding  SelectedDistrict.Building.ApartmentBuildings}" SelectedItem="{Binding SelectedApartmentBuilding}">
+                                        <DataGrid.Columns >
                                             <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Генплановий №" Width="0.6*" Binding="{Binding PlanNumber}"/>
                                             <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Поверхів" Width="0.4*" Binding="{Binding Levels}"/>
                                             <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Під'їздів" Width="0.4*" Binding="{Binding Entrances}"/>

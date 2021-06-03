@@ -41,9 +41,10 @@ namespace WpfPaging.ViewModels
                 _selectedDistrict = value;
                 foreach (var e in _selectedDistrict.Building.ApartmentBuildings)
                 {
-                    e.PropertyChanged += EntityPropertyChanged;
+                    e.PropertyChanged += ValidationRuleApartmentBuildings;
                 }
-              
+
+
 
             }
         }
@@ -54,8 +55,14 @@ namespace WpfPaging.ViewModels
             get { return _selectedApartmentBuilding; }
             set
             {
+               
                 _selectedApartmentBuilding = value;
-                
+                foreach (var e in _selectedDistrict.Building.ApartmentBuildings)
+                {
+                    e.PropertyChanged += ValidationRuleApartmentBuildings;
+                }
+
+
             }
         }
 
@@ -111,9 +118,48 @@ namespace WpfPaging.ViewModels
             ApartmentBuilding apartmentBuilding = new ApartmentBuilding();
             SelectedDistrict.Building.ApartmentBuildings.Insert(0, apartmentBuilding);
             SelectedApartmentBuilding = apartmentBuilding;
-
+            
         }
         );
+
+        // Флаг который отключает валидацию при копировании домов.
+        bool IsCopying = false;//
+        public ICommand Copy
+        {
+            get
+            {
+                return new AsyncCommand<TextBox>(async (copy) =>
+                {
+                   IsCopying = true;  //
+                   if (SelectedApartmentBuilding != null)
+                   {
+                       try
+                       {
+                           int count = Convert.ToInt32(copy.Text);
+                           int x = (from p in SelectedDistrict.Building.ApartmentBuildings.TakeWhile(p => p.Id != SelectedApartmentBuilding.Id) select p).Count();
+                           while (count > 0)
+                           {
+                               SelectedDistrict.Building.ApartmentBuildings.Insert(x, new ApartmentBuilding());
+                               SelectedDistrict.Building.ApartmentBuildings[x].ApartmentsOnSite = SelectedApartmentBuilding.ApartmentsOnSite;
+                               SelectedDistrict.Building.ApartmentBuildings[x].Levels = SelectedApartmentBuilding.ApartmentsOnSite;
+                               SelectedDistrict.Building.ApartmentBuildings[x].PowerPlants = SelectedApartmentBuilding.PowerPlants;
+                               SelectedDistrict.Building.ApartmentBuildings[x].ElectrificationLevel = SelectedApartmentBuilding.ElectrificationLevel;
+                               SelectedDistrict.Building.ApartmentBuildings[x].Entrances = SelectedApartmentBuilding.Entrances;
+                               SelectedDistrict.Building.ApartmentBuildings[x].ReliabilityCathegory = SelectedApartmentBuilding.ReliabilityCathegory;
+                               count--;
+                           }
+                       }
+                       catch
+                       {
+                           MessageBox.Show("Введіть ціле число щоб створити копії обраної будівлі");
+                       }
+                 
+                   }
+                   IsCopying = false;
+        
+                });
+            }
+        }
 
         /// <summary>
         /// Комманда добавления лифта
@@ -189,10 +235,12 @@ namespace WpfPaging.ViewModels
             }
         }
 
-        public void EntityPropertyChanged(object sender, PropertyChangedEventArgs e)
+        public void ValidationRuleApartmentBuildings(object sender, PropertyChangedEventArgs e)
        {
-            if (SelectedDistrict.Building.Validate(SelectedApartmentBuilding.Id, SelectedApartmentBuilding.PlanNumber))
+            if (SelectedApartmentBuilding != null)
+            if (SelectedDistrict.Building.Validate(SelectedApartmentBuilding.Id, SelectedApartmentBuilding.PlanNumber)&&IsCopying!=true)
                 SelectedApartmentBuilding.PlanNumber = 0;
+
                
         }
 

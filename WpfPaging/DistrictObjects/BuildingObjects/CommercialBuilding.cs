@@ -7,7 +7,7 @@ namespace WpfPaging.DistrictObjects
 {
      public class CommercialBuilding:BindableBase
     {
-        public Guid Id = new Guid();
+        public Guid Id =  Guid.NewGuid();
         public byte PlanNumber { get; set; }
         private string _typeOfCommercial;
         public string TypeOfCommercial 

@@ -12,6 +12,14 @@ namespace WpfPaging.DistrictObjects
         public string Title { get; set; }
         public Building Building { get; set; } = new Building();
 
+        // Поле площадь микрорайона
+        public double Area { get; set; }
+        // Создать коллекцию улиц
+        // Рассчет улиц
+        // Рассчет полной мощности микрорайона без учета потерь 
+        // Рассчет полной мощности микрорайона с учетом потерь
+        // Создать коллекцию ТП
+
        public void CalculateApartmentBuildings() 
         {
          foreach (var ab in Building.ApartmentBuildings)

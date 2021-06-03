@@ -62,32 +62,7 @@ namespace WpfPaging.DistrictObjects
             { IsDuplicate = true; }
             else IsDuplicate = false;
             return IsDuplicate;
-             //   
-             //   
-             //   
-             //   
-             //   
-             //   
-             //   
-             //   
-             //   
-             //   
-             //   byte pos = 0;
-             //   foreach (var i in identificators)
-             //   {
-             //       if (i == id)
-             //           selectedBuildingPosition = pos;
-             //       pos++;
-             //   }
-             //   pos = 0;
-             //   foreach (var p in planNumbers)
-             //   {
-             //       if (planNumber == p && id != identificators[pos])
-             //       { c = 0; break; }
-             //       else c = planNumber;
-             //       pos++;
-             //   }
-             //   return c;
+          
             
           
 

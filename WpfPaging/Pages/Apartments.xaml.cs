@@ -32,6 +32,7 @@ namespace WpfPaging.Pages
             ApartmentBuildingsLoadsTab.IsSelected = true;
         }
 
+      
     }
 
     public class ApartmentDataBase
