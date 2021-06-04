@@ -1,4 +1,5 @@
 ﻿using DevExpress.Mvvm;
+using DistrictSupplySolution.Pages;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -58,6 +59,12 @@ namespace WpfPaging.ViewModels
             _pageService.ChangePage(new DisrictsMenu());
 
         });
+
+        public ICommand GoToDistrictLoad => new DelegateCommand(() =>
+        {
+            _pageService.ChangePage(new DistrictLoad());
+        }
+        );
 
 
 

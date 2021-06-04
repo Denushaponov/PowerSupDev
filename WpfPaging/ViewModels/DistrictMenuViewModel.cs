@@ -1,4 +1,6 @@
 ﻿using DevExpress.Mvvm;
+using DistrictSupplySolution.Pages;
+using DistrictSupplySolution.ViewModels;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
@@ -167,6 +169,13 @@ namespace WpfPaging.ViewModels
             
         });
 
+
+        public ICommand GoForDistrictLoad => new AsyncCommand(async () =>
+        {
+            _pageService.ChangePage(new DistrictLoad());
+            await _messageBus.SendTo<LoadOfDistrictViewModel>(new DistrictMessage(SelectedDistrict));
+
+        });
 
 
     }

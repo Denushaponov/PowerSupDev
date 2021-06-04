@@ -1,4 +1,5 @@
 ﻿
+using DistrictSupplySolution.ViewModels;
 using LiteDB;
 using Microsoft.Extensions.DependencyInjection;
 using WpfPaging.Services;
@@ -18,6 +19,7 @@ namespace WpfPaging
             services.AddTransient<CommercialsViewModel>();
             services.AddTransient<ApartmentsViewModel>();
             services.AddTransient<MainMenuViewModel>();
+            services.AddTransient<LoadOfDistrictViewModel>();
             
             services.AddScoped<DistrictMenuViewModel>();
 
@@ -43,6 +45,7 @@ namespace WpfPaging
         public CommercialsViewModel CommercialsViewModel => _provider.GetRequiredService<CommercialsViewModel>();
         public ApartmentsViewModel ApartmentsViewModel => _provider.GetRequiredService<ApartmentsViewModel>();
         public DistrictMenuViewModel DistrictViewModel => _provider.GetRequiredService<DistrictMenuViewModel>();
+        public LoadOfDistrictViewModel LoadOfDistrictViewModel => _provider.GetRequiredService<LoadOfDistrictViewModel>();
        
       
     }

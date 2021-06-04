@@ -1,4 +1,5 @@
 ﻿using DevExpress.Mvvm;
+using DistrictSupplySolution.DistrictObjects;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,6 +12,10 @@ namespace WpfPaging.DistrictObjects
         public Guid Id { get; set; } = Guid.NewGuid();
         public string Title { get; set; }
         public Building Building { get; set; } = new Building();
+        /// <summary>
+        /// Улицы
+        /// </summary>
+        public ObservableCollection<Street> Streets = new ObservableCollection<Street>();
 
         // Поле площадь микрорайона
         public double Area { get; set; }
