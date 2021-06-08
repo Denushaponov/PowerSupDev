@@ -23,26 +23,11 @@ namespace DistrictSupplySolution.Pages
             InitializeComponent();
         }
 
-        private void StreetsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-           
-        }
-    }
+       
 
-    public class StreetLoads
-    {
-        double _minimumLoad;
-        public double MinimumLoad {
-            get { return _minimumLoad; }
-            set {
-            
-            }
-        }
-        public double MaximumLoad { get; set; }
-
-        public void x() 
-        {
         
-        }
     }
+
+   
+    
 }

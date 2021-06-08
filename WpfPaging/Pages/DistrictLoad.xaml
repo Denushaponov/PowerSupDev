@@ -132,9 +132,7 @@
                 </StackPanel.Style>
                 <!-- !!!! -->
 
-                <Button Style="{StaticResource AddButton}" Command="{Binding AddCommand}" Content="Add"/>
-                <Button Style="{StaticResource RemoveButton}" Command="{Binding Remove}" CommandParameter="{Binding SelectedApartmentBuilding}" Content="Remove"/>
-
+                
 
 
 
@@ -146,12 +144,14 @@
                 <!-- Панель ввода информации о лифтах -->
 
                 <TextBlock Style="{StaticResource BlockField }" Text="Вулиці м.району"></TextBlock>
-                <Button Grid.Column="1" Content="Додати" Width="80" Margin="0, 3, 5, 3" Background="LightGreen" Command="{Binding AddElevatorCommand}"/>
-                <ListBox SelectionChanged="StreetsList_SelectionChanged"  Name="StreetsList" BorderThickness="0" HorizontalAlignment="Center" Width="140" MaxHeight="150" ItemsSource="{Binding SelectedApartmentBuilding.PowerPlants.ElevatorsPerEntrance}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
+                
+                
+                
+                <ListBox   Name="StreetsList" BorderThickness="0"  HorizontalAlignment="Center" Width="140" Height="470" ItemsSource="{Binding SelectedDistrict.Streets}" SelectedValue="{Binding SelectedStreet}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
                     <ListBox.ItemTemplate>
-                        <DataTemplate x:Name="StreetsElement">
+                        <DataTemplate  x:Name="StreetsElement" >
 
-                            <Border BorderThickness="1" BorderBrush="DarkGray" CornerRadius="5" Margin="5">
+                            <Border BorderThickness="1" BorderBrush="DarkGray" CornerRadius="1" Margin="5">
 
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -159,14 +159,23 @@
                                         <ColumnDefinition Width="auto"/>
                                         <ColumnDefinition Width="auto"/>
                                     </Grid.ColumnDefinitions>
-                                    
-                                        <TextBlock Grid.Column="1" Style="{StaticResource BlockField}" Text="Загальна довжина" Width="30"></TextBlock>
-                                        <TextBox Grid.Column="1" Margin="0, 3, 0, 3" BorderThickness="1" Width="40" FontSize="14" Text="{Binding}" HorizontalAlignment="Left"/>
-                                    <TextBlock x:Name="Category"></TextBlock>
-                                    <Slider Minimum="{Binding Path=Area}"></Slider>
-                                    
+                                    <StackPanel Orientation="Vertical" Width="200"  Grid.Column="0">
+                                        <StackPanel Orientation="Horizontal" >
+                                            <TextBlock Style="{StaticResource BlockField}" Width="80" Background="Yellow"  Margin="0,0,0,0">Категорія</TextBlock>
+                                            <TextBlock  Style="{StaticResource BlockField}" Background="Yellow"  Margin="0,0,0,0" Width="40" FontSize="14" Text="{Binding Category}" HorizontalAlignment="Left"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Grid.Column="1" Width="80" Style="{StaticResource BlockField}" Text="Lзаг, км"  Margin="0,0,0,0"></TextBlock>
+                                            <TextBox Width="40" Style="{StaticResource TextField}" Text="{Binding TotalLength}"  Margin="0,0,0,0"></TextBox>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                        <TextBlock Grid.Column="1" Width="80" Style="{StaticResource BlockField}" Margin="0,0,0,0" Text="Рпит, кВт"></TextBlock>
+                                        <TextBlock Text="{Binding SpecificLoad}" Width="40" Style="{StaticResource BlockField}"   Margin="0,0,0,0"></TextBlock>
+                                        </StackPanel>
+                                        <Slider  Value="{Binding SpecificLoad}" Background="Yellow" Maximum="{Binding MaxLoad}" Minimum="{Binding MinLoad}" Width="115" HorizontalAlignment="Left" IsSnapToTickEnabled="True"  />
+                                    </StackPanel>
+                                  
 
-                                    <Button Grid.Column="2" Width="20" Background="Red" HorizontalAlignment="Right" Content="×" Margin="0, 3, 5, 3 " Command="{Binding RelativeSource= {RelativeSource AncestorType=Page}, Path=DataContext.RemoveElevator}" CommandParameter="{Binding}"/>
 
                                 </Grid>
                             </Border>
@@ -176,32 +185,7 @@
 
 
                 <!-- Панель ввода информации о насосах-->
-                <TextBlock Style="{StaticResource BlockField }" Text="Насоси на під'їзд"></TextBlock>
-                <Button Grid.Column="1" Content="Додати" Width="80" Margin="0, 3, 5, 3" Background="LightGreen" Command="{Binding AddPompCommand}"/>
-                <ListBox Name="PompsList" BorderThickness="0" HorizontalAlignment="Center" Width="140" MaxHeight="150" ItemsSource="{Binding SelectedApartmentBuilding.PowerPlants.Pomps}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
-                    <ListBox.ItemTemplate>
-                        <DataTemplate x:Name="PompElement">
-
-                            <Border BorderThickness="1" BorderBrush="DarkGray" CornerRadius="5" Margin="5">
-
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="auto"/>
-                                        <ColumnDefinition Width="auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
-                                        <TextBlock Grid.Column="1" Style="{StaticResource BlockField}" Text="Pсту=" Width="30"></TextBlock>
-                                        <TextBox Grid.Column="1" Margin="3, 3, 0, 3" BorderThickness="1" Width="40" FontSize="14" Text="{Binding Load}" HorizontalAlignment="Left"/>
-                                    </StackPanel>
-
-                                    <Button Grid.Column="2" Width="20" Background="Red" HorizontalAlignment="Right" Content="×" Margin="0, 3, 5, 3 " Command="{Binding RelativeSource= {RelativeSource AncestorType=Page}, Path=DataContext.RemovePomp}" CommandParameter="{Binding}"/>
-
-                                </Grid>
-                            </Border>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
+                
 
 
             </StackPanel>

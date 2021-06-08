@@ -15,7 +15,12 @@ namespace WpfPaging.DistrictObjects
         /// <summary>
         /// Улицы
         /// </summary>
-        public ObservableCollection<Street> Streets = new ObservableCollection<Street>();
+       private ObservableCollection<Street> _streets = new ObservableCollection<Street>();
+        public ObservableCollection<Street> Streets
+        {
+            get { return _streets; }
+            set { _streets = value; }
+        }
 
         // Поле площадь микрорайона
         public double Area { get; set; }
@@ -24,6 +29,10 @@ namespace WpfPaging.DistrictObjects
         // Рассчет полной мощности микрорайона без учета потерь 
         // Рассчет полной мощности микрорайона с учетом потерь
         // Создать коллекцию ТП
+
+        //Внутриквартальное освешение
+        public double QuartalInnerLightning { get; set; }
+        public double StreetsTotalLightning { get; set; }
 
        public void CalculateApartmentBuildings() 
         {

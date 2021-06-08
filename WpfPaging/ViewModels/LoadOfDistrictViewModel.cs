@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
+using System.Windows.Input;
 using WpfPaging.DistrictObjects;
 using WpfPaging.Messages;
 using WpfPaging.Services;
@@ -17,7 +18,7 @@ namespace DistrictSupplySolution.ViewModels
         private readonly MessageBus _messageBus;
 
         public District SelectedDistrict { get; set; } = new District();
-        public Street SelectedStreet { get; set; } = new Street(); 
+        public Street SelectedStreet { get; set; }
 
         public LoadOfDistrictViewModel(PageService pageService, EventBus eventBus, MessageBus messageBus)
         {
@@ -29,9 +30,14 @@ namespace DistrictSupplySolution.ViewModels
             {
                 // присваивание присланного из DistrictMenuVM микрорайона в качестве выбранного
                 SelectedDistrict = message.SharedDistrict;
-                SelectedDistrict.Streets = new ObservableCollection<Street>();
+                SelectedDistrict.Streets = new ObservableCollection<Street> { new Street { Category = "A" }, new Street { Category = "B" }, new Street { Category = "C" } };
+                
+
             });
-        }
+
+             
+    }
+        
 
     }
 }
