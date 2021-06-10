@@ -22,6 +22,7 @@ namespace WpfPaging.Pages
         public Commercials()
         {
             InitializeComponent();
+            
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -51,7 +52,18 @@ namespace WpfPaging.Pages
                     MessageBox.Show("УТОЧНІТЬ ВРУЧНУ ЗНАЧЕННЯ cosφ ТА tgφ СПОЖИВАЧА, У ПОЛЕ ЩО ПІДСВІЧЕНЕ ЖОВТИМ ЗЛІВА");
                     LoadBox.Visibility = Visibility.Collapsed;
                     LoadText.Visibility = Visibility.Collapsed;
+                    TypeSideNoteComboBox.Visibility = Visibility.Collapsed;
+                    TypeSideNoteTextBlock.Visibility = Visibility.Collapsed;
                 }
+
+               else if (TypeOfCommercialsBox.SelectedItem.ToString() == "Підприємства громадського харчування повністю електрифіковані"|| TypeOfCommercialsBox.SelectedItem.ToString() == "Підприємства громадського харчування частково електрифіковані")
+               {
+                   TypeSideNoteComboBox.Visibility = Visibility.Visible;
+                   TypeSideNoteTextBlock.Visibility = Visibility.Visible;
+                   TypeSideNoteTextBlock.Background = Brushes.Yellow;
+                   TypeSideNoteComboBox.Background = Brushes.Yellow;
+                   MessageBox.Show("Будь ласка, виберіть у полі зліва, даний споживач: кафе(ресторан), чи їдальня?");
+               }
               
                 else
                 {
@@ -59,6 +71,8 @@ namespace WpfPaging.Pages
                     CosFiText.Visibility = Visibility.Collapsed;
                     TgFiTextBox.Visibility = Visibility.Collapsed;
                     TgFiText.Visibility = Visibility.Collapsed;
+                    TypeSideNoteComboBox.Visibility = Visibility.Collapsed;
+                    TypeSideNoteTextBlock.Visibility = Visibility.Collapsed;
 
                     if (TypeOfCommercialsBox.SelectedItem.ToString() == "Громадські будівлі багатофункціонального призначення")
                     {
@@ -74,6 +88,7 @@ namespace WpfPaging.Pages
                     {
                         LoadBox.Visibility = Visibility.Collapsed;
                         LoadText.Visibility = Visibility.Collapsed;
+                     
                     }
                 }
             }
@@ -103,15 +118,30 @@ namespace WpfPaging.Pages
             "Кінотеатри та кіноконцертні зали без кондиціонування повітря", "Театри та цирки",
             "Палаци культури, клуби", "Готелі (без ресторанів) з кондиціонуванням повітря",
             "Готелі (без ресторанів) без кондиціонування повітря", "Фабрики хімчистки та пральні самообслуговування",
-            "Комплексні підприємства, служби побуту", "Перукарні"
+            "Комплексні підприємства, служби побуту", "Перукарні", "Гуртожитки з електроплитами на кухнях", "Гуртожитки без електроплит на кухнях",
+            "Будівлі (приміщення) для науково-дослідних установ, проектних, управлінських, громадських організацій та культових будинків та споруд, адміністративні будинки промпідприємств з кондиціонуванням повітря",
+            "Будівлі (приміщення) для науково-дослідних установ, проектних, управлінських, громадських організацій та культових будинків та споруд, адміністративні будинки промпідприємств без кондиціонування повітря",
+            "Навчальні корпуси вищих, середніх спеціальних навчальних закладів (без їдалень) з кондиціонуванням повітря",
+            "Навчальні корпуси вищих, середніх спеціальних навчальних закладів (без їдалень) без кондиціонування повітря",
+            "Лабораторні корпуси вищих і середніх спеціальних навчальних закладів (без їдалень) з кондиціонуванням повітря",
+            "Лабораторні корпуси вищих і середніх спеціальних навчальних закладів (без їдалень) без кондиціонування повітря",
+            "Вбудовані нежитлові приміщення в житлових будинках при загальній площі до 2000 м2 включно",
+            "Вбудовані нежитлові приміщення в житлових будинках при загальній площі понад 2000 м2",
+            "Громадські будівлі багатофункціонального призначення",
+            "Гаражі (стоянки) індивідуального автотранспорту стаціонарні відкриті стоянки",
+            "Гаражі (стоянки) індивідуального автотранспорту закриті гаражі-бокси",
+            "Гаражі (стоянки) індивідуального автотранспорту закриті багатоповерхові та підземні гаражі"
+
         };
 
 
 
         public static IEnumerable<byte> ElectrificationLevelColl { get; } = new byte[] { 1, 3 };
         public static IEnumerable<byte> ReliabilityCathegoryColl { get; } = new byte[] { 1, 2, 3 };
-       
+        public static IEnumerable<string> IsCafeQuizColl { get; } = new string[] { "Їдальня", "Ресторан(кафе)" };
 
     }
+
+
 
 }

@@ -122,6 +122,10 @@
                     <TextBlock Style="{StaticResource BlockField}">Тип споживача:</TextBlock>
                     <ComboBox Name="TypeOfCommercialsBox" Style="{StaticResource ComboField}" ItemsSource="{Binding Source={x:Static local:CommercialsDataBase.CommercialTypeColl}}" Text="{Binding SelectedCommercialBuilding.TypeOfCommercial}" SelectionChanged="TypeOfCommercialsBox_SelectionChanged"></ComboBox>
 
+                    <TextBlock Name="TypeSideNoteTextBlock" Style="{StaticResource BlockField}" Visibility="Collapsed">Ресторан/їдальня?</TextBlock>
+                    <ComboBox Name="TypeSideNoteComboBox" Style="{StaticResource ComboField}" ItemsSource="{Binding Source={x:Static local:CommercialsDataBase.IsCafeQuizColl}}" Text="{Binding SelectedCommercialBuilding.TypeSideNote}" Visibility="Collapsed"></ComboBox>
+
+
                     <TextBlock Style="{StaticResource BlockField}">Знач. характерис.</TextBlock>
                     <TextBox Style="{StaticResource TextField}" Text="{Binding SelectedCommercialBuilding.ValueOfCharacteristics}"></TextBox>
 
@@ -134,6 +138,7 @@
                     <TextBlock Name="LoadText" Style="{StaticResource BlockField}" Visibility="Collapsed">Питоме навантаження</TextBlock>
                     <TextBox Name="LoadBox" Style="{StaticResource TextField}" Text="{Binding SelectedCommercialBuilding.SpecificActiveLoad}" Visibility="Collapsed"></TextBox>
 
+                    
 
                     <TextBlock Style="{StaticResource BlockField}">Катег. надійності</TextBlock>
                     <ComboBox Style="{StaticResource ComboField}" ItemsSource="{Binding Source={x:Static local:CommercialsDataBase.ReliabilityCathegoryColl}}" Text="{Binding SelectedCommercialBuilding.ReliabilityCathegory}"></ComboBox>

@@ -33,6 +33,7 @@ namespace WpfPaging.DistrictObjects
         //Внутриквартальное освешение
         public double QuartalInnerLightning { get; set; }
         public double StreetsTotalLightning { get; set; }
+        public double DistrictTotalLightning { get; set; }
 
        public void CalculateApartmentBuildings() 
         {
@@ -48,6 +49,17 @@ namespace WpfPaging.DistrictObjects
             {
                 cb.CalculateCommercialBuildings();
             }
+        }
+
+        public void CalculateLightning()
+        {
+            QuartalInnerLightning = Area * 1.2;
+            StreetsTotalLightning = 0;
+            foreach (var s in Streets)
+            {
+                StreetsTotalLightning += s.SpecificLoad * s.TotalLength;
+            }
+            DistrictTotalLightning = QuartalInnerLightning + StreetsTotalLightning;
         }
 
     }

@@ -22,6 +22,10 @@ namespace WpfPaging.DistrictObjects
                 }
             }
         }
+
+        // Содержит дополнительную информацию, для уточнения типа потребителя
+        public string TypeSideNote { get; set; }
+
         private double _valueOfCharacteristics;
         public double ValueOfCharacteristics 
         {

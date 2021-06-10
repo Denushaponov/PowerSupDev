@@ -13,7 +13,7 @@ namespace DistrictSupplySolution.DistrictObjects.BuildingObjects
     {
         // Создаю коллекцию жилых зданий для хранения
         // поле принимает коллекцию зданий из микрорайона
-
+        public Guid Id = Guid.NewGuid();
 
         public ObservableCollection<ApartmentBuilding> ApartmentBuildings { get; set; } = new ObservableCollection<ApartmentBuilding>();
 
@@ -45,7 +45,7 @@ namespace DistrictSupplySolution.DistrictObjects.BuildingObjects
                     if (UnitedApartmentBuildingsCollection[0].PlanNumber == null)
                         UnitedApartmentBuildingsCollection[0].PlanNumber = ab.PlanNumber.ToString();
                     else
-                        UnitedApartmentBuildingsCollection[0].PlanNumber =    UnitedApartmentBuildingsCollection[0].PlanNumber +", "+ ab.PlanNumber.ToString();
+                        UnitedApartmentBuildingsCollection[0].PlanNumber = UnitedApartmentBuildingsCollection[0].PlanNumber +", "+ ab.PlanNumber.ToString();
 
                     // Перенимает наибольее значение єтажей для определения коефициентов спроса
                     if (ab.Levels >      UnitedApartmentBuildingsCollection[0].Levels)
