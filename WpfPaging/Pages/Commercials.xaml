@@ -125,6 +125,9 @@
                     <TextBlock Name="TypeSideNoteTextBlock" Style="{StaticResource BlockField}" Visibility="Collapsed">Ресторан/їдальня?</TextBlock>
                     <ComboBox Name="TypeSideNoteComboBox" Style="{StaticResource ComboField}" ItemsSource="{Binding Source={x:Static local:CommercialsDataBase.IsCafeQuizColl}}" Text="{Binding SelectedCommercialBuilding.TypeSideNote}" Visibility="Collapsed"></ComboBox>
 
+                    <TextBlock Name="IsTempleQuizTextBlock" Style="{StaticResource BlockField}" Visibility="Collapsed">Культова споруда/Інше?</TextBlock>
+                    <ComboBox Name="IsTempleQuizComboBox" Style="{StaticResource ComboField}" ItemsSource="{Binding Source={x:Static local:CommercialsDataBase.IsTempleQuizColl}}" Text="{Binding SelectedCommercialBuilding.TypeSideNote}" Visibility="Collapsed"></ComboBox>
+
 
                     <TextBlock Style="{StaticResource BlockField}">Знач. характерис.</TextBlock>
                     <TextBox Style="{StaticResource TextField}" Text="{Binding SelectedCommercialBuilding.ValueOfCharacteristics}"></TextBox>

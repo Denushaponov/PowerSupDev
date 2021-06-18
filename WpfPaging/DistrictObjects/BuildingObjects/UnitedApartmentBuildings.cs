@@ -13,7 +13,7 @@ namespace DistrictSupplySolution.DistrictObjects.BuildingObjects
     {
         // Создаю коллекцию жилых зданий для хранения
         // поле принимает коллекцию зданий из микрорайона
-        public Guid Id = Guid.NewGuid();
+        
 
         public ObservableCollection<ApartmentBuilding> ApartmentBuildings { get; set; } = new ObservableCollection<ApartmentBuilding>();
 

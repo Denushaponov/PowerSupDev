@@ -8,6 +8,7 @@ namespace DistrictSupplySolution.DistrictObjects.BuildingObjects
 {
     public class UnitedApartmentBuilding
     {
+        public Guid Id = Guid.NewGuid();
         public string PlanNumber { get; set; } 
         public double Levels { get; set; }
 

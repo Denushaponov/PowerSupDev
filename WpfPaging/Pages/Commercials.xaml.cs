@@ -39,6 +39,8 @@ namespace WpfPaging.Pages
         {
             if (TypeOfCommercialsBox.SelectedItem != null)
             {
+                IsTempleQuizComboBox.Visibility = Visibility.Collapsed;
+                IsTempleQuizTextBlock.Visibility = Visibility.Collapsed;
                 if (TypeOfCommercialsBox.SelectedItem.ToString() == "Професіонально-технічні навчальні заклади з їдальнями")
                 {
                     CosFiTextBox.Visibility = Visibility.Visible;
@@ -54,6 +56,15 @@ namespace WpfPaging.Pages
                     LoadText.Visibility = Visibility.Collapsed;
                     TypeSideNoteComboBox.Visibility = Visibility.Collapsed;
                     TypeSideNoteTextBlock.Visibility = Visibility.Collapsed;
+                }
+
+               else if (TypeOfCommercialsBox.SelectedItem.ToString()== "Будівлі (приміщення) для науково-дослідних установ, проектних, управлінських, громадських організацій та культових будинків та споруд, адміністративні будинки промпідприємств з кондиціонуванням повітря"
+               || TypeOfCommercialsBox.SelectedItem.ToString() == "Будівлі (приміщення) для науково-дослідних установ, проектних, управлінських, громадських організацій та культових будинків та споруд, адміністративні будинки промпідприємств без кондиціонування повітря")
+                {
+                    IsTempleQuizComboBox.Visibility = Visibility.Visible;
+                    IsTempleQuizComboBox.Background = Brushes.Yellow;
+                    IsTempleQuizTextBlock.Visibility = Visibility.Visible;
+                    IsTempleQuizTextBlock.Background = Brushes.Yellow;
                 }
 
                else if (TypeOfCommercialsBox.SelectedItem.ToString() == "Підприємства громадського харчування повністю електрифіковані"|| TypeOfCommercialsBox.SelectedItem.ToString() == "Підприємства громадського харчування частково електрифіковані")
@@ -73,7 +84,9 @@ namespace WpfPaging.Pages
                     TgFiText.Visibility = Visibility.Collapsed;
                     TypeSideNoteComboBox.Visibility = Visibility.Collapsed;
                     TypeSideNoteTextBlock.Visibility = Visibility.Collapsed;
-
+                    IsTempleQuizComboBox.Visibility = Visibility.Hidden;
+                    IsTempleQuizTextBlock.Visibility = Visibility.Hidden;
+                    
                     if (TypeOfCommercialsBox.SelectedItem.ToString() == "Громадські будівлі багатофункціонального призначення")
                     {
 
@@ -138,7 +151,8 @@ namespace WpfPaging.Pages
 
         public static IEnumerable<byte> ElectrificationLevelColl { get; } = new byte[] { 1, 3 };
         public static IEnumerable<byte> ReliabilityCathegoryColl { get; } = new byte[] { 1, 2, 3 };
-        public static IEnumerable<string> IsCafeQuizColl { get; } = new string[] { "Їдальня", "Ресторан(кафе)" };
+        public static IEnumerable<string> IsCafeQuizColl { get; } = new string[] { "Їдальня", "Ресторани, кафе" };
+        public static IEnumerable<string> IsTempleQuizColl { get; } = new string[] { "Культові споруди", "Установи адміністративного управління, фінансові, проектно-конструкторські організації" };
 
     }
 

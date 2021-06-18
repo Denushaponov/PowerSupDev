@@ -35,9 +35,15 @@ namespace DistrictSupplySolution.ViewModels
 
             });
 
-             
-    }
-        
+            }
+
+        public ICommand CalculateDistrict => new DelegateCommand(() =>
+        {
+            SelectedDistrict.CalculateDistrictPower();
+        });
+
+
+
 
     }
 }

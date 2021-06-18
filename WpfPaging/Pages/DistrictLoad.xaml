@@ -235,7 +235,7 @@
                                     </DataGrid.Columns>
                                 </DataGrid>
 
-                                <Button Grid.Row="1" Style="{StaticResource AddButton}" Command="{Binding ExecuteCalculation}"  HorizontalAlignment="Right" Height="25" VerticalAlignment="Bottom">Далее</Button>
+                                <Button Grid.Row="1" Style="{StaticResource AddButton}" Command="{Binding CalculateDistrict}"  HorizontalAlignment="Right" Height="25" VerticalAlignment="Bottom">Далее</Button>
                                 <Button Grid.Row="1" Style="{StaticResource MenuControls}" Content="Зберегти в Excel" Command="{Binding InitialApartmentDataToExcel}" CommandParameter="{Binding ElementName=InitialDataApartmentBuildings}" />
                             </Grid>
                         </StackPanel>
@@ -257,18 +257,7 @@
                                 <DataGrid x:Name="CalculatedApartmentBuildings"  AutoGenerateColumns="False" ItemsSource="{Binding  SelectedDistrict.Building.ApartmentBuildings}" SelectedItem="{Binding SelectedApartmentBuilding}">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Генплановий №" Width="0.6*" Binding="{Binding PlanNumber}"/>
-                                        <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Число квартир" Width="0.5*" Binding="{Binding TotalApartments}"/>
-                                        <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Pпит.кв." Width="0.2*" Binding="{Binding ApartmentSpecificLoad}"/>
-                                        <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Рпит.буд" Width="0.25*" Binding="{Binding BuildingSpecificActiveLoad}"/>
-                                        <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Кпоп.ліфт" Width="0.25*" Binding="{Binding ElevatorsCofficientOfAsk}"/>
-                                        <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="ΣPліфт" Width="0.25*" Binding="{Binding ElevatorsActiveLoad}"/>
-                                        <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Кпоп.с-ту" Width="0.25*" Binding="{Binding PompsCoefficientOfAsk}"/>
-                                        <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="ΣPсту" Width="0.25*" Binding="{Binding PompsActiveLoad}"/>
-                                        <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Рсил" Width="0.25*" Binding="{Binding PowerPlantsActiveLoad}"/>
-                                        <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Ржб" Width="0.25*" Binding="{Binding BuildingActiveLoad}"/>
-                                        <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Qжб" Width="0.25*" Binding="{Binding BuildingReactiveLoad}"/>
-                                        <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Sжб" Width="0.25*" Binding="{Binding BuildingFullLoad}"/>
-
+                                        
 
                                         <!-- КОЛОНКА С КНОПКАМИ УДАЛИТЬ ДЛЯ КАЖДОГО РЯДА 
                             
