@@ -20,12 +20,16 @@ namespace DistrictSupplySolution.Pages
     {
         public DistrictLoad()
         {
-            InitializeComponent();
+           
+        InitializeComponent();
         }
 
-       
+     
 
-        
+        private void CalculateLightningButton_Click(object sender, RoutedEventArgs e)
+        {
+            GoToNextStepButton.IsEnabled = true;
+        }
     }
 
    

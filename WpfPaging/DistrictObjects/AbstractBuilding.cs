@@ -16,7 +16,8 @@ namespace DistrictSupplySolution.DistrictObjects
         public double ActivePower { get; set; }
         public double ReactivePower { get; set; }
         public double FullPower { get; set; }
-        public double KoefficientOfAsk { get; set; }
+        public double CoefficientOfMax { get; set; }
+       
      
 
     }

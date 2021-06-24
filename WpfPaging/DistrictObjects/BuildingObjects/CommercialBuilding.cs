@@ -93,6 +93,7 @@ namespace WpfPaging.DistrictObjects
                         SpecificActiveLoad = c.SpecificActiveLoad;
                         CosFi = c.CosFi;
                         TgFi = c.TgFi;
+                    if (c.TypeSideNote!=null)
                     TypeSideNote = c.TypeSideNote;
                       
                     

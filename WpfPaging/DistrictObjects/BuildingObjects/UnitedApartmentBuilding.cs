@@ -41,6 +41,9 @@ namespace DistrictSupplySolution.DistrictObjects.BuildingObjects
         public double ElevatorsCofficientOfAsk { get; set; }
         public double ElevatorsActiveLoad { get; set; }
 
+        // Коєффициент участия в максимуме
+        public double CoefficientOfParticipanceInMaximum { get; set; }
+
         public double ElevatorsReactiveLoad { get; set; }
 
 

@@ -37,33 +37,34 @@ namespace WpfPaging.DistrictObjects
         public double QuartalInnerLightning { get; set; }
         public double StreetsTotalLightning { get; set; }
         public double DistrictTotalLightning { get; set; }
+        public ObservableCollection<AbstractBuilding> AbstractBuildings { get; set; } = new ObservableCollection<AbstractBuilding>();
 
         // Рассчет нагрузки микроорайона
         public void CalculateDistrictPower() 
         {
             // Создаю коллекцию специальніх обїектов для определения коеффициентов участия в максимуме
-        Collection<AbstractBuilding> abstractBuildings = new Collection<AbstractBuilding>();
+            AbstractBuildings.Clear();
      // Создаю объекты и напоолняю их информацией соответсвтуюего жилого здания
             foreach (var cb in Building.CommercialBuildings)
             {
                 AbstractBuilding abstractBuilding = new AbstractBuilding();
-                abstractBuildings.Insert(0, abstractBuilding);
-                abstractBuildings[0].Id = cb.Id;
-                abstractBuildings[0].Type = cb.TypeOfCommercial;//
-                abstractBuildings[0].SideNote = cb.TypeSideNote;
-                abstractBuildings[0].ActivePower = cb.ActiveLoad;
-                abstractBuildings[0].ReactivePower = cb.ReactiveLoad;
-                abstractBuildings[0].FullPower = cb.FullLoad;
+                AbstractBuildings.Insert(0, abstractBuilding);
+                AbstractBuildings[0].Id = cb.Id;
+                AbstractBuildings[0].Type = cb.TypeOfCommercial;//
+                AbstractBuildings[0].SideNote = cb.TypeSideNote;
+                AbstractBuildings[0].ActivePower = cb.ActiveLoad;
+                AbstractBuildings[0].ReactivePower = cb.ReactiveLoad;
+                AbstractBuildings[0].FullPower = cb.FullLoad;
             }
          // Также добавляю туда обьекты соответствующие жилым зданиям
-            abstractBuildings = GetUnitedApartmentBuildings(3, abstractBuildings);
-            abstractBuildings = GetUnitedApartmentBuildings(1, abstractBuildings);
+            AbstractBuildings = GetUnitedApartmentBuildings(3, AbstractBuildings);
+            AbstractBuildings = GetUnitedApartmentBuildings(1, AbstractBuildings);
             // Нахожу максимальную нагрузку
-            double maxLoad = abstractBuildings.Max(ab => ab.FullPower);
+            double maxLoad = AbstractBuildings.Max(ab => ab.FullPower);
             // Создаю объект который будет содержать информацию о здании с максимальной нагрузкой
             AbstractBuilding buildingWithMaxLoad = new AbstractBuilding(); 
             // Наполняю его информацией
-            foreach (var ab in abstractBuildings)
+            foreach (var ab in AbstractBuildings)
             {
                 if (ab.FullPower == maxLoad)
                 {
@@ -74,7 +75,7 @@ namespace WpfPaging.DistrictObjects
 
             Console.WriteLine(buildingWithMaxLoad.FullPower);
             // Определяю нужный ряд в таблице коеффициентов участия в максимуме  
-            double row=0;
+            int row=0;
             // Создаю таблицу
             CoefficientsOfMembershipInMaximum DbnTable = new CoefficientsOfMembershipInMaximum();
             // Сопоставляю значение в Заметке о типе с номером ряда в таблице
@@ -86,13 +87,13 @@ namespace WpfPaging.DistrictObjects
             {
 
                 // Перечисляю случаи когда получен нужный ряд и пора остановиться.
-                 
+
                 if (buildingWithMaxLoad.SideNote == "0")
                 {
                     row = 0;
                 }
 
-               else if (buildingWithMaxLoad.SideNote == "1")
+                else if (buildingWithMaxLoad.SideNote == "1")
                 {
                     row = 1;
                 }
@@ -151,7 +152,57 @@ namespace WpfPaging.DistrictObjects
 
                 // Становится известен ряд
                 Console.WriteLine(row);
+
+                // Создаю условия выбора колонки в соответствии с примечанием
+                // Создаю переменную содержащую номер колонки
+                int column=0;
+                // Перебираю всю коллекцию
+                foreach (var e in AbstractBuildings)
+                {
+                    if (e.SideNote == "Житлові будинки з електроплитами")
+                        column = 0;
+                   else if (e.SideNote == "Житлові будинки з газовими плитами або на твердому паливі")
+                        column = 1;
+                    else if (e.SideNote == "Їдальня")
+                        column = 2;
+                    else if (e.SideNote == "Ресторани, кафе")
+                        column = 3;
+                    else if (e.SideNote == "4")
+                        column = 4;
+                    else if (e.SideNote == "5")
+                        column = 5;
+                    else if (e.SideNote == "Установи адміністративного управління, фінансові, проектно-конструкторські організації")
+                        column = 6;
+                    else if (e.SideNote == "7")
+                    { column = 7; }
+                    else if (e.SideNote == "8"
+                        || e.SideNote == "9"
+                        || e.SideNote == "10"
+                        || e.SideNote =="11"
+                        || e.SideNote == "12"
+                        || e.SideNote == "13"
+                        // Для комунальніх потребителей если они будут добавлені в будущем
+                        || e.SideNote == "14")
+                        { column = Convert.ToInt32(e.SideNote); }
+                    else if (e.SideNote == "Культові споруди")
+                        column = 15;
+                    
+
+                    // Присваиваем значение коффициента участия в имаксимуме
+                    e.CoefficientOfMax = DbnTable.CoefficientsOfMaximum[row, column];
+
+                   if (e.SideNote == "Особливий")
+                    {
+                        e.CoefficientOfMax = 0.77;
+                    }
+                }
+
+                
             }
+
+               
+
+            
 
             
         }
@@ -162,7 +213,7 @@ namespace WpfPaging.DistrictObjects
         /// <param name="ElectrificationLevel"></param>
         /// <param name="ab"></param>
         /// <returns></returns>
-        public Collection<AbstractBuilding> GetUnitedApartmentBuildings(double ElectrificationLevel, Collection<AbstractBuilding> ab)
+        public ObservableCollection<AbstractBuilding> GetUnitedApartmentBuildings(double ElectrificationLevel, ObservableCollection<AbstractBuilding> ab)
         {
             AbstractBuilding abstractBuilding = new AbstractBuilding();
             
@@ -213,13 +264,13 @@ namespace WpfPaging.DistrictObjects
 
         public void CalculateLightning()
         {
-            QuartalInnerLightning = Area * 1.2;
+            QuartalInnerLightning = Math.Round( Area * 1.2, 2);
             StreetsTotalLightning = 0;
             foreach (var s in Streets)
             {
-                StreetsTotalLightning += s.SpecificLoad * s.TotalLength;
+                StreetsTotalLightning += Math.Round(s.SpecificLoad * s.TotalLength,2);
             }
-            DistrictTotalLightning = QuartalInnerLightning + StreetsTotalLightning;
+            DistrictTotalLightning = Math.Round( QuartalInnerLightning + StreetsTotalLightning,2);
         }
 
     }

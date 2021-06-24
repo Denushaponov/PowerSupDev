@@ -16,8 +16,10 @@
             <Setter Property="Margin" Value="3"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Width" Value="120"/>
-            <Setter Property="Height" Value="20"/>
-            <Setter Property="Background" Value="Peru"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Background" Value="CornflowerBlue"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
         </Style>
         <!-- Стиль для кнопок добавления-->
         <Style x:Key="AddButton" TargetType="Button">
@@ -132,22 +134,22 @@
                 </StackPanel.Style>
                 <!-- !!!! -->
 
-                
 
 
 
-                <TextBlock Style="{StaticResource BlockField}">Площа м.району</TextBlock>
+
+                <TextBlock Style="{StaticResource BlockField}" FontWeight="Bold">Площа м.району</TextBlock>
                 <TextBox Style="{StaticResource TextField}" Text="{Binding SelectedDistrict.Area, UpdateSourceTrigger=LostFocus, NotifyOnTargetUpdated=True}"></TextBox>
 
-               
+
 
                 <!-- Панель ввода информации о лифтах -->
 
                 <TextBlock Style="{StaticResource BlockField }" Text="Вулиці м.району"></TextBlock>
-                
-                
-                
-                <ListBox   Name="StreetsList" BorderThickness="0"  HorizontalAlignment="Center" Width="140" Height="470" ItemsSource="{Binding SelectedDistrict.Streets}" SelectedValue="{Binding SelectedStreet}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
+
+
+
+                <ListBox   Name="StreetsList" BorderThickness="0"  HorizontalAlignment="Center" Width="140" Height="300" ItemsSource="{Binding SelectedDistrict.Streets}" SelectedValue="{Binding SelectedStreet}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" >
                     <ListBox.ItemTemplate>
                         <DataTemplate  x:Name="StreetsElement" >
 
@@ -169,12 +171,12 @@
                                             <TextBox Width="40" Style="{StaticResource TextField}" Text="{Binding TotalLength}"  Margin="0,0,0,0"></TextBox>
                                         </StackPanel>
                                         <StackPanel Orientation="Horizontal">
-                                        <TextBlock Grid.Column="1" Width="80" Style="{StaticResource BlockField}" Margin="0,0,0,0" Text="Рпит, кВт"></TextBlock>
-                                        <TextBlock Text="{Binding SpecificLoad}" Width="40" Style="{StaticResource BlockField}"   Margin="0,0,0,0"></TextBlock>
+                                            <TextBlock Grid.Column="1" Width="80" Style="{StaticResource BlockField}" Margin="0,0,0,0" Text="Рпит, кВт"></TextBlock>
+                                            <TextBlock Text="{Binding SpecificLoad}" Width="40" Style="{StaticResource BlockField}"   Margin="0,0,0,0"></TextBlock>
                                         </StackPanel>
                                         <Slider  Value="{Binding SpecificLoad}" Background="Yellow" Maximum="{Binding MaxLoad}" Minimum="{Binding MinLoad}" Width="115" HorizontalAlignment="Left" IsSnapToTickEnabled="True"  />
                                     </StackPanel>
-                                  
+
 
 
                                 </Grid>
@@ -185,7 +187,7 @@
 
 
                 <!-- Панель ввода информации о насосах-->
-                
+
 
 
             </StackPanel>
@@ -196,32 +198,20 @@
 
 
                 <TabControl>
-                    <TabItem x:Name="UserDataTab" IsSelected="True">
-                        <TabItem.Header>
-                            <TextBlock Style="{StaticResource BlockField}">Вхідні дані</TextBlock>
+                    <TabItem x:Name="UserDataTab" IsSelected="True" Width="300">
+                        <TabItem.Header >
+                            <TextBlock Style="{StaticResource BlockField}" Width="300">Дані вуличного освітлення</TextBlock>
                         </TabItem.Header>
                         <!-- Таблица показывает начальные данные которые вносит пользователь-->
                         <StackPanel Grid.Column="1">
-                            <!-- Колонки-->
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="600"/>
-                                    <RowDefinition Height="1*"/>
-                                </Grid.RowDefinitions>
 
-                                <DataGrid x:Name="InitialDataApartmentBuildings"  AutoGenerateColumns="False" HorizontalAlignment="Center" ItemsSource="{Binding  SelectedDistrict.Building.ApartmentBuildings}" SelectedItem="{Binding SelectedApartmentBuilding}">
-                                    <DataGrid.Columns >
-                                        <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Генплановий №" Width="0.6*" Binding="{Binding PlanNumber}"/>
-                                        <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Поверхів" Width="0.4*" Binding="{Binding Levels}"/>
-                                        <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Під'їздів" Width="0.4*" Binding="{Binding Entrances}"/>
-                                        <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Квартир на площадці" Width="0.8*" Binding="{Binding ApartmentsOnSite}"/>
-                                        <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Рівень електрифікації" Width="0.8*" Binding="{Binding ElectrificationLevel}"/>
-                                        <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Категорія надійності" Width="0.8*" Binding="{Binding ReliabilityCathegory}"/>
-                                        <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Ліфтів на під'їзд" Width="0.6*" Binding="{Binding PowerPlants.ElevatorsPerEntrance.Count}"/>
-                                        <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Ліфтів " Width="0.6*" Binding="{Binding PowerPlants.Elevators.Count}"/>
-
-
-                                        <!-- КОЛОНКА С КНОПКАМИ УДАЛИТЬ ДЛЯ КАЖДОГО РЯДА 
+                            <DataGrid x:Name="LightningGrid"  AutoGenerateColumns="False" HorizontalAlignment="Center" ItemsSource="{Binding SelectedDistrict.Streets}" SelectedItem="{Binding SelectedStreet}">
+                                <DataGrid.Columns >
+                                    <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Категорія" Width="*" Binding="{Binding Category}"/>
+                                    <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Довжина, км" Width="0.7*" Binding="{Binding TotalLength}"/>
+                                    <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Питоме навантаження" Width="0.6*" Binding="{Binding SpecificLoad}">
+                                    </DataGridTextColumn>
+                                    <!-- КОЛОНКА С КНОПКАМИ УДАЛИТЬ ДЛЯ КАЖДОГО РЯДА 
                             
                             <DataGridTemplateColumn Width="20" CanUserResize="False">
                                 <DataGridTemplateColumn.CellTemplate>
@@ -232,18 +222,63 @@
                             </DataGridTemplateColumn>
                             
                              -->
-                                    </DataGrid.Columns>
-                                </DataGrid>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <!-- Колонки-->
+                            <Grid>
+                               
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="100"/>
+                                    <RowDefinition Height="150"/>
+                                    <RowDefinition Height="100"/>
 
-                                <Button Grid.Row="1" Style="{StaticResource AddButton}" Command="{Binding CalculateDistrict}"  HorizontalAlignment="Right" Height="25" VerticalAlignment="Bottom">Далее</Button>
-                                <Button Grid.Row="1" Style="{StaticResource MenuControls}" Content="Зберегти в Excel" Command="{Binding InitialApartmentDataToExcel}" CommandParameter="{Binding ElementName=InitialDataApartmentBuildings}" />
+                                </Grid.RowDefinitions>
+
+
+
+                                <Button Grid.Row="2" Name="CalculateLightningButton"  Style="{StaticResource MenuControls}" Width="200" Content="Розрахувати освітлення" Command="{Binding CalculateLigtningCommand}" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.ColumnSpan="2" Click="CalculateLightningButton_Click" />
+
+                                <Button Grid.Row="2" Name="GoToNextStepButton" Style="{StaticResource MenuControls}" Background="LimeGreen" IsEnabled="{Binding CalculationButtonIsEnabled}" Command="{Binding CalculateDistrict}"  HorizontalAlignment="Right"  VerticalAlignment="Top" Grid.Column="1" Margin="0,3,10,0">Далее</Button>
+                                <StackPanel Orientation="Vertical" Grid.Row="1" Grid.ColumnSpan="2">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Column="0">
+                                            <TextBlock Text="{Binding SelectedDistrict.QuartalInnerLightning}" Name="InnerQuartalLightningText" HorizontalAlignment="Center" Style="{StaticResource PageTitle}"   FontWeight="SemiBold"/>
+                                            <TextBlock Text=" кВТ"  HorizontalAlignment="Center" Style="{StaticResource PageTitle}"   FontWeight="SemiBold"/>
+                                        </StackPanel>
+                                        <TextBlock HorizontalAlignment="Center" Margin="0, 50, 0, 0"  Grid.Column="0" Text="Внутрішньоквартальне освітлення" FontSize="14" FontWeight="SemiBold"/>
+                                        
+                                        
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Column="1">
+                                            <TextBlock Text="{Binding SelectedDistrict.StreetsTotalLightning}" HorizontalAlignment="Center" Style="{StaticResource PageTitle}" Grid.Column="1"  FontWeight="SemiBold"/>
+                                            <TextBlock Text=" кВТ"  HorizontalAlignment="Center" Style="{StaticResource PageTitle}"   FontWeight="SemiBold"/>
+                                        </StackPanel>
+                                        <TextBlock HorizontalAlignment="Center" Margin="0, 50, 0, 0"  Grid.Column="1" Text="Загальне вуличне освітлення" FontSize="14" FontWeight="SemiBold"/>
+
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Column="2">
+                                            <TextBlock Text="{Binding SelectedDistrict.DistrictTotalLightning}" HorizontalAlignment="Center" Style="{StaticResource PageTitle}" Grid.Column="2"  FontWeight="SemiBold"/>
+                                            <TextBlock Text=" кВТ"  HorizontalAlignment="Center" Style="{StaticResource PageTitle}"   FontWeight="SemiBold"/>
+                                        </StackPanel>
+                                       
+                                        <TextBlock HorizontalAlignment="Center" Margin="0, 50, 0, 0"  Grid.Column="2" Text="Загальне освітлення мікрорайону" FontSize="14" FontWeight="SemiBold"/>
+
+                                    </Grid>
+
+                                </StackPanel>
+
                             </Grid>
+
                         </StackPanel>
                     </TabItem>
 
-                    <TabItem x:Name="ApartmentBuildingsLoadsTab">
+                    <TabItem x:Name="ParticipanceInMaximum">
                         <TabItem.Header>
-                            <TextBlock Style="{StaticResource BlockField}" Width="200" Text="Навантаження будинків"/>
+                            <TextBlock Style="{StaticResource BlockField}" Width="200" Text="Коефіцієнти участі в максимумі"/>
                         </TabItem.Header>
 
                         <StackPanel Grid.Column="1">
@@ -254,10 +289,33 @@
                                     <RowDefinition Height="1*"/>
                                 </Grid.RowDefinitions>
 
-                                <DataGrid x:Name="CalculatedApartmentBuildings"  AutoGenerateColumns="False" ItemsSource="{Binding  SelectedDistrict.Building.ApartmentBuildings}" SelectedItem="{Binding SelectedApartmentBuilding}">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Генплановий №" Width="0.6*" Binding="{Binding PlanNumber}"/>
-                                        
+                                <DataGrid x:Name="CoefficientsOfParticipanceInMaximumGrid"  AutoGenerateColumns="False" HorizontalAlignment="Center" ItemsSource="{Binding SelectedDistrict.AbstractBuildings}" SelectedItem="{Binding SelectedAbstractBuilding}">
+                                    <DataGrid.Columns >
+                                        <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Тип" Width="1*" Binding="{Binding Type}"/>
+                                        <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Повна потужність" Width="0.2*" Binding="{Binding FullPower}"/>
+                                        <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Коефіціент участі у максимумі" Width="0.32*" Binding="{Binding CoefficientOfMax}">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="{x:Type TextBlock}">
+                                                    <Style.Triggers>
+                                                        <Trigger Property="Text" Value="0.77">
+                                                            <Setter Property="Background" Value="Coral"/>
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Примітка" Width="0.2*" Binding="{Binding SideNote}">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="{x:Type TextBlock}">
+                                                    <Style.Triggers>
+                                                        <Trigger Property="Text" Value="Особливий">
+                                                            <Setter Property="Background" Value="LightBlue"/>
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+
 
                                         <!-- КОЛОНКА С КНОПКАМИ УДАЛИТЬ ДЛЯ КАЖДОГО РЯДА 
                             

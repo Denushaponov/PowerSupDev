@@ -123,10 +123,10 @@
                     <ComboBox Name="TypeOfCommercialsBox" Style="{StaticResource ComboField}" ItemsSource="{Binding Source={x:Static local:CommercialsDataBase.CommercialTypeColl}}" Text="{Binding SelectedCommercialBuilding.TypeOfCommercial}" SelectionChanged="TypeOfCommercialsBox_SelectionChanged"></ComboBox>
 
                     <TextBlock Name="TypeSideNoteTextBlock" Style="{StaticResource BlockField}" Visibility="Collapsed">Ресторан/їдальня?</TextBlock>
-                    <ComboBox Name="TypeSideNoteComboBox" Style="{StaticResource ComboField}" ItemsSource="{Binding Source={x:Static local:CommercialsDataBase.IsCafeQuizColl}}" Text="{Binding SelectedCommercialBuilding.TypeSideNote}" Visibility="Collapsed"></ComboBox>
+                    <ComboBox Name="TypeSideNoteComboBox" Style="{StaticResource ComboField}"  ItemsSource="{Binding Source={x:Static local:CommercialsDataBase.IsCafeQuizColl}}"  Text="{Binding SelectedCommercialBuilding.TypeSideNote}" SelectedItem="{Binding SelectedCommercialBuilding.TypeSideNote}" Visibility="Collapsed"></ComboBox>
 
                     <TextBlock Name="IsTempleQuizTextBlock" Style="{StaticResource BlockField}" Visibility="Collapsed">Культова споруда/Інше?</TextBlock>
-                    <ComboBox Name="IsTempleQuizComboBox" Style="{StaticResource ComboField}" ItemsSource="{Binding Source={x:Static local:CommercialsDataBase.IsTempleQuizColl}}" Text="{Binding SelectedCommercialBuilding.TypeSideNote}" Visibility="Collapsed"></ComboBox>
+                    <ComboBox Name="IsTempleQuizComboBox" Style="{StaticResource ComboField}"  ItemsSource="{Binding Source={x:Static local:CommercialsDataBase.IsTempleQuizColl}}" Text="{Binding SelectedCommercialBuilding.TypeSideNote}" Visibility="Collapsed" SelectedItem="{Binding SelectedCommercialBuilding.TypeSideNote}"></ComboBox>
 
 
                     <TextBlock Style="{StaticResource BlockField}">Знач. характерис.</TextBlock>
