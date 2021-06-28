@@ -34,17 +34,50 @@ namespace WpfPaging.DistrictObjects
         // Создать коллекцию ТП
 
         //Внутриквартальное освешение
-        public double QuartalInnerLightning { get; set; }
+
+        double _quartalInnnerLightning;
+
+        public double QuartalInnerLightning 
+        { 
+            get
+            { 
+                return _quartalInnnerLightning;
+            }
+            set
+            {
+                _quartalInnnerLightning = value;
+                // Проверка действительно ли программа провёла рассчёт  освещения
+                if (_quartalInnnerLightning != 0)
+                {
+                    IsReadyForCalculation = true;
+                }
+                else
+                {
+                    IsReadyForCalculation = false;
+                }
+            }
+        }
         public double StreetsTotalLightning { get; set; }
         public double DistrictTotalLightning { get; set; }
         public ObservableCollection<AbstractBuilding> AbstractBuildings { get; set; } = new ObservableCollection<AbstractBuilding>();
 
         // Рассчет нагрузки микроорайона
-        public void CalculateDistrictPower() 
+        public bool IsReadyForCalculation { get; set; } = false;
+
+        // Нагрузка микрорайона c учётом потерь
+        public double ActivePowerOfDistrict { get; set; }
+        public double ReactivePowerOfDistrict { get; set; }
+        public double FullPowerOfDistrict { get; set; }
+
+     
+       
+
+        public void DetermineCoefficientsOfParticipanceInMaximumLoad() 
         {
+            ConvertTotalLigtningToAbstractBuildings();
             // Создаю коллекцию специальніх обїектов для определения коеффициентов участия в максимуме
-            AbstractBuildings.Clear();
-     // Создаю объекты и напоолняю их информацией соответсвтуюего жилого здания
+
+            // Создаю объекты и напоолняю их информацией соответсвтуюего жилого здания
             foreach (var cb in Building.CommercialBuildings)
             {
                 AbstractBuilding abstractBuilding = new AbstractBuilding();
@@ -155,27 +188,25 @@ namespace WpfPaging.DistrictObjects
 
                 // Создаю условия выбора колонки в соответствии с примечанием
                 // Создаю переменную содержащую номер колонки
-                int column=0;
+                int column = 0;
                 // Перебираю всю коллекцию
                 foreach (var e in AbstractBuildings)
                 {
                     if (e.SideNote == "Житлові будинки з електроплитами")
                         column = 0;
-                   else if (e.SideNote == "Житлові будинки з газовими плитами або на твердому паливі")
+                    else if (e.SideNote == "Житлові будинки з газовими плитами або на твердому паливі")
                         column = 1;
                     else if (e.SideNote == "Їдальня")
                         column = 2;
                     else if (e.SideNote == "Ресторани, кафе")
                         column = 3;
-                    else if (e.SideNote == "4")
-                        column = 4;
-                    else if (e.SideNote == "5")
-                        column = 5;
                     else if (e.SideNote == "Установи адміністративного управління, фінансові, проектно-конструкторські організації")
                         column = 6;
-                    else if (e.SideNote == "7")
-                    { column = 7; }
-                    else if (e.SideNote == "8"
+                    else if (
+                           e.SideNote == "4"
+                        || e.SideNote == "5"
+                        || e.SideNote == "7"
+                        || e.SideNote == "8"
                         || e.SideNote == "9"
                         || e.SideNote == "10"
                         || e.SideNote =="11"
@@ -195,23 +226,18 @@ namespace WpfPaging.DistrictObjects
                     {
                         e.CoefficientOfMax = 0.77;
                     }
-                }
 
-                
-            }
-
-               
-
-            
-
-            
+                   else if (e.Type == "Освітлення мікрорайону")
+                    { e.CoefficientOfMax = 1; }
+                } 
+            } 
         }
 
         /// <summary>
         /// Добавляет информацию про жилые дома в коллекцию для определения коэффициентов участия в максимуме
         /// </summary>
-        /// <param name="ElectrificationLevel"></param>
-        /// <param name="ab"></param>
+        /// <param name="ElectrificationLevel">Уровень Электрификации</param>
+        /// <param name="ab">Обновляемая коллекция</param>
         /// <returns></returns>
         public ObservableCollection<AbstractBuilding> GetUnitedApartmentBuildings(double ElectrificationLevel, ObservableCollection<AbstractBuilding> ab)
         {
@@ -272,6 +298,44 @@ namespace WpfPaging.DistrictObjects
             }
             DistrictTotalLightning = Math.Round( QuartalInnerLightning + StreetsTotalLightning,2);
         }
+
+        /// <summary>
+        /// конверитрую освещение в формат для рассчёта коефициента участия в максимуме
+        /// </summary>
+        public void ConvertTotalLigtningToAbstractBuildings() 
+        {
+            AbstractBuildings.Clear();
+            AbstractBuilding ab = new AbstractBuilding();
+            ab.ActivePower = DistrictTotalLightning;
+            ab.FullPower = ab.ActivePower;
+            ab.Type = "Освітлення мікрорайону";
+            AbstractBuildings.Insert(0, ab);
+        }
+
+
+
+        public void CalculateDistrictPower()
+        {
+            double PreliminaryActivePowerOfDistrict=0;
+            double PreliminaryReactivePowerOfDistrict = 0;
+            double PreliminaryFullPowerOfDistrict = 0;
+
+            foreach (var ab in AbstractBuildings)
+            {
+                PreliminaryActivePowerOfDistrict += Math.Round( ab.ActivePower,2);
+                PreliminaryReactivePowerOfDistrict += Math.Round( ab.ReactivePower, 2);
+                PreliminaryFullPowerOfDistrict = Math.Round(Math.Sqrt(Math.Pow(PreliminaryActivePowerOfDistrict,2)+Math.Pow(PreliminaryReactivePowerOfDistrict,2)),2);
+            }
+            double ActivePowerLossesInVT = 0.02 * PreliminaryFullPowerOfDistrict;
+            double ReactivePowerLossesInVT = 0.01 * PreliminaryFullPowerOfDistrict;
+            double ActivePowerLossesInLines = 0.03 * PreliminaryFullPowerOfDistrict;
+
+            ActivePowerOfDistrict = PreliminaryActivePowerOfDistrict + ActivePowerLossesInVT + ActivePowerLossesInLines;
+            ReactivePowerOfDistrict = ReactivePowerLossesInVT + PreliminaryReactivePowerOfDistrict;
+            FullPowerOfDistrict = Math.Round(Math.Sqrt(Math.Pow(ActivePowerOfDistrict, 2) + Math.Pow(ReactivePowerOfDistrict, 2)), 2);
+        }
+
+        
 
     }
 

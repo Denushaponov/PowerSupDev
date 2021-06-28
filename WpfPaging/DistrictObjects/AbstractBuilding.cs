@@ -6,7 +6,7 @@ using System.Text;
 namespace DistrictSupplySolution.DistrictObjects
 {
     /// <summary>
-    /// Класс для хранения информации  о здании и рассчётов коэфициента участия в максимуме
+    /// Класс для хранения информации  о здании для рассчёта коэфициента участия в максимуме и нагрузки микрорайноа
     /// </summary>
     public class AbstractBuilding:BindableBase
     {

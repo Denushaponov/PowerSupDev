@@ -65,6 +65,7 @@
         <Style TargetType="TextBlock" x:Key="PageTitle">
             <Setter Property="FontSize" Value="24"/>
             <Setter Property="Margin" Value="0, 12, 0, 8"/>
+
         </Style>
         <!-- Для текстбоксов-->
         <Style TargetType="TextBox" x:Key="TextField">
@@ -83,7 +84,7 @@
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Width" Value="120"/>
             <Setter Property="Height" Value="20"/>
-            <Setter Property="Background" Value="White"/>
+            <Setter Property="Background" Value="Transparent"/>
         </Style>
         <!-- Для комбобоксов -->
         <Style TargetType="ComboBox" x:Key="ComboField">
@@ -100,26 +101,33 @@
         </Style>
     </Page.Resources>
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="11*"/>
+            <ColumnDefinition Width="89*"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="6*"/>
+            <RowDefinition Height="57*"/>
+            <RowDefinition Height="123*"/>
+            <RowDefinition Height="220*"/>
         </Grid.RowDefinitions>
         <!--Заголовок-->
-        <StackPanel Background="Bisque" Orientation="Vertical" VerticalAlignment="Center">
-            <TextBlock Text="Навантаження мікрорайону" TextAlignment="Center" Style="{StaticResource PageTitle}"/>
+        <StackPanel Background="Transparent" Orientation="Vertical" VerticalAlignment="Center" Grid.ColumnSpan="2">
+            <TextBlock Text="Навантаження мікрорайону" FontWeight="DemiBold" FontSize="60" Foreground="LightGray" TextAlignment="Center" Style="{StaticResource PageTitle}"/>
 
             <!--Меню переключатели-->
 
             <!--Делю рабочую область на две колонки-->
         </StackPanel>
-        <Grid Grid.Row="1">
+        <Grid Grid.ColumnSpan="2" Margin="0,114,0,0" Grid.RowSpan="3">
 
             <Grid.ColumnDefinitions>
                 <!--Для панели ввода данных-->
-                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1.5*"/>
                 <!--Для таблицы-->
-                <ColumnDefinition Width="7*"/>
+                <ColumnDefinition Width="8*"/>
             </Grid.ColumnDefinitions>
+
+
 
             <StackPanel x:Name="UserInputPanel">
                 <StackPanel.Style>
@@ -143,17 +151,17 @@
 
 
 
-                <!-- Панель ввода информации о лифтах -->
+                <!-- Панель ввода информации о улицах -->
 
                 <TextBlock Style="{StaticResource BlockField }" Text="Вулиці м.району"></TextBlock>
 
 
 
-                <ListBox   Name="StreetsList" BorderThickness="0"  HorizontalAlignment="Center" Width="140" Height="300" ItemsSource="{Binding SelectedDistrict.Streets}" SelectedValue="{Binding SelectedStreet}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" >
+                <ListBox   Name="StreetsList" ScrollViewer.CanContentScroll="False"   BorderThickness="0"  HorizontalAlignment="Center" Width="140" Height="330" ItemsSource="{Binding SelectedDistrict.Streets}" SelectedValue="{Binding SelectedStreet}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" >
                     <ListBox.ItemTemplate>
-                        <DataTemplate  x:Name="StreetsElement" >
+                        <DataTemplate  x:Name="StreetsElement">
 
-                            <Border BorderThickness="1" BorderBrush="DarkGray" CornerRadius="1" Margin="5">
+                            <Border BorderThickness="2" BorderBrush="LightGray" CornerRadius="1" Margin="5" Padding="3">
 
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -161,20 +169,20 @@
                                         <ColumnDefinition Width="auto"/>
                                         <ColumnDefinition Width="auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <StackPanel Orientation="Vertical" Width="200"  Grid.Column="0">
+                                    <StackPanel Orientation="Vertical" Width="200"  Grid.Column="0" >
                                         <StackPanel Orientation="Horizontal" >
                                             <TextBlock Style="{StaticResource BlockField}" Width="80" Background="Yellow"  Margin="0,0,0,0">Категорія</TextBlock>
                                             <TextBlock  Style="{StaticResource BlockField}" Background="Yellow"  Margin="0,0,0,0" Width="40" FontSize="14" Text="{Binding Category}" HorizontalAlignment="Left"/>
                                         </StackPanel>
                                         <StackPanel Orientation="Horizontal">
-                                            <TextBlock Grid.Column="1" Width="80" Style="{StaticResource BlockField}" Text="Lзаг, км"  Margin="0,0,0,0"></TextBlock>
+                                            <TextBlock Grid.Column="1" Width="77" Style="{StaticResource BlockField}" Text="Lзаг, км"  Margin="0,0,0,0"></TextBlock>
                                             <TextBox Width="40" Style="{StaticResource TextField}" Text="{Binding TotalLength}"  Margin="0,0,0,0"></TextBox>
                                         </StackPanel>
                                         <StackPanel Orientation="Horizontal">
                                             <TextBlock Grid.Column="1" Width="80" Style="{StaticResource BlockField}" Margin="0,0,0,0" Text="Рпит, кВт"></TextBlock>
                                             <TextBlock Text="{Binding SpecificLoad}" Width="40" Style="{StaticResource BlockField}"   Margin="0,0,0,0"></TextBlock>
                                         </StackPanel>
-                                        <Slider  Value="{Binding SpecificLoad}" Background="Yellow" Maximum="{Binding MaxLoad}" Minimum="{Binding MinLoad}" Width="115" HorizontalAlignment="Left" IsSnapToTickEnabled="True"  />
+                                        <Slider  Value="{Binding SpecificLoad}" Background="WhiteSmoke" Maximum="{Binding MaxLoad}" Minimum="{Binding MinLoad}" Width="115" HorizontalAlignment="Left" IsSnapToTickEnabled="True"  />
                                     </StackPanel>
 
 
@@ -192,15 +200,36 @@
 
             </StackPanel>
 
+            <!-- Панель ввода данных если выбран особенный потребитель-->
+            <StackPanel x:Name="CoeficientOfParticipanceInputPanel">
+                <StackPanel.Style>
+                    <Style TargetType="StackPanel">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=ParticipanceInMaximumTab, Path=IsSelected}" Value="False">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Setter Property="IsEnabled" Value="False"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </StackPanel.Style>
+
+                <!-- Панель ввода данніх о кєф участия в максимуме-->
+                <TextBox x:Name="HiddenTextBlockWithSideNote" Style="{StaticResource TextField}" TextChanged="HiddenTextBlockWithSideNote_TextChanged" Text="{Binding SelectedAbstractBuilding.SideNote}"  Visibility="Collapsed"></TextBox>
+                <TextBlock x:Name="ParticipanceInMaxText1" Style="{StaticResource BlockField}" FontWeight="DemiBold" Width="150" Margin="30,35,0,0">Коеф. участі у макс.</TextBlock>
+                <TextBlock x:Name="ParticipanceInMaxText2" Style="{StaticResource BlockField}" FontWeight="DemiBold" Width="150" Margin="30,0,0,0">навантаження</TextBlock>
+                <TextBox x:Name="InputFieldCoefficientOfParticipanceInMax" Style="{StaticResource TextField}" Text="{Binding SelectedAbstractBuilding.CoefficientOfMax}"></TextBox>
+
+            </StackPanel>
+
             <!-- Таблица вывода информации о жилых домах-->
 
             <StackPanel Grid.Column="1">
 
 
-                <TabControl>
+                <TabControl HorizontalAlignment="Left" Width="985">
                     <TabItem x:Name="UserDataTab" IsSelected="True" Width="300">
                         <TabItem.Header >
-                            <TextBlock Style="{StaticResource BlockField}" Width="300">Дані вуличного освітлення</TextBlock>
+                            <TextBlock Style="{StaticResource BlockField}" TextAlignment="Center" Width="280">Дані вуличного освітлення</TextBlock>
                         </TabItem.Header>
                         <!-- Таблица показывает начальные данные которые вносит пользователь-->
                         <StackPanel Grid.Column="1">
@@ -226,7 +255,7 @@
                             </DataGrid>
                             <!-- Колонки-->
                             <Grid>
-                               
+
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="100"/>
                                     <RowDefinition Height="150"/>
@@ -236,9 +265,9 @@
 
 
 
-                                <Button Grid.Row="2" Name="CalculateLightningButton"  Style="{StaticResource MenuControls}" Width="200" Content="Розрахувати освітлення" Command="{Binding CalculateLigtningCommand}" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.ColumnSpan="2" Click="CalculateLightningButton_Click" />
+                                <Button Grid.Row="2" Name="CalculateLightningButton"  Style="{StaticResource MenuControls}" Width="200" Content="Розрахувати освітлення" Command="{Binding CalculateLigtningCommand}" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.ColumnSpan="2" />
 
-                                <Button Grid.Row="2" Name="GoToNextStepButton" Style="{StaticResource MenuControls}" Background="LimeGreen" IsEnabled="{Binding CalculationButtonIsEnabled}" Command="{Binding CalculateDistrict}"  HorizontalAlignment="Right"  VerticalAlignment="Top" Grid.Column="1" Margin="0,3,10,0">Далее</Button>
+                                <Button Grid.Row="2" Name="GoToNextStepButton" Style="{StaticResource MenuControls}" Background="LimeGreen" IsEnabled="{Binding SelectedDistrict.IsReadyForCalculation}" Command="{Binding CalculateDistrict}"  HorizontalAlignment="Right"  VerticalAlignment="Top" Grid.Column="1" Margin="0,3,10,0" Click="GoToNextStepButton_Click">Далее</Button>
                                 <StackPanel Orientation="Vertical" Grid.Row="1" Grid.ColumnSpan="2">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
@@ -252,8 +281,8 @@
                                             <TextBlock Text=" кВТ"  HorizontalAlignment="Center" Style="{StaticResource PageTitle}"   FontWeight="SemiBold"/>
                                         </StackPanel>
                                         <TextBlock HorizontalAlignment="Center" Margin="0, 50, 0, 0"  Grid.Column="0" Text="Внутрішньоквартальне освітлення" FontSize="14" FontWeight="SemiBold"/>
-                                        
-                                        
+
+
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Column="1">
                                             <TextBlock Text="{Binding SelectedDistrict.StreetsTotalLightning}" HorizontalAlignment="Center" Style="{StaticResource PageTitle}" Grid.Column="1"  FontWeight="SemiBold"/>
                                             <TextBlock Text=" кВТ"  HorizontalAlignment="Center" Style="{StaticResource PageTitle}"   FontWeight="SemiBold"/>
@@ -264,7 +293,7 @@
                                             <TextBlock Text="{Binding SelectedDistrict.DistrictTotalLightning}" HorizontalAlignment="Center" Style="{StaticResource PageTitle}" Grid.Column="2"  FontWeight="SemiBold"/>
                                             <TextBlock Text=" кВТ"  HorizontalAlignment="Center" Style="{StaticResource PageTitle}"   FontWeight="SemiBold"/>
                                         </StackPanel>
-                                       
+
                                         <TextBlock HorizontalAlignment="Center" Margin="0, 50, 0, 0"  Grid.Column="2" Text="Загальне освітлення мікрорайону" FontSize="14" FontWeight="SemiBold"/>
 
                                     </Grid>
@@ -276,24 +305,33 @@
                         </StackPanel>
                     </TabItem>
 
-                    <TabItem x:Name="ParticipanceInMaximum">
+                    <TabItem x:Name="ParticipanceInMaximumTab">
                         <TabItem.Header>
-                            <TextBlock Style="{StaticResource BlockField}" Width="200" Text="Коефіцієнти участі в максимумі"/>
+                            <TextBlock Style="{StaticResource BlockField}" Background="Transparent" Width="201" TextAlignment="Center" Text="Коефіцієнти участі в максимумі"/>
                         </TabItem.Header>
+
 
                         <StackPanel Grid.Column="1">
                             <!-- Колонки-->
+
+
+
                             <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="624*"/>
+                                    <ColumnDefinition Width="355*"/>
+                                </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="600"/>
-                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="550"/>
+                                    <RowDefinition Height="0.5*"/>
+                                    <RowDefinition Height="0.5*"/>
                                 </Grid.RowDefinitions>
 
-                                <DataGrid x:Name="CoefficientsOfParticipanceInMaximumGrid"  AutoGenerateColumns="False" HorizontalAlignment="Center" ItemsSource="{Binding SelectedDistrict.AbstractBuildings}" SelectedItem="{Binding SelectedAbstractBuilding}">
+                                <DataGrid x:Name="CoefficientsOfParticipanceInMaximumGrid" Grid.Row="0"  AutoGenerateColumns="False" HorizontalAlignment="Left" ItemsSource="{Binding SelectedDistrict.AbstractBuildings}" SelectedItem="{Binding SelectedAbstractBuilding}" Grid.ColumnSpan="2">
                                     <DataGrid.Columns >
                                         <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Тип" Width="1*" Binding="{Binding Type}"/>
                                         <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Повна потужність" Width="0.2*" Binding="{Binding FullPower}"/>
-                                        <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Коефіціент участі у максимумі" Width="0.32*" Binding="{Binding CoefficientOfMax}">
+                                        <DataGridTextColumn CanUserResize="False"  IsReadOnly="True" Header="Коефіціент участі у максимумі" Width="0.32*" Binding="{Binding CoefficientOfMax}">
                                             <DataGridTextColumn.ElementStyle>
                                                 <Style TargetType="{x:Type TextBlock}">
                                                     <Style.Triggers>
@@ -304,12 +342,13 @@
                                                 </Style>
                                             </DataGridTextColumn.ElementStyle>
                                         </DataGridTextColumn>
-                                        <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Примітка" Width="0.2*" Binding="{Binding SideNote}">
+                                        <DataGridTextColumn CanUserResize="False" Foreground="Transparent" IsReadOnly="True" Header="Примітка" Width="0.2*" Binding="{Binding SideNote}">
                                             <DataGridTextColumn.ElementStyle>
                                                 <Style TargetType="{x:Type TextBlock}">
                                                     <Style.Triggers>
                                                         <Trigger Property="Text" Value="Особливий">
-                                                            <Setter Property="Background" Value="LightBlue"/>
+                                                            <Setter Property="Foreground" Value="Black"/>
+                                                            <Setter Property="Background" Value="Coral"/>
                                                         </Trigger>
                                                     </Style.Triggers>
                                                 </Style>
@@ -330,14 +369,26 @@
                              -->
                                     </DataGrid.Columns>
                                 </DataGrid>
-                                <Button Grid.Row="1" Style="{StaticResource MenuControls}" Content="Зберегти в Excel" Command="{Binding CalculatedApartmentBuildingsToExcel}" CommandParameter="{Binding ElementName=CalculatedApartmentBuildings}" />
+
+                                <Button Grid.Row="2" Style="{StaticResource MenuControls}" Content="Зберегти в Excel" Command="{Binding CoefficientsOfParticipanceDataToExcel}" CommandParameter="{Binding ElementName=CoefficientsOfParticipanceInMaximumGrid}" Margin="430,3,74,3"/>
+                                <Button Grid.Row="2"  Style="{StaticResource MenuControls}" Background="LimeGreen" IsEnabled="{Binding SelectedDistrict.IsReadyForCalculation}" Command="{Binding CalculateDistrict}"  HorizontalAlignment="Right"  VerticalAlignment="Top" Grid.Column="1" Margin="0,3,10,0" Click="GoToNextStepButton_Click">Зберегти та продовжити</Button>
+                                <TextBlock Name="WarningToEnterCorrectCoefficientsOfParticipance" Grid.Row="1"  Width="800"  Style="{StaticResource PageTitle}" Background="Transparent" Foreground="Black" Grid.ColumnSpan="2" Margin="90,12,89,8" >
+                                    <Border BorderThickness="2" BorderBrush="Coral">
+                                    <StackPanel Orientation="Horizontal"  >
+                                       
+                                        <TextBlock  Background="Coral" FontSize="14" Padding="5,5,5,5" Width="30" Height="30"><Run Text="⚠"/></TextBlock>
+                                        <TextBlock Style="{StaticResource BlockField}" FontWeight="DemiBold" Margin="10, 0,0,0" Width="700" ><Run Text="УВАГА, натисніть на клітинки , що підсвічені червоним, для уточнення коефіціентів участі в максимумі"/></TextBlock>
+                                   
+                                        </StackPanel>
+                                        </Border>
+                                </TextBlock>
                             </Grid>
                         </StackPanel>
                     </TabItem>
 
                     <TabItem x:Name="UnitedApartmentBuildingsTab">
                         <TabItem.Header>
-                            <TextBlock Style="{StaticResource BlockField}" Width="200" Text="Навантаження будинків"/>
+                            <TextBlock Style="{StaticResource BlockField}" Width="200" Text="Навантаження мікрорайону" TextAlignment="Center"/>
                         </TabItem.Header>
 
                         <StackPanel Grid.Column="1">
@@ -345,29 +396,42 @@
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="600"/>
-                                    <RowDefinition Height="1*"/>
                                 </Grid.RowDefinitions>
 
-                                <DataGrid x:Name="UnitedApartmentBuildingsGrid"  AutoGenerateColumns="False" ItemsSource="{Binding  SelectedDistrict.Building.UnitedApartmentBuildings.UnitedApartmentBuildingsCollection}">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Генплановий №" Width="0.6*" Binding="{Binding PlanNumber}"/>
-                                        <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Число квартир" Width="0.5*" Binding="{Binding TotalApartments}"/>
-                                        <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Pпит.кв." Width="0.2*" Binding="{Binding ApartmentSpecificLoad}"/>
-                                        <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Рпит.буд" Width="0.25*" Binding="{Binding BuildingSpecificActiveLoad}"/>
-                                        <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Кпоп.ліфт" Width="0.25*" Binding="{Binding ElevatorsCofficientOfAsk}"/>
-                                        <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="ΣPліфт" Width="0.25*" Binding="{Binding ElevatorsActiveLoad}"/>
-                                        <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Кпоп.с-ту" Width="0.25*" Binding="{Binding PompsCoefficientOfAsk}"/>
-                                        <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="ΣPсту" Width="0.25*" Binding="{Binding PompsActiveLoad}"/>
-                                        <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Рсил" Width="0.25*" Binding="{Binding PowerPlantsActiveLoad}"/>
-                                        <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Ржб" Width="0.25*" Binding="{Binding BuildingActiveLoad}"/>
-                                        <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Qжб" Width="0.25*" Binding="{Binding BuildingReactiveLoad}"/>
-                                        <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Sжб" Width="0.25*" Binding="{Binding BuildingFullLoad}"/>
+                                <StackPanel Orientation="Vertical" Grid.Row="0" Grid.ColumnSpan="2" Margin="0, 200,0,0">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="0">
+                                            <TextBlock Text="{Binding SelectedDistrict.ActivePowerOfDistrict}" HorizontalAlignment="Center" Style="{StaticResource PageTitle}"   FontWeight="SemiBold"/>
+                                            <TextBlock Text=" кВТ"  HorizontalAlignment="Center" Style="{StaticResource PageTitle}"   FontWeight="SemiBold"/>
+                                        </StackPanel>
+                                        <TextBlock HorizontalAlignment="Center" Margin="0, 50, 0, 0"  Grid.Column="0" Text="Активне навантаження мікрорайону" FontSize="14" FontWeight="SemiBold"/>
 
 
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Column="1">
+                                            <TextBlock Text="{Binding SelectedDistrict.ReactivePowerOfDistrict}" HorizontalAlignment="Center" Style="{StaticResource PageTitle}" Grid.Column="1"  FontWeight="SemiBold"/>
+                                            <TextBlock Text=" кВТ"  HorizontalAlignment="Center" Style="{StaticResource PageTitle}"   FontWeight="SemiBold"/>
+                                        </StackPanel>
+                                        <TextBlock HorizontalAlignment="Center" Margin="0, 50, 0, 0"  Grid.Column="1" Text="Реактивне навантаження мікрорайону" FontSize="14" FontWeight="SemiBold"/>
 
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                                <Button Grid.Row="1" Style="{StaticResource MenuControls}" Content="Зберегти в Excel" Command="{Binding UnitedApartmentBuildingsToExcel}" CommandParameter="{Binding ElementName=CalculatedApartmentBuildings}" />
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Column="2">
+                                            <TextBlock Text="{Binding SelectedDistrict.FullPowerOfDistrict}" HorizontalAlignment="Center" Style="{StaticResource PageTitle}" Grid.Column="2"  FontWeight="SemiBold"/>
+                                            <TextBlock Text=" кВТ"  HorizontalAlignment="Center" Style="{StaticResource PageTitle}"   FontWeight="SemiBold"/>
+                                        </StackPanel>
+
+                                        <TextBlock HorizontalAlignment="Center" Margin="0, 50, 0, 0"  Grid.Column="2" Text="Повне навантаження мікрорайону" FontSize="14" FontWeight="SemiBold"/>
+
+                                    </Grid>
+
+                                    <Button Grid.Row="0" Margin="0,80,0,0" Style="{StaticResource MenuControls}" Background="LimeGreen" Width="200" Content="Зберегти та продовжити" Command="{Binding UnitedApartmentBuildingsToExcel}" CommandParameter="{Binding ElementName=CalculatedApartmentBuildings}" />
+                                </StackPanel>
+
+
                             </Grid>
                         </StackPanel>
                     </TabItem>

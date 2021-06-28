@@ -22,13 +22,35 @@ namespace DistrictSupplySolution.Pages
         {
            
         InitializeComponent();
+            
         }
 
      
 
-        private void CalculateLightningButton_Click(object sender, RoutedEventArgs e)
+     
+
+        private void HiddenTextBlockWithSideNote_TextChanged(object sender, TextChangedEventArgs e)
         {
-            GoToNextStepButton.IsEnabled = true;
+            if (HiddenTextBlockWithSideNote.Text == "Особливий")
+            {
+                ParticipanceInMaxText1.Visibility = Visibility.Visible;
+                ParticipanceInMaxText2.Visibility = Visibility.Visible;
+                InputFieldCoefficientOfParticipanceInMax.Visibility = Visibility.Visible;
+                CoeficientOfParticipanceInputPanel.Background = Brushes.Yellow;
+            }    
+            else
+            {
+                ParticipanceInMaxText1.Visibility = Visibility.Collapsed;
+                ParticipanceInMaxText2.Visibility = Visibility.Collapsed;
+                InputFieldCoefficientOfParticipanceInMax.Visibility = Visibility.Collapsed;
+                CoeficientOfParticipanceInputPanel.Background = Brushes.Transparent;
+            }
+
+        }
+
+        private void GoToNextStepButton_Click(object sender, RoutedEventArgs e)
+        {
+            ParticipanceInMaximumTab.IsSelected = true;
         }
     }
 

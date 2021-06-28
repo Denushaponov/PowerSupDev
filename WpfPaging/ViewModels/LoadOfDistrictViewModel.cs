@@ -1,9 +1,13 @@
 ﻿using DevExpress.Mvvm;
 using DistrictSupplySolution.DistrictObjects;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Text;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using WpfPaging.DistrictObjects;
 using WpfPaging.Events;
@@ -40,8 +44,9 @@ namespace DistrictSupplySolution.ViewModels
                 SelectedDistrict = message.SharedDistrict;
             });
             SelectedDistrict.Streets = new ObservableCollection<Street> { new Street { Category = "A" }, new Street { Category = "B" }, new Street { Category = "C" } };
+            
             SelectedDistrict.AbstractBuildings = new ObservableCollection<AbstractBuilding> { };
-            Console.WriteLine("");
+           
         }
 
         // Начало рассчёта
@@ -53,7 +58,7 @@ namespace DistrictSupplySolution.ViewModels
 
         public ICommand CalculateDistrict => new DelegateCommand(() =>
         {
-            SelectedDistrict.CalculateDistrictPower();
+            SelectedDistrict.DetermineCoefficientsOfParticipanceInMaximumLoad();
         });
 
         public ICommand CalculateLigtningCommand => new DelegateCommand(() =>
@@ -69,7 +74,77 @@ namespace DistrictSupplySolution.ViewModels
         });
 
 
+        public ICommand CoefficientsOfParticipanceDataToExcel
+        {
+            get
+            {
+                return new AsyncCommand<DataGrid>(async (dg) =>
+                {
 
+                    ExportAsExcelHandler(dg, "Коефіцієнти участі в максимумі навантаження");
+                });
+            }
+        }
+
+
+
+        public void ExportAsExcelHandler(DataGrid dg, string worksheetsName)
+        {
+            string directoryName = "Excel/" + SelectedDistrict.Title + "/";
+            string csvFileName = "CSV/" + "tempData.csv";
+            string excelFileName = @"" + directoryName + "_коефіціенти_участі_у_максимумі_навантаження_мікрорайону" + ".xlsx";
+            if (Directory.Exists("CSV") != true)
+                Directory.CreateDirectory("CSV");
+            if (Directory.Exists("Excel") != true)
+                Directory.CreateDirectory("Excel");
+            if (Directory.Exists(directoryName) != true)
+            {
+                Directory.CreateDirectory(directoryName);
+            }
+
+
+            dg.SelectAllCells();
+            dg.ClipboardCopyMode = DataGridClipboardCopyMode.IncludeHeader;
+            ApplicationCommands.Copy.Execute(null, dg);
+            dg.UnselectAllCells();
+            string result = (string)Clipboard.GetData(DataFormats.CommaSeparatedValue);
+
+            if (File.Exists(csvFileName))
+            {
+                File.Delete(csvFileName);
+            }
+
+
+            File.AppendAllText(csvFileName, result, Encoding.UTF8);
+
+            bool firstRowIsHeader = false;
+
+            var format = new ExcelTextFormat();
+            format.Delimiter = ',';
+            format.EOL = "\r";              // DEFAULT IS "\r\n";
+            format.TextQualifier = '"';
+
+            using (ExcelPackage package = new ExcelPackage(new FileInfo(excelFileName)))
+            {
+                try
+                {
+                    package.Workbook.Worksheets.Delete(worksheetsName);
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add(worksheetsName);
+                    worksheet.Cells["A1"].LoadFromText(new FileInfo(csvFileName), format, OfficeOpenXml.Table.TableStyles.Medium27, firstRowIsHeader);
+                    package.Save();
+                }
+                catch
+                {
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add(worksheetsName);
+                    worksheet.Cells["A1"].LoadFromText(new FileInfo(csvFileName), format, OfficeOpenXml.Table.TableStyles.Medium27, firstRowIsHeader);
+                    package.Save();
+                }
+
+            }
+            File.Delete(csvFileName);
+            MessageBox.Show("Таблицю" + excelFileName + " збережено");
+
+        }
 
 
     }
