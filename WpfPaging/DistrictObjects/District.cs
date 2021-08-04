@@ -219,7 +219,7 @@ namespace WpfPaging.DistrictObjects
                         column = 15;
                     
 
-                    // Присваиваем значение коффициента участия в имаксимуме
+                    // Присваиваем значение коффициента участия в максимуме
                     e.CoefficientOfMax = DbnTable.CoefficientsOfMaximum[row, column];
 
                    if (e.SideNote == "Особливий")

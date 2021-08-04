@@ -52,6 +52,11 @@ namespace DistrictSupplySolution.Pages
         {
             ParticipanceInMaximumTab.IsSelected = true;
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            FinalDistrictLoadTab.IsSelected = true;
+        }
     }
 
    

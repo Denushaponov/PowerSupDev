@@ -61,6 +61,11 @@ namespace DistrictSupplySolution.ViewModels
             SelectedDistrict.DetermineCoefficientsOfParticipanceInMaximumLoad();
         });
 
+        public ICommand CalculateDistrictPower => new DelegateCommand(() =>
+        {
+            SelectedDistrict.CalculateDistrictPower();
+        });
+
         public ICommand CalculateLigtningCommand => new DelegateCommand(() =>
         {
             SelectedDistrict.CalculateLightning();
