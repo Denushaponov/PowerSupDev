@@ -36,7 +36,9 @@ namespace DistrictSupplySolution.Pages
                 ParticipanceInMaxText1.Visibility = Visibility.Visible;
                 ParticipanceInMaxText2.Visibility = Visibility.Visible;
                 InputFieldCoefficientOfParticipanceInMax.Visibility = Visibility.Visible;
-                CoeficientOfParticipanceInputPanel.Background = Brushes.Yellow;
+                CoeficientOfParticipanceInputPanel.Background = Brushes.Coral;
+                GoToChangeCoefficientsOfMaxForSpecialConsumer.Visibility = Visibility.Visible;
+                MessageBox.Show("ОСОБЛИВИЙ СПОЖИВАЧ: необхідно уточнити усі його можливі коефіцієнти участі");
             }    
             else
             {
@@ -44,6 +46,7 @@ namespace DistrictSupplySolution.Pages
                 ParticipanceInMaxText2.Visibility = Visibility.Collapsed;
                 InputFieldCoefficientOfParticipanceInMax.Visibility = Visibility.Collapsed;
                 CoeficientOfParticipanceInputPanel.Background = Brushes.Transparent;
+                GoToChangeCoefficientsOfMaxForSpecialConsumer.Visibility = Visibility.Hidden;
             }
 
         }

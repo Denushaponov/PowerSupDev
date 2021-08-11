@@ -1,0 +1,156 @@
+﻿<Page x:Class="DistrictSupplySolution.Pages.CustomCoefficientsOfMaxPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:DistrictSupplySolution.Pages"
+      DataContext="{Binding AbstractBuildingViewModel, Source={StaticResource ViewModelLocator}}"
+      mc:Ignorable="d" 
+      d:DesignHeight="800" d:DesignWidth="1200"
+      Title="CustomCoefficientsOfMaxPage">
+    <Page.Resources>
+
+        <!-- Стили для кнопок меню -->
+        <Style TargetType="Button" x:Key="MenuControls">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Margin" Value="3"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Width" Value="120"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Background" Value="CornflowerBlue"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+        <!-- Стиль для кнопок добавления-->
+        <Style x:Key="AddButton" TargetType="Button">
+            <Setter Property="Width" Value="120"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Height" Value="25"/>
+            <Setter Property="Background" Value="#FF36FF63"/>
+            <Setter Property="Margin" Value="5, 0, 5, 5"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="0"/>
+        </Style>
+        <!-- ДЛЯ КОНПОК УДАЛЕНИЯ-->
+        <Style x:Key="RemoveButton" TargetType="Button" >
+            <Setter Property="Width" Value="120"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Height" Value="25"/>
+            <Setter Property="Background" Value="LightCoral"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="0"/>
+
+        </Style>
+
+        <Style x:Key="CopyButton" TargetType="Button">
+
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Height" Value="25"/>
+            <Setter Property="Background" Value="#FF7FE0FF"/>
+            <Setter Property="Margin" Value="3, 3,0,3"/>
+            <Setter Property="BorderBrush" Value="LightBlue"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Width" Value="85"/>
+            <Setter Property="Padding" Value="0"/>
+        </Style>
+
+
+
+        <!--Стили для заголовка страницы-->
+        <Style TargetType="TextBlock" x:Key="PageTitle">
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="Margin" Value="0, 12, 0, 8"/>
+
+        </Style>
+        <!-- Для текстбоксов-->
+        <Style TargetType="TextBox" x:Key="TextField">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Margin" Value="3, 3, 3, 6"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Width" Value="240"/>
+            <Setter Property="Height" Value="25"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="Peru"/>
+        </Style>
+        <!-- Для Текстблоков в области ввода данных-->
+        <Style TargetType="TextBlock" x:Key="BlockField">
+
+            <Setter Property="Margin" Value="3, 6, 3, 3"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Width" Value="240"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+        <!-- Для комбобоксов -->
+        <Style TargetType="ComboBox" x:Key="ComboField">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Margin" Value="3, 3, 3, 6"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Width" Value="120"/>
+            <Setter Property="Height" Value="25"/>
+        </Style>
+
+        <!-- Для ячеек -->
+        <Style TargetType="DataGridCell">
+            <Setter Property="TextBlock.TextAlignment" Value="Center" />
+        </Style>
+    </Page.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="11*"/>
+            <ColumnDefinition Width="89*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="57*"/>
+            <RowDefinition Height="123*"/>
+            <RowDefinition Height="220*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Background="Transparent" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.ColumnSpan="2">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Коефіціенти участі в максимумі споживача №" FontSize="40" FontWeight="DemiBold"  Foreground="LightGray" TextAlignment="Center" Style="{StaticResource PageTitle}"/>
+                <TextBlock  Text="{Binding SelectedAbstractBuilding.PlanNumber}" FontSize="40" FontWeight="DemiBold" Style="{StaticResource PageTitle}" ></TextBlock>
+            </StackPanel>
+           
+
+            <!--Меню переключатели-->
+
+            <!--Делю рабочую область на две колонки-->
+        </StackPanel>
+        <Grid Grid.ColumnSpan="2" Margin="0,114,0,0" Grid.RowSpan="3">
+
+            <Grid.ColumnDefinitions>
+                <!--Для панели ввода данных-->
+                <ColumnDefinition Width="3*"/>
+                <!--Для таблицы-->
+                <ColumnDefinition Width="8*"/>
+            </Grid.ColumnDefinitions>
+
+
+
+            <StackPanel x:Name="UserInputPanel" Grid.Column="0">
+                
+                <TextBlock Style="{StaticResource BlockField}" FontWeight="Bold">Назва</TextBlock>
+                <TextBlock Style="{StaticResource BlockField}" Text="{Binding SelectedSpecialCoefficientOfMax.Type, UpdateSourceTrigger=LostFocus, NotifyOnTargetUpdated=True}"></TextBlock>
+                <TextBlock Style="{StaticResource BlockField}" FontWeight="Bold">Коефіцієнт участі</TextBlock>
+                <TextBox Style="{StaticResource TextField}" Text="{Binding SelectedSpecialCoefficientOfMax.CoefficientOfMax, UpdateSourceTrigger=LostFocus, NotifyOnTargetUpdated=True}"></TextBox>
+                <Button VerticalAlignment="Top" Margin="0, 25, 0,0"  Style="{StaticResource AddButton}" Command="{Binding OpenWindow}" x:Name="SaveThisCoefficients" Content="Зберегти внесені коефіцієнти" Width="240"></Button>
+
+            </StackPanel>
+
+
+            <DataGrid x:Name="CoefficientsOfParticipanceInMaximumGrid" Grid.Column="1" Margin="0,0,43.5,43.5"  AutoGenerateColumns="False" HorizontalAlignment="Left" ItemsSource="{Binding SelectedAbstractBuilding.SpecialConsumerCoefficientsOfMax}" SelectedItem="{Binding SelectedSpecialCoefficientOfMax}" Grid.ColumnSpan="2">
+               
+                <DataGrid.Columns>
+                    <DataGridTextColumn CanUserResize="False" IsReadOnly="True"  Header="Тип" Width="1*" Binding="{Binding Type}"/>
+                    <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Коефіціент попиту" Width="0.2*" Binding="{Binding CoefficientOfMax}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </Grid>
+</Page>

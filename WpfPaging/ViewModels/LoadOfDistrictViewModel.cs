@@ -1,5 +1,7 @@
 ﻿using DevExpress.Mvvm;
 using DistrictSupplySolution.DistrictObjects;
+using DistrictSupplySolution.Messages;
+using DistrictSupplySolution.Pages;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
@@ -76,6 +78,20 @@ namespace DistrictSupplySolution.ViewModels
         public ICommand ClearCommand => new DelegateCommand(() =>
         {
             SelectedDistrict.AbstractBuildings.Clear();
+        });
+
+
+        /// <summary>
+        /// Отправить выбранное абстрактное здание для редактирования в его вьюмодель
+        /// перейти на интерфейчсу редактирования
+        /// </summary>
+        public ICommand UserWantsToAddCustomCoefficientsOfMax => new AsyncCommand(async () =>
+        {
+            // переход на страницу где буду редактьировать коєфициентіф учасития в максимуме
+
+            _pageService.ChangePage(new CustomCoefficientsOfMaxPage());
+            await _messageBus.SendTo<AbstractBuildingViewModel>(new AbstractBuildingMessage(SelectedAbstractBuilding));
+
         });
 
 

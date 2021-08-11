@@ -88,6 +88,7 @@ namespace WpfPaging.DistrictObjects
                 AbstractBuildings[0].ActivePower = cb.ActiveLoad;
                 AbstractBuildings[0].ReactivePower = cb.ReactiveLoad;
                 AbstractBuildings[0].FullPower = cb.FullLoad;
+                AbstractBuildings[0].PlanNumber = cb.PlanNumber.ToString();
             }
          // Также добавляю туда обьекты соответствующие жилым зданиям
             AbstractBuildings = GetUnitedApartmentBuildings(3, AbstractBuildings);
@@ -224,6 +225,7 @@ namespace WpfPaging.DistrictObjects
 
                    if (e.SideNote == "Особливий")
                     {
+                        // Здесь можно описать поведение для особенных потребителей
                         e.CoefficientOfMax = 0.77;
                     }
 
@@ -254,6 +256,7 @@ namespace WpfPaging.DistrictObjects
                     abstractBuilding.ActivePower = Building.UnitedApartmentBuildings.UnitedApartmentBuildingsCollection[0].BuildingActiveLoad;
                     abstractBuilding.ReactivePower = Building.UnitedApartmentBuildings.UnitedApartmentBuildingsCollection[0].BuildingReactiveLoad;
                     abstractBuilding.FullPower = Building.UnitedApartmentBuildings.UnitedApartmentBuildingsCollection[0].BuildingFullLoad;
+                    abstractBuilding.PlanNumber = Building.UnitedApartmentBuildings.UnitedApartmentBuildingsCollection[0].PlanNumber;
                 }
 
                 else if (uab.ElectrificationLevel == ElectrificationLevel && ElectrificationLevel == 3)
@@ -265,6 +268,7 @@ namespace WpfPaging.DistrictObjects
                     abstractBuilding.ActivePower = Building.UnitedApartmentBuildings.UnitedApartmentBuildingsCollection[1].BuildingActiveLoad;
                     abstractBuilding.ReactivePower = Building.UnitedApartmentBuildings.UnitedApartmentBuildingsCollection[1].BuildingReactiveLoad;
                     abstractBuilding.FullPower = Building.UnitedApartmentBuildings.UnitedApartmentBuildingsCollection[1].BuildingFullLoad;
+                    abstractBuilding.PlanNumber = Building.UnitedApartmentBuildings.UnitedApartmentBuildingsCollection[1].PlanNumber;
                 }
             }
            

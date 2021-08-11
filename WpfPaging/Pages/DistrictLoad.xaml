@@ -218,7 +218,7 @@
                 <TextBlock x:Name="ParticipanceInMaxText1" Style="{StaticResource BlockField}" FontWeight="DemiBold" Width="150" Margin="30,35,0,0">Коеф. участі у макс.</TextBlock>
                 <TextBlock x:Name="ParticipanceInMaxText2" Style="{StaticResource BlockField}" FontWeight="DemiBold" Width="150" Margin="30,0,0,0">навантаження</TextBlock>
                 <TextBox x:Name="InputFieldCoefficientOfParticipanceInMax" Style="{StaticResource TextField}" Text="{Binding SelectedAbstractBuilding.CoefficientOfMax}" Visibility="Collapsed"></TextBox>
-
+                <Button x:Name="GoToChangeCoefficientsOfMaxForSpecialConsumer" Visibility="Hidden" Style="{StaticResource MenuControls}"  Margin="0,20,0,0" Content="Редагувати всі" Width="120" Background="Gray" HorizontalAlignment="Center" Command="{Binding UserWantsToAddCustomCoefficientsOfMax}"/>
             </StackPanel>
 
             <!-- Таблица вывода информации о жилых домах-->
@@ -342,18 +342,7 @@
                                                 </Style>
                                             </DataGridTextColumn.ElementStyle>
                                         </DataGridTextColumn>
-                                        <DataGridTextColumn CanUserResize="False" Foreground="Transparent" IsReadOnly="True" Header="Примітка" Width="0.2*" Binding="{Binding SideNote}">
-                                            <DataGridTextColumn.ElementStyle>
-                                                <Style TargetType="{x:Type TextBlock}">
-                                                    <Style.Triggers>
-                                                        <Trigger Property="Text" Value="Особливий">
-                                                            <Setter Property="Foreground" Value="Black"/>
-                                                            <Setter Property="Background" Value="Coral"/>
-                                                        </Trigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </DataGridTextColumn.ElementStyle>
-                                        </DataGridTextColumn>
+                                        
 
 
                                         <!-- КОЛОНКА С КНОПКАМИ УДАЛИТЬ ДЛЯ КАЖДОГО РЯДА 
@@ -371,6 +360,7 @@
                                 </DataGrid>
 
                                 <Button Grid.Row="2" Style="{StaticResource MenuControls}" Content="Зберегти в Excel" HorizontalAlignment="Center" Command="{Binding CoefficientsOfParticipanceDataToExcel}" CommandParameter="{Binding ElementName=CoefficientsOfParticipanceInMaximumGrid}" Margin="430,3,74,3"/>
+                              
                                 <Button Grid.Row="2"  Style="{StaticResource MenuControls}" Background="LimeGreen" IsEnabled="{Binding SelectedDistrict.IsReadyForCalculation}" Command="{Binding CalculateDistrictPower}"  HorizontalAlignment="Right"  VerticalAlignment="Top" Grid.Column="1" Margin="0,3,10,0" Width="200" Click="Button_Click">Розрахувати навантаження</Button>
                                 <TextBlock Name="WarningToEnterCorrectCoefficientsOfParticipance" Grid.Row="1"  Width="800"  Style="{StaticResource PageTitle}" Background="Transparent" Foreground="Black" Grid.ColumnSpan="2" Margin="90,12,89,8" >
                                     <Border BorderThickness="2" BorderBrush="Coral">
