@@ -219,6 +219,7 @@
                 <TextBlock x:Name="ParticipanceInMaxText2" Style="{StaticResource BlockField}" FontWeight="DemiBold" Width="150" Margin="30,0,0,0">навантаження</TextBlock>
                 <TextBox x:Name="InputFieldCoefficientOfParticipanceInMax" Style="{StaticResource TextField}" Text="{Binding SelectedAbstractBuilding.CoefficientOfMax}" Visibility="Collapsed"></TextBox>
                 <Button x:Name="GoToChangeCoefficientsOfMaxForSpecialConsumer" Visibility="Hidden" Style="{StaticResource MenuControls}"  Margin="0,20,0,0" Content="Редагувати всі" Width="120" Background="Gray" HorizontalAlignment="Center" Command="{Binding UserWantsToAddCustomCoefficientsOfMax}"/>
+               
             </StackPanel>
 
             <!-- Таблица вывода информации о жилых домах-->
@@ -234,7 +235,7 @@
                         <!-- Таблица показывает начальные данные которые вносит пользователь-->
                         <StackPanel Grid.Column="1">
 
-                            <DataGrid x:Name="LightningGrid"  AutoGenerateColumns="False" HorizontalAlignment="Center" ItemsSource="{Binding SelectedDistrict.Streets}" SelectedItem="{Binding SelectedStreet}">
+                            <DataGrid x:Name="LightningGrid" CanUserDeleteRows="False" AutoGenerateColumns="False" HorizontalAlignment="Center" ItemsSource="{Binding SelectedDistrict.Streets}" SelectedItem="{Binding SelectedStreet}">
                                 <DataGrid.Columns >
                                     <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Категорія" Width="*" Binding="{Binding Category}"/>
                                     <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Довжина, км" Width="0.7*" Binding="{Binding TotalLength}"/>
@@ -331,18 +332,24 @@
                                     <DataGrid.Columns >
                                         <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Тип" Width="1*" Binding="{Binding Type}"/>
                                         <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Повна потужність" Width="0.2*" Binding="{Binding FullPower}"/>
-                                        <DataGridTextColumn CanUserResize="False"  IsReadOnly="True" Header="Коефіціент участі у максимумі" Width="0.32*" Binding="{Binding CoefficientOfMax}">
+                                        <DataGridTextColumn CanUserResize="False"  IsReadOnly="True" Header="Коефіціент участі у максимумі" Width="0.32*" Binding="{Binding CoefficientOfMax}"/>
+                                        <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Foreground="Transparent" Header="Примітка" Width="0.2" Binding="{Binding SideNote}">
                                             <DataGridTextColumn.ElementStyle>
                                                 <Style TargetType="{x:Type TextBlock}">
                                                     <Style.Triggers>
-                                                        <Trigger Property="Text" Value="0.77">
+                                                        <Trigger Property="Text" Value="Особливий">
                                                             <Setter Property="Background" Value="Coral"/>
+                                                        </Trigger>
+                                                        <Trigger Property="Text" Value="Особливий визначений">
+                                                            <Setter Property="Background" Value="LimeGreen"/>
                                                         </Trigger>
                                                     </Style.Triggers>
                                                 </Style>
                                             </DataGridTextColumn.ElementStyle>
                                         </DataGridTextColumn>
-                                        
+
+
+
 
 
                                         <!-- КОЛОНКА С КНОПКАМИ УДАЛИТЬ ДЛЯ КАЖДОГО РЯДА 

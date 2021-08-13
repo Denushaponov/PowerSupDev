@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DistrictSupplySolution.MessageWindows;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -23,6 +24,9 @@ namespace DistrictSupplySolution.Pages
             InitializeComponent();
         }
 
-       
+        private void SaveThisCoefficients_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Коефіцієнти збережено");
+        }
     }
 }

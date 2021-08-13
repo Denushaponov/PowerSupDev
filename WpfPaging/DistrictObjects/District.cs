@@ -103,6 +103,7 @@ namespace WpfPaging.DistrictObjects
                 if (ab.FullPower == maxLoad)
                 {
                     buildingWithMaxLoad = ab;
+                   
                     break;
                 }
             }
@@ -223,6 +224,11 @@ namespace WpfPaging.DistrictObjects
                     // Присваиваем значение коффициента участия в максимуме
                     e.CoefficientOfMax = DbnTable.CoefficientsOfMaximum[row, column];
 
+                    // То здание, которое с максимальной нагрузкой обладает коэфициентом 1, выставляю
+                    if (e.Id == buildingWithMaxLoad.Id)
+                    {
+                        e.CoefficientOfMax = 1;
+                    }
                    if (e.SideNote == "Особливий")
                     {
                         // Здесь можно описать поведение для особенных потребителей

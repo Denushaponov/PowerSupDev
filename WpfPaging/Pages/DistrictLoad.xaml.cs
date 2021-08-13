@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DistrictSupplySolution.MessageWindows;
+using DistrictSupplySolution.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -37,8 +39,10 @@ namespace DistrictSupplySolution.Pages
                 ParticipanceInMaxText2.Visibility = Visibility.Visible;
                 InputFieldCoefficientOfParticipanceInMax.Visibility = Visibility.Visible;
                 CoeficientOfParticipanceInputPanel.Background = Brushes.Coral;
+                
                 GoToChangeCoefficientsOfMaxForSpecialConsumer.Visibility = Visibility.Visible;
                 MessageBox.Show("ОСОБЛИВИЙ СПОЖИВАЧ: необхідно уточнити усі його можливі коефіцієнти участі");
+                
             }    
             else
             {
@@ -60,6 +64,8 @@ namespace DistrictSupplySolution.Pages
         {
             FinalDistrictLoadTab.IsSelected = true;
         }
+
+        
     }
 
    

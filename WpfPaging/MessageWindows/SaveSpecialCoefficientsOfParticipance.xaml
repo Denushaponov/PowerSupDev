@@ -4,9 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DistrictSupplySolution.MessageWindows"
-        DataContext="{Binding AbstractBuildingViewModel, Source={StaticResource ViewModelLocator}}"
         mc:Ignorable="d"
-        Title="SaveSpecialCoefficientsOfParticipance" Height="270" Width="400">
+        Title="Зробіть вибір" Height="270" Width="400" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen"> 
     <Window.Resources>
 
         <Style TargetType="TextBlock" x:Key="PageTitle">
@@ -55,10 +54,10 @@
     <Grid>
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
             <TextBlock Text="Зберегти зміни?" Style="{StaticResource PageTitle}"></TextBlock>
-            <Button Style="{StaticResource MenuControls}" Background="LimeGreen" Width="240" Content="Так"></Button>
-            <Button Style="{StaticResource MenuControls}" Content="Продовжити редагування" Width="240"></Button>
-            <Button Content="Ні" Style="{StaticResource MenuControls}" Background="Coral" Width="240"></Button>
-          
+            <Button Name="SaveButton" Style="{StaticResource MenuControls}"  Background="LimeGreen" Width="240" Content="Так" Click="SaveButton_Click"></Button>
+            <Button Name="ResumeButton" Style="{StaticResource MenuControls}" Content="Продовжити редагування" Width="240" Click="ResumeButton_Click"></Button>
+            <Button Name="CancelChangesButton" Content="Ні" Style="{StaticResource MenuControls}"  Background="Coral" Width="240" Click="CancelChangesButton_Click"></Button>
+            <TextBlock Visibility="Collapsed" x:Name="DialogResultText"></TextBlock>
         </StackPanel>
     </Grid>
 </Window>

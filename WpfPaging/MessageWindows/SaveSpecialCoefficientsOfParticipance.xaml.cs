@@ -21,5 +21,30 @@ namespace DistrictSupplySolution.MessageWindows
         {
             InitializeComponent();
         }
+
+        private void ResumeButton_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = true;
+            MessageBox.Show("Мікрорайон збережено");
+            DialogResultText.Text = "Так";
+        }
+
+        private void CancelChangesButton_Click(object sender, RoutedEventArgs e)
+        {
+            DialogResultText.Text = "Ні";
+            MessageBox.Show("Зміни відхилено");
+        }
+
+        public string TextResult
+        {
+            get { return DialogResultText.Text.ToString(); }
+        }
+
+       
     }
 }

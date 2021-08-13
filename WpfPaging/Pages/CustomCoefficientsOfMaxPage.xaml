@@ -139,12 +139,12 @@
                 <TextBlock Style="{StaticResource BlockField}" Text="{Binding SelectedSpecialCoefficientOfMax.Type, UpdateSourceTrigger=LostFocus, NotifyOnTargetUpdated=True}"></TextBlock>
                 <TextBlock Style="{StaticResource BlockField}" FontWeight="Bold">Коефіцієнт участі</TextBlock>
                 <TextBox Style="{StaticResource TextField}" Text="{Binding SelectedSpecialCoefficientOfMax.CoefficientOfMax, UpdateSourceTrigger=LostFocus, NotifyOnTargetUpdated=True}"></TextBox>
-                <Button VerticalAlignment="Top" Margin="0, 25, 0,0"  Style="{StaticResource AddButton}" Command="{Binding OpenWindow}" x:Name="SaveThisCoefficients" Content="Зберегти внесені коефіцієнти" Width="240"></Button>
-
+                <Button VerticalAlignment="Top" Margin="0, 25, 0,0"  Style="{StaticResource MenuControls}" Background="LimeGreen" Command="{Binding SaveCommand}" x:Name="SaveThisCoefficients" Content="Зберегти внесені коефіцієнти" Width="240" Click="SaveThisCoefficients_Click"></Button>
+               
             </StackPanel>
 
 
-            <DataGrid x:Name="CoefficientsOfParticipanceInMaximumGrid" Grid.Column="1" Margin="0,0,43.5,43.5"  AutoGenerateColumns="False" HorizontalAlignment="Left" ItemsSource="{Binding SelectedAbstractBuilding.SpecialConsumerCoefficientsOfMax}" SelectedItem="{Binding SelectedSpecialCoefficientOfMax}" Grid.ColumnSpan="2">
+            <DataGrid x:Name="CoefficientsOfParticipanceInMaximumGrid" Grid.Column="1" Margin="0,0,43.5,43.5"  AutoGenerateColumns="False" CanUserDeleteRows="False" HorizontalAlignment="Left" ItemsSource="{Binding SelectedAbstractBuilding.SpecialConsumerCoefficientsOfMax}" SelectedItem="{Binding SelectedSpecialCoefficientOfMax}" Grid.ColumnSpan="2">
                
                 <DataGrid.Columns>
                     <DataGridTextColumn CanUserResize="False" IsReadOnly="True"  Header="Тип" Width="1*" Binding="{Binding Type}"/>

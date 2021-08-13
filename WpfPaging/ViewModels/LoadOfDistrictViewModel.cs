@@ -45,6 +45,24 @@ namespace DistrictSupplySolution.ViewModels
                 // присваивание присланного из DistrictMenuVM микрорайона в качестве выбранного
                 SelectedDistrict = message.SharedDistrict;
             });
+
+            // получение абстрактного здания с отредактироваными значениями
+            _messageBus.Receive<AbstractBuildingMessage>(this, async message => 
+            {
+                
+                int i = 0;
+                foreach (var ab in SelectedDistrict.AbstractBuildings)
+                {
+                    if (ab.Id==message.SharedAbstractBuilding.Id)
+                    {
+                        break;
+                    }
+                    else
+                    i++;
+                }
+                SelectedDistrict.AbstractBuildings[i] = message.SharedAbstractBuilding;
+            });
+
             SelectedDistrict.Streets = new ObservableCollection<Street> { new Street { Category = "A" }, new Street { Category = "B" }, new Street { Category = "C" } };
             
             SelectedDistrict.AbstractBuildings = new ObservableCollection<AbstractBuilding> { };
