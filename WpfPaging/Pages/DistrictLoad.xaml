@@ -232,7 +232,7 @@
                             <TextBlock Style="{StaticResource BlockField}" TextAlignment="Center" Width="280">Дані вуличного освітлення</TextBlock>
                         </TabItem.Header>
                         <!-- Таблица показывает начальные данные которые вносит пользователь-->
-                        <StackPanel Grid.Column="1">
+                        <StackPanel>
 
                             <DataGrid x:Name="LightningGrid" CanUserDeleteRows="False" AutoGenerateColumns="False" HorizontalAlignment="Center" ItemsSource="{Binding SelectedDistrict.Streets}" SelectedItem="{Binding SelectedStreet}">
                                 <DataGrid.Columns >
@@ -240,17 +240,7 @@
                                     <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Довжина, км" Width="0.7*" Binding="{Binding TotalLength}"/>
                                     <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Питоме навантаження" Width="0.6*" Binding="{Binding SpecificLoad}">
                                     </DataGridTextColumn>
-                                    <!-- КОЛОНКА С КНОПКАМИ УДАЛИТЬ ДЛЯ КАЖДОГО РЯДА 
-                            
-                            <DataGridTemplateColumn Width="20" CanUserResize="False">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Button Background="Red" Height="20" Width="20" Content="x" HorizontalAlignment="Center"></Button>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            
-                             -->
+                                
                                 </DataGrid.Columns>
                             </DataGrid>
                             <!-- Колонки-->
@@ -383,24 +373,37 @@
                     </TabItem>
 
                     
-                    <TabItem x:Name="FinalDistrictLoadTab">
+                    <TabItem x:Name="FinalDistrictLoadTab" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                         <TabItem.Header>
                             <TextBlock Style="{StaticResource BlockField}" Width="200" Text="Навантаження мікрорайону" TextAlignment="Center"/>
                         </TabItem.Header>
 
-                        <StackPanel >
+                        <StackPanel>
+
+                            <DataGrid Visibility="Hidden" CanUserDeleteRows="False" AutoGenerateColumns="False" HorizontalAlignment="Center"  >
+                                <DataGrid.Columns >
+                                    <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Width="*" />
+                                    <DataGridTextColumn CanUserResize="False" IsReadOnly="True"  Width="0.7*" />
+                                    <DataGridTextColumn CanUserResize="False" IsReadOnly="True"  Width="0.6*">
+                                    </DataGridTextColumn>
+
+                                </DataGrid.Columns>
+                            </DataGrid>
                             <!-- Колонки-->
                             <Grid>
-                                
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="600"/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                
 
-                                <StackPanel Orientation="Vertical" Grid.Row="0" Grid.ColumnSpan="2" Margin="0, 200,0,0" HorizontalAlignment="Right">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="100"/>
+                                    <RowDefinition Height="150"/>
+                                    <RowDefinition Height="100"/>
+
+                                </Grid.RowDefinitions>
+
+
+
+                                
+                                <StackPanel Orientation="Vertical" Grid.Row="1" Grid.ColumnSpan="2">
+                                    <TextBlock Height="40"></TextBlock>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
 
@@ -408,37 +411,38 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="*"/>
                                         </Grid.ColumnDefinitions>
-                                        
-                                        
-                                        
-                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="0">
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Column="0">
+                                            <TextBlock Text="P = "  HorizontalAlignment="Center" Style="{StaticResource PageTitle}"   FontWeight="SemiBold"/>
                                             <TextBlock Text="{Binding SelectedDistrict.ActivePowerOfDistrict}" HorizontalAlignment="Center" Style="{StaticResource PageTitle}"   FontWeight="SemiBold"/>
                                             <TextBlock Text=" кВТ"  HorizontalAlignment="Center" Style="{StaticResource PageTitle}"   FontWeight="SemiBold"/>
                                         </StackPanel>
-                                        <TextBlock HorizontalAlignment="Center" Margin="0, 50, 0, 0"  Grid.Column="0" Text="Активне навантаження мікрорайону" FontSize="14" FontWeight="SemiBold"/>
+                                        <TextBlock HorizontalAlignment="Center" Margin="0, 50, 0, 0"  Grid.Column="0" Text="Активна потужність" FontSize="14" FontWeight="SemiBold"/>
 
 
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Column="1">
+                                            <TextBlock Text="Q = "  HorizontalAlignment="Center" Style="{StaticResource PageTitle}"   FontWeight="SemiBold"/>
                                             <TextBlock Text="{Binding SelectedDistrict.ReactivePowerOfDistrict}" HorizontalAlignment="Center" Style="{StaticResource PageTitle}" Grid.Column="1"  FontWeight="SemiBold"/>
                                             <TextBlock Text=" кВТ"  HorizontalAlignment="Center" Style="{StaticResource PageTitle}"   FontWeight="SemiBold"/>
                                         </StackPanel>
-                                        <TextBlock HorizontalAlignment="Center" Margin="0, 50, 0, 0"  Grid.Column="1" Text="Реактивне навантаження мікрорайону" FontSize="14" FontWeight="SemiBold"/>
+                                        <TextBlock HorizontalAlignment="Center" Margin="0, 50, 0, 0"  Grid.Column="1" Text="Реактивна потужність" FontSize="14" FontWeight="SemiBold"/>
 
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Column="2">
+                                            <TextBlock Text="S = "  HorizontalAlignment="Center" Style="{StaticResource PageTitle}"   FontWeight="SemiBold"/>
                                             <TextBlock Text="{Binding SelectedDistrict.FullPowerOfDistrict}" HorizontalAlignment="Center" Style="{StaticResource PageTitle}" Grid.Column="2"  FontWeight="SemiBold"/>
                                             <TextBlock Text=" кВТ"  HorizontalAlignment="Center" Style="{StaticResource PageTitle}"   FontWeight="SemiBold"/>
                                         </StackPanel>
 
-                                        <TextBlock HorizontalAlignment="Center" Margin="0, 50, 0, 0"  Grid.Column="2" Text="Повне навантаження мікрорайону" FontSize="14" FontWeight="SemiBold"/>
+                                        <TextBlock HorizontalAlignment="Center" Margin="0, 50, 0, 0"  Grid.Column="2" Text="Повна потужність" FontSize="14" FontWeight="SemiBold"/>
 
                                     </Grid>
 
-                                    <Button Grid.Row="0" Margin="0,80,0,0" Style="{StaticResource MenuControls}" Background="LimeGreen" Width="200" Content="Зберегти та продовжити" Command="{Binding UnitedApartmentBuildingsToExcel}" CommandParameter="{Binding ElementName=CalculatedApartmentBuildings}" />
                                 </StackPanel>
-
-
+                                <Button Grid.Row="2"   Style="{StaticResource MenuControls}" Background="LimeGreen" Width="200" Content="Зберегти і продовжити"  HorizontalAlignment="Center" VerticalAlignment="Top" Grid.ColumnSpan="2" />
+                                
                             </Grid>
+
                         </StackPanel>
+
                     </TabItem>
 
 
