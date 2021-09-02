@@ -215,10 +215,9 @@
 
                 <!-- Панель ввода данніх о кєф участия в максимуме-->
                 <TextBox x:Name="HiddenTextBlockWithSideNote" Style="{StaticResource TextField}" TextChanged="HiddenTextBlockWithSideNote_TextChanged" Text="{Binding SelectedAbstractBuilding.SideNote}"  Visibility="Collapsed"></TextBox>
-                <TextBlock x:Name="ParticipanceInMaxText1" Style="{StaticResource BlockField}" FontWeight="DemiBold" Width="150" Margin="30,35,0,0">Коеф. участі у макс.</TextBlock>
-                <TextBlock x:Name="ParticipanceInMaxText2" Style="{StaticResource BlockField}" FontWeight="DemiBold" Width="150" Margin="30,0,0,0">навантаження</TextBlock>
-                <TextBox x:Name="InputFieldCoefficientOfParticipanceInMax" Style="{StaticResource TextField}" Text="{Binding SelectedAbstractBuilding.CoefficientOfMax}" Visibility="Collapsed"></TextBox>
-                <Button x:Name="GoToChangeCoefficientsOfMaxForSpecialConsumer" Visibility="Hidden" Style="{StaticResource MenuControls}"  Margin="0,20,0,0" Content="Редагувати всі" Width="120" Background="Gray" HorizontalAlignment="Center" Command="{Binding UserWantsToAddCustomCoefficientsOfMax}"/>
+                <TextBlock x:Name="ParticipanceInMaxText1" Visibility="Hidden" Style="{StaticResource BlockField}" FontWeight="DemiBold" Width="150" Margin="30,35,0,0">Коеф. участі у макс.</TextBlock>
+                <TextBlock x:Name="ParticipanceInMaxText2" Visibility="Hidden" Style="{StaticResource BlockField}" FontWeight="DemiBold" Width="150" Margin="30,0,0,0">навантаження</TextBlock>
+                <Button x:Name="GoToChangeCoefficientsOfMaxForSpecialConsumer" Visibility="Hidden" Style="{StaticResource MenuControls}"  Margin="0,20,0,0" Content="Редагувати обраний" Width="150" Background="Gray" HorizontalAlignment="Center" Command="{Binding UserWantsToAddCustomCoefficientsOfMax}"/>
                
             </StackPanel>
 
@@ -268,7 +267,7 @@
 
                                 <Button Grid.Row="2" Name="CalculateLightningButton"  Style="{StaticResource MenuControls}" Width="200" Content="Розрахувати освітлення" Command="{Binding CalculateLigtningCommand}" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.ColumnSpan="2" />
 
-                                <Button Grid.Row="2" Name="GoToNextStepButton" Style="{StaticResource MenuControls}" Background="LimeGreen" IsEnabled="{Binding SelectedDistrict.IsReadyForCalculation}" Command="{Binding CalculateDistrict}"  HorizontalAlignment="Right"  VerticalAlignment="Top" Grid.Column="1" Margin="0,3,10,0" Click="GoToNextStepButton_Click">Далее</Button>
+                                <Button Grid.Row="2" Name="GoToNextStepButton" Style="{StaticResource MenuControls}" Command="{Binding ConvertBuildingsToAbstractBuildingsCommand}" Background="LimeGreen" IsEnabled="{Binding SelectedDistrict.IsLightningCalculated}"   HorizontalAlignment="Right"  VerticalAlignment="Top" Grid.Column="1" Margin="0,3,10,0" Click="GoToNextStepButton_Click">Далее</Button>
                                 <StackPanel Orientation="Vertical" Grid.Row="1" Grid.ColumnSpan="2">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
@@ -333,7 +332,7 @@
                                         <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Тип" Width="1*" Binding="{Binding Type}"/>
                                         <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Повна потужність" Width="0.2*" Binding="{Binding FullPower}"/>
                                         <DataGridTextColumn CanUserResize="False"  IsReadOnly="True" Header="Коефіціент участі у максимумі" Width="0.32*" Binding="{Binding CoefficientOfMax}"/>
-                                        <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Foreground="Transparent" Header="Примітка" Width="0.2" Binding="{Binding SideNote}">
+                                        <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Foreground="Transparent"  Width="0.2" Binding="{Binding SideNote}">
                                             <DataGridTextColumn.ElementStyle>
                                                 <Style TargetType="{x:Type TextBlock}">
                                                     <Style.Triggers>
@@ -365,10 +364,10 @@
                              -->
                                     </DataGrid.Columns>
                                 </DataGrid>
+                                <Button Grid.Row="2" Style="{StaticResource MenuControls}" Content="Зберегти в Excel" HorizontalAlignment="Center" Background="SeaGreen" Command="{Binding CoefficientsOfParticipanceDataToExcel}" CommandParameter="{Binding ElementName=CoefficientsOfParticipanceInMaximumGrid}" Margin="0,3,325,3"/>
+                                <Button Name="DefineCoefficientsButton" Grid.Row="2" Command="{Binding DetermineCoefficientsOfParticipanceInMaximumLoadCommand}" IsEnabled="{Binding SelectedDistrict.IsReadyToDetermineCOP}" Style="{StaticResource MenuControls}" Background="LimeGreen" HorizontalAlignment="Right"  VerticalAlignment="Top" Grid.Column="0" Margin="0,3,0,0" Width="200">Визначити коефіцієнти</Button>
 
-                                <Button Grid.Row="2" Style="{StaticResource MenuControls}" Content="Зберегти в Excel" HorizontalAlignment="Center" Command="{Binding CoefficientsOfParticipanceDataToExcel}" CommandParameter="{Binding ElementName=CoefficientsOfParticipanceInMaximumGrid}" Margin="430,3,74,3"/>
-                              
-                                <Button Grid.Row="2"  Style="{StaticResource MenuControls}" Background="LimeGreen" IsEnabled="{Binding SelectedDistrict.IsReadyForCalculation}" Command="{Binding CalculateDistrictPower}"  HorizontalAlignment="Right"  VerticalAlignment="Top" Grid.Column="1" Margin="0,3,10,0" Width="200" Click="Button_Click">Розрахувати навантаження</Button>
+                                <Button x:Name="CalculateDistrictLoad" Grid.Row="2"  Style="{StaticResource MenuControls}" Background="LimeGreen" IsEnabled="{Binding SelectedDistrict.IsReadyForCalculation}" Command="{Binding CalculateDistrictPower}"  HorizontalAlignment="Right"  VerticalAlignment="Top" Grid.Column="1" Margin="0,3,10,0" Width="200" Click="Button_Click">Розрахувати навантаження</Button>
                                 <TextBlock Name="WarningToEnterCorrectCoefficientsOfParticipance" Grid.Row="1"  Width="800"  Style="{StaticResource PageTitle}" Background="Transparent" Foreground="Black" Grid.ColumnSpan="2" Margin="90,12,89,8" >
                                     <Border BorderThickness="2" BorderBrush="Coral">
                                     <StackPanel Orientation="Horizontal"  >

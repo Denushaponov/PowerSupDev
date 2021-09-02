@@ -52,12 +52,14 @@ namespace DistrictSupplySolution.ViewModels
             byte i=0;
             foreach (var cm in SelectedAbstractBuilding.SpecialConsumerCoefficientsOfMax)
             {
-                // добавляю особекнную отметку к тем потребителям для которых пользователь 
+                // добавляю особенную отметку к тем потребителям для которых пользователь 
                 if (cm.CoefficientOfMax == 0)
                     i++;
             }
             if (i == 0)
             { SelectedAbstractBuilding.SideNote = "Особливий визначений"; }
+            else
+            { SelectedAbstractBuilding.SideNote = "Особливий"; }
             await _messageBus.SendTo<LoadOfDistrictViewModel>(new AbstractBuildingMessage(SelectedAbstractBuilding));
             
         });

@@ -144,7 +144,7 @@
             </StackPanel>
 
 
-            <DataGrid x:Name="CoefficientsOfParticipanceInMaximumGrid" Grid.Column="1" Margin="0,0,43.5,43.5"  AutoGenerateColumns="False" CanUserDeleteRows="False" HorizontalAlignment="Left" ItemsSource="{Binding SelectedAbstractBuilding.SpecialConsumerCoefficientsOfMax}" SelectedItem="{Binding SelectedSpecialCoefficientOfMax}" Grid.ColumnSpan="2">
+            <DataGrid x:Name="CoefficientsOfParticipanceInMaximumGrid" Grid.Column="1" Margin="0,0,43.5,43.5"  AutoGenerateColumns="False" CanUserDeleteRows="False"  HorizontalAlignment="Left" ItemsSource="{Binding SelectedAbstractBuilding.SpecialConsumerCoefficientsOfMax}" SelectedItem="{Binding SelectedSpecialCoefficientOfMax}" Grid.ColumnSpan="2">
                
                 <DataGrid.Columns>
                     <DataGridTextColumn CanUserResize="False" IsReadOnly="True"  Header="Тип" Width="1*" Binding="{Binding Type}"/>

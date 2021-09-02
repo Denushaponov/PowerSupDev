@@ -25,12 +25,24 @@ namespace DistrictSupplySolution.ViewModels
         private readonly EventBus _eventBus;
         private readonly MessageBus _messageBus;
 
-        public District SelectedDistrict { get; set; } = new District();
+        District _selectedDistrict = new District();
+        public District SelectedDistrict
+        {
+            get { return _selectedDistrict; }
+            set 
+            {
+                if (_selectedDistrict.Building == value.Building)
+                    _isDistrictUpdated = false;
+                else
+                    _isDistrictUpdated = true;
+                _selectedDistrict = value;
+                
+            }
+        } 
         public Street SelectedStreet { get; set; }
         public AbstractBuilding SelectedAbstractBuilding { get; set; }
 
-      
-        public bool CalculationButtonIsEnabled=false; 
+        bool _isDistrictUpdated = false;
           
         public LoadOfDistrictViewModel(PageService pageService, EventBus eventBus, MessageBus messageBus)
         {
@@ -44,6 +56,14 @@ namespace DistrictSupplySolution.ViewModels
             {
                 // присваивание присланного из DistrictMenuVM микрорайона в качестве выбранного
                 SelectedDistrict = message.SharedDistrict;
+
+                // валидация возможности рассчёта  нагрузки
+                if (SelectedDistrict.IsReadyToDetermineCOP== false)
+                {
+                    SelectedDistrict.IsReadyForCalculation = false;
+                }
+
+
             });
 
             // получение абстрактного здания с отредактироваными значениями
@@ -60,10 +80,34 @@ namespace DistrictSupplySolution.ViewModels
                     else
                     i++;
                 }
+
                 SelectedDistrict.AbstractBuildings[i] = message.SharedAbstractBuilding;
+
+
+
+                // Проверяю можно ли давать пользователю доступ к кнопке определение коэффициентов участия в максимуме
+                i = 0;
+                foreach (var ab in SelectedDistrict.AbstractBuildings)
+                {
+                    if (ab.SideNote=="Особливий")
+                    {
+                        i++;  
+                    }    
+                }
+               if (i == 0)
+                { 
+                    SelectedDistrict.IsReadyToDetermineCOP = true; 
+                
+                }
+               else
+                { SelectedDistrict.IsReadyToDetermineCOP = false; }
+               // Если пользователь сделал изменение и отправляет его в форму для рассчёта то он не может сразу начать рассчёт микрорайона а сначала
+               // должен определить , нажать кнопку определить коэффициенты участия в максимуме.
+                SelectedDistrict.IsReadyForCalculation = false;
+            
             });
 
-            SelectedDistrict.Streets = new ObservableCollection<Street> { new Street { Category = "A" }, new Street { Category = "B" }, new Street { Category = "C" } };
+            SelectedDistrict.Streets = new ObservableCollection<Street> {};
             
             SelectedDistrict.AbstractBuildings = new ObservableCollection<AbstractBuilding> { };
            
@@ -76,20 +120,51 @@ namespace DistrictSupplySolution.ViewModels
             await _eventBus.Publish(new SaveEvent());
         });
 
-        public ICommand CalculateDistrict => new DelegateCommand(() =>
+        public ICommand ConvertBuildingsToAbstractBuildingsCommand => new DelegateCommand(()=>
+        {
+            if (_isDistrictUpdated == true)
+            {
+                SelectedDistrict.ConvertBuildingsToAbstractBuildings();
+                _isDistrictUpdated = false;
+            }
+        });
+       
+
+        public ICommand DetermineCoefficientsOfParticipanceInMaximumLoadCommand => new DelegateCommand(() =>
         {
             SelectedDistrict.DetermineCoefficientsOfParticipanceInMaximumLoad();
+            // Пользователь определил коэффициенты участия в максимуме, теперь можно дать доступ к рассчёту
+            SelectedDistrict.IsReadyForCalculation = true;
         });
 
         public ICommand CalculateDistrictPower => new DelegateCommand(() =>
         {
+           
             SelectedDistrict.CalculateDistrictPower();
         });
+
+        
+        
+
+        
 
         public ICommand CalculateLigtningCommand => new DelegateCommand(() =>
         {
             SelectedDistrict.CalculateLightning();
-            CalculationButtonIsEnabled = true;
+            
+            // Проверяю также возможность доступа пользователя к определению коэффициентов участия
+            byte i = 0;
+            foreach (var ab in SelectedDistrict.AbstractBuildings)
+            {
+                if (ab.SideNote == "Особливий")
+                {
+                    i++;
+                }
+            }
+            if (i == 0)
+            { SelectedDistrict.IsReadyToDetermineCOP = true; }
+            else
+            { SelectedDistrict.IsReadyToDetermineCOP = false; }
         });
 
 

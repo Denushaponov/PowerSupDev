@@ -35,20 +35,26 @@ namespace DistrictSupplySolution.Pages
         {
             if (HiddenTextBlockWithSideNote.Text == "Особливий")
             {
-                ParticipanceInMaxText1.Visibility = Visibility.Visible;
+              ParticipanceInMaxText1.Visibility = Visibility.Visible;
                 ParticipanceInMaxText2.Visibility = Visibility.Visible;
-                InputFieldCoefficientOfParticipanceInMax.Visibility = Visibility.Visible;
+                //InputFieldCoefficientOfParticipanceInMax.Visibility = Visibility.Visible;
                 CoeficientOfParticipanceInputPanel.Background = Brushes.Coral;
                 
                 GoToChangeCoefficientsOfMaxForSpecialConsumer.Visibility = Visibility.Visible;
                 MessageBox.Show("ОСОБЛИВИЙ СПОЖИВАЧ: необхідно уточнити усі його можливі коефіцієнти участі");
-                
             }    
+             
+            else if (HiddenTextBlockWithSideNote.Text == "Особливий визначений")
+            {
+                GoToChangeCoefficientsOfMaxForSpecialConsumer.Visibility = Visibility.Visible;
+                MessageBox.Show("ОСОБЛИВИЙ СПОЖИВАЧ: натисніть, щоб редагувати значення");
+            }    
+
             else
             {
                 ParticipanceInMaxText1.Visibility = Visibility.Collapsed;
                 ParticipanceInMaxText2.Visibility = Visibility.Collapsed;
-                InputFieldCoefficientOfParticipanceInMax.Visibility = Visibility.Collapsed;
+                
                 CoeficientOfParticipanceInputPanel.Background = Brushes.Transparent;
                 GoToChangeCoefficientsOfMaxForSpecialConsumer.Visibility = Visibility.Hidden;
             }
@@ -65,7 +71,7 @@ namespace DistrictSupplySolution.Pages
             FinalDistrictLoadTab.IsSelected = true;
         }
 
-        
+       
     }
 
    

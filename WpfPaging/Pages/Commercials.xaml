@@ -40,8 +40,11 @@
         </Style>
         <!--Стили для заголовка страницы-->
         <Style TargetType="TextBlock" x:Key="PageTitle">
-            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="FontSize" Value="40"/>
             <Setter Property="Margin" Value="0, 12, 0, 8"/>
+            <Setter Property="FontWeight" Value="DemiBold"/>
+            <Setter Property="Foreground" Value="LightGray"/>
+            <Setter Property="TextAlignment" Value="Center"/>
         </Style>
         <!-- Для текстбоксов-->
         <Style TargetType="TextBox" x:Key="TextField">
@@ -79,13 +82,10 @@
                 <RowDefinition Height="6*"/>
             </Grid.RowDefinitions>
             <!--Заголовок-->
-            <StackPanel Background="Bisque" Orientation="Vertical" VerticalAlignment="Center">
+            <StackPanel  Orientation="Vertical" VerticalAlignment="Center">
                 <TextBlock Text="Комерційні будівлі: вхідні дані" TextAlignment="Center" Style="{StaticResource PageTitle}"/>
 
-                <!--Меню переключатели-->
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,15">
-                    <Button Style="{StaticResource MenuControls}" Command="{Binding ChangePage}" Content="Меню" />
-                </StackPanel>
+                
 
                 <!--Делю рабочую область на две колонки-->
             </StackPanel>

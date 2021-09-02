@@ -11,13 +11,16 @@
     <Page.Resources>
 
         <!-- Стили для кнопок меню -->
+        <!-- Стили для кнопок меню -->
         <Style TargetType="Button" x:Key="MenuControls">
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Margin" Value="3"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Width" Value="120"/>
-            <Setter Property="Height" Value="20"/>
-            <Setter Property="Background" Value="Peru"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Background" Value="CornflowerBlue"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
         </Style>
         <!-- Стиль для кнопок добавления-->
         <Style x:Key="AddButton" TargetType="Button">
@@ -47,9 +50,11 @@
            
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Height" Value="25"/>
-            <Setter Property="Background" Value="#FF7FE0FF"/>
+            <Setter Property="Background" Value="CornflowerBlue"/>
             <Setter Property="Margin" Value="3, 3,0,3"/>
-            <Setter Property="BorderBrush" Value="LightBlue"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="BorderBrush" Value="CornflowerBlue"/>
             <Setter Property="HorizontalAlignment" Value="Left"/>
             
             <Setter Property="VerticalAlignment" Value="Center"/>
@@ -61,8 +66,11 @@
 
         <!--Стили для заголовка страницы-->
         <Style TargetType="TextBlock" x:Key="PageTitle">
-            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="FontSize" Value="40"/>
             <Setter Property="Margin" Value="0, 12, 0, 8"/>
+            <Setter Property="FontWeight" Value="DemiBold"/>
+            <Setter Property="Foreground" Value="LightGray"/>
+            <Setter Property="TextAlignment" Value="Center"/>
         </Style>
         <!-- Для текстбоксов-->
         <Style TargetType="TextBox" x:Key="TextField">
@@ -105,9 +113,9 @@
                 <RowDefinition Height="6*"/>
             </Grid.RowDefinitions>
             <!--Заголовок-->
-            <StackPanel Background="Bisque" Orientation="Vertical" VerticalAlignment="Center">
+            <StackPanel Orientation="Vertical" VerticalAlignment="Center">
                 <TextBlock Text="Житлові будинки" TextAlignment="Center" Style="{StaticResource PageTitle}"/>
-
+                
                 <!--Меню переключатели-->
                
                 <!--Делю рабочую область на две колонки-->
@@ -134,8 +142,8 @@
                     </StackPanel.Style>
                     <!-- !!!! -->
                     
-                        <Button Style="{StaticResource AddButton}" Command="{Binding AddCommand}" Content="Add"/>
-                        <Button Style="{StaticResource RemoveButton}" Command="{Binding Remove}" CommandParameter="{Binding SelectedApartmentBuilding}" Content="Remove"/>
+                        <Button Style="{StaticResource MenuControls}" Background="LimeGreen" Command="{Binding AddCommand}" Content="Додати"/>
+                        <Button Style="{StaticResource MenuControls}" Background="Coral" Command="{Binding Remove}" CommandParameter="{Binding SelectedApartmentBuilding}" Content="Видалити"/>
 
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <Button Style="{StaticResource CopyButton}" Command="{Binding Copy}" CommandParameter="{Binding ElementName=CopyTextBox}">Копіювати</Button>
@@ -166,7 +174,7 @@
                     <!-- Панель ввода информации о лифтах -->
 
                     <TextBlock Style="{StaticResource BlockField }" Text="Ліфти на під'їзд"></TextBlock>
-                    <Button Grid.Column="1" Content="Додати" Width="80" Margin="0, 3, 5, 3" Background="LightGreen" Command="{Binding AddElevatorCommand}"/>
+                    <Button Grid.Column="1" Content="Додати"   Margin="4, 3, 5, 3" Style="{StaticResource MenuControls}" Height="25" Background="LimeGreen" Command="{Binding AddElevatorCommand}"/>
                     <ListBox Name="ElevatorsList" BorderThickness="0" HorizontalAlignment="Center" Width="140" MaxHeight="150" ItemsSource="{Binding SelectedApartmentBuilding.PowerPlants.ElevatorsPerEntrance}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
                         <ListBox.ItemTemplate>
                             <DataTemplate x:Name="ElevatorElement">
@@ -195,7 +203,7 @@
 
                     <!-- Панель ввода информации о насосах-->
                     <TextBlock Style="{StaticResource BlockField }" Text="Насоси на під'їзд"></TextBlock>
-                    <Button Grid.Column="1" Content="Додати" Width="80" Margin="0, 3, 5, 3" Background="LightGreen" Command="{Binding AddPompCommand}"/>
+                    <Button Grid.Column="1" Content="Додати" Style="{StaticResource MenuControls}" Height="25"   Margin="4, 3, 5, 3" Background="LimeGreen" Foreground="White" Command="{Binding AddPompCommand}"/>
                     <ListBox Name="PompsList" BorderThickness="0" HorizontalAlignment="Center" Width="140" MaxHeight="150" ItemsSource="{Binding SelectedApartmentBuilding.PowerPlants.Pomps}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
                         <ListBox.ItemTemplate>
                             <DataTemplate x:Name="PompElement">
@@ -239,7 +247,7 @@
                                 <!-- Колонки-->
                                 <Grid>
                                     <Grid.RowDefinitions>
-                                        <RowDefinition Height="600"/>
+                                        <RowDefinition Height="550"/>
                                         <RowDefinition Height="1*"/>
                                     </Grid.RowDefinitions>
 
@@ -269,8 +277,8 @@
                                         </DataGrid.Columns>
                                     </DataGrid>
 
-                                    <Button Grid.Row="1" Style="{StaticResource AddButton}" Command="{Binding ExecuteCalculation}"  HorizontalAlignment="Right" Height="25" VerticalAlignment="Bottom" Click="Button_Click">Далее</Button>
-                                    <Button Grid.Row="1" Style="{StaticResource MenuControls}" Content="Зберегти в Excel" Command="{Binding InitialApartmentDataToExcel}" CommandParameter="{Binding ElementName=InitialDataApartmentBuildings}" />
+                                    <Button Grid.Row="1" Style="{StaticResource MenuControls}" Background="LimeGreen" Command="{Binding ExecuteCalculation}"  HorizontalAlignment="Right"  VerticalAlignment="Bottom" Click="Button_Click">Продовжити</Button>
+                                    <Button Grid.Row="1" Style="{StaticResource MenuControls}"  Background="SeaGreen" Content="Зберегти в Excel" Command="{Binding InitialApartmentDataToExcel}" CommandParameter="{Binding ElementName=InitialDataApartmentBuildings}" />
                                 </Grid>
                             </StackPanel>
                         </TabItem>
