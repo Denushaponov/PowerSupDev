@@ -244,6 +244,12 @@ namespace WpfPaging.ViewModels
                
         }
 
+        public ICommand GoToCommercials => new AsyncCommand(async () =>
+        {
+            _pageService.ChangePage(new Commercials());
+            await _messageBus.SendTo<CommercialsViewModel>(new DistrictMessage(SelectedDistrict));
+        }
+       );
 
         /// <summary>
         /// Комманда сохранения таблицы со входными данными.

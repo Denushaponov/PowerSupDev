@@ -14,29 +14,30 @@
     mc:Ignorable="d">
     <Page.Resources>
 
+
+       
+
         <!-- Стили для кнопок меню -->
         <Style TargetType="Button" x:Key="MenuControls">
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Margin" Value="3"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Width" Value="120"/>
-            <Setter Property="Height" Value="20"/>
-            <Setter Property="Background" Value="Peru"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Background" Value="CornflowerBlue"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
         </Style>
         <!-- Стиль для кнопок добавления-->
-        <Style  x:Key="AddButton" TargetType="Button">
-            <Setter Property="Width" Value="50"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Height" Value="20"/>
-            <Setter Property="Background" Value="Green"/>
-            <Setter Property="Margin" Value="3"/>
-            <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
+        <Style  x:Key="AddButton" BasedOn="{StaticResource MenuControls}" TargetType="Button">
+            <Setter Property="Background" Value="LimeGreen"/>
         </Style>
         <!-- ДЛЯ КОНПОК УДАЛЕНИЯ-->
-        <Style x:Key="RemoveButton" TargetType="Button" BasedOn="{StaticResource AddButton}">
-            <Setter Property="Background" Value="Red"/>
-
+        <Style x:Key="RemoveButton" TargetType="Button" BasedOn="{StaticResource MenuControls}">
+            <Setter Property="Background" Value="Coral"/>
+        </Style>
+        <Style x:Key="SaveAsExcelButton" TargetType="Button" BasedOn="{StaticResource MenuControls}">
+            <Setter Property="Background" Value="SeaGreen"/>
         </Style>
         <!--Стили для заголовка страницы-->
         <Style TargetType="TextBlock" x:Key="PageTitle">
@@ -110,14 +111,19 @@
                         </Style>
                     </StackPanel.Style>
                     <!-- !!!! -->
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Button Style="{StaticResource AddButton}" Command="{Binding AddCommand}" Content="+"/>
-                        <Button Style="{StaticResource RemoveButton}" Command="{Binding Remove}" CommandParameter="{Binding SelectedCommercialBuilding}" Content="-"/>
-                    </StackPanel>
+                  
+                        <Button Style="{StaticResource AddButton}" Command="{Binding AddCommand}" Content="Додати"/>
+                        <Button Style="{StaticResource RemoveButton}" Command="{Binding Remove}" CommandParameter="{Binding SelectedCommercialBuilding}" Content="Видалити"/>
+                    
 
 
                     <TextBlock Style="{StaticResource BlockField}">Генплановий №</TextBlock>
                     <TextBox Style="{StaticResource TextField}" Text="{Binding SelectedCommercialBuilding.PlanNumber}"></TextBox>
+
+                    <TextBlock Style="{StaticResource BlockField}">Координата X</TextBlock>
+                    <TextBox Style="{StaticResource TextField}" Text="{Binding SelectedCommercialBuilding.BuildingCoordinates.X}"></TextBox>
+                    <TextBlock Style="{StaticResource BlockField}">Координата Y</TextBlock>
+                    <TextBox Style="{StaticResource TextField}" Text="{Binding SelectedCommercialBuilding.BuildingCoordinates.Y}"></TextBox>
 
                     <TextBlock Style="{StaticResource BlockField}">Тип споживача:</TextBlock>
                     <ComboBox Name="TypeOfCommercialsBox" Style="{StaticResource ComboField}" ItemsSource="{Binding Source={x:Static local:CommercialsDataBase.CommercialTypeColl}}" Text="{Binding SelectedCommercialBuilding.TypeOfCommercial}" SelectionChanged="TypeOfCommercialsBox_SelectionChanged"></ComboBox>
@@ -143,29 +149,10 @@
 
                     
 
-                    <TextBlock Style="{StaticResource BlockField}">Катег. надійності</TextBlock>
-                    <ComboBox Style="{StaticResource ComboField}" ItemsSource="{Binding Source={x:Static local:CommercialsDataBase.ReliabilityCathegoryColl}}" Text="{Binding SelectedCommercialBuilding.ReliabilityCathegory}"></ComboBox>
-
+                   
                      <!-- Панель ввода информации о лифтах -->
 
-                    <CheckBox IsChecked="False" Command="{Binding ClearElectrification}" Content="Електрифікація" FontSize="14" Width="120" Name="IsElectrificated" Margin="5,8,5,3" >
-
-                    </CheckBox>
-                    <StackPanel>
-                        <StackPanel.Style>
-                            <Style TargetType="StackPanel">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ElementName=IsElectrificated, Path=IsChecked}" Value="False">
-                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                        <Setter Property="IsEnabled" Value="False"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </StackPanel.Style>
-                        <TextBlock Style="{StaticResource BlockField}">Рівень електриф.:</TextBlock>
-                        <ComboBox Style="{StaticResource ComboField}" ItemsSource="{Binding Source={x:Static local:CommercialsDataBase.ElectrificationLevelColl}}" Text="{Binding SelectedCommercialBuilding.ElectrificationLevel}"></ComboBox>
-
-                    </StackPanel>
+                   
 
                     
 
@@ -192,13 +179,14 @@
 
                                     <DataGrid FontSize="12" Name="InitialDataCommercialBuildings"  AutoGenerateColumns="False" ItemsSource="{Binding SelectedDistrict.Building.CommercialBuildings}" SelectedItem="{Binding SelectedCommercialBuilding}">
                                         <DataGrid.Columns>
-                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Генплановий №" Width="0.3*" Binding="{Binding PlanNumber}"/>
-                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Тип споживача" Width="1*" Binding="{Binding TypeOfCommercial}"/>
-                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Характеристика" Width="0.3*" Binding="{Binding ValueOfCharacteristics}"/>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Генплановий №" Width="0.4*" Binding="{Binding PlanNumber}"/>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Координата Х" Width="0.4*" Binding="{Binding BuildingCoordinates.X}"/>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Координата Y" Width="0.4*" Binding="{Binding BuildingCoordinates.Y}"/>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Тип споживача" Width="0.9*" Binding="{Binding TypeOfCommercial}"/>
+                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Характеристика" Width="0.4*" Binding="{Binding ValueOfCharacteristics}"/>
                                             <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Од. вим." Width="0.3*" Binding="{Binding MeasurmentUnit}"/>
-                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Категорія надійності" Width="0.45*" Binding="{Binding ReliabilityCathegory}"/>
-                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Рівень електрифікації (*якщо є)" Width="0.6*" Binding="{Binding ElectrificationLevel}"/>
-
+                                            
+                                           
 
 
                                             <!-- КОЛОНКА С КНОПКАМИ УДАЛИТЬ ДЛЯ КАЖДОГО РЯДА 
@@ -214,9 +202,9 @@
                              -->
                                         </DataGrid.Columns>
                                     </DataGrid>
-                                    
-                                    <Button Grid.Row="1" Style="{StaticResource AddButton}" Command="{Binding ExecuteCalculation}"  HorizontalAlignment="Right" Height="25" VerticalAlignment="Bottom" Click="Button_Click">Далее</Button>
-                                    <Button Grid.Row="1" Style="{StaticResource MenuControls}" Content="Зберегти в Excel" Command="{Binding InitialCommercialBuildingsDataToExcel}" CommandParameter="{Binding ElementName=InitialDataCommercialBuildings}" />
+
+                                    <Button Grid.Row="1" Style="{StaticResource AddButton}" Command="{Binding ExecuteCalculation}"  HorizontalAlignment="Right"  VerticalAlignment="Bottom" Width="200" Click="Button_Click">Розрахувати та зберегти</Button>
+                                    <Button Grid.Row="1" Style="{StaticResource SaveAsExcelButton}" Content="Зберегти в Excel" Command="{Binding InitialCommercialBuildingsDataToExcel}" CommandParameter="{Binding ElementName=InitialDataCommercialBuildings}" />
 
                                 </Grid>
                             </StackPanel>
@@ -253,7 +241,9 @@
                              -->
                                     </DataGrid.Columns>
                                 </DataGrid>
-                                <Button Grid.Row="1" Style="{StaticResource MenuControls}" Content="Зберегти в Excel" Command="{Binding CalculatedCommercialBuildingsDataToExcel}" CommandParameter="{Binding ElementName=CalculatedDataCommercialBuildings}" />
+                                <Button Grid.Row="1" Style="{StaticResource SaveAsExcelButton}" Content="Зберегти в Excel" Command="{Binding CalculatedCommercialBuildingsDataToExcel}" CommandParameter="{Binding ElementName=CalculatedDataCommercialBuildings}" />
+                                <Button Grid.Row="1" Style="{StaticResource AddButton}" Command="{Binding GoToDistrictLoadGrid}"  HorizontalAlignment="Right"  VerticalAlignment="Bottom" Width="150" >Продовжити</Button>
+
                             </Grid>
                         </TabItem>
                     </TabControl>

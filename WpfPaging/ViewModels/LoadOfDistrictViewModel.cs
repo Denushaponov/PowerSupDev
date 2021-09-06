@@ -187,6 +187,18 @@ namespace DistrictSupplySolution.ViewModels
 
         });
 
+        /// <summary>
+        /// Последнее сохранение и переход к въюмодели подстанций 
+        /// </summary>
+        public ICommand SaveAndGoToNextStepCommand => new AsyncCommand(async () =>
+        {
+            // Сохранить
+            await _eventBus.Publish(new SaveEvent());
+            // Перейти на следующее окно
+
+
+        });
+
 
         public ICommand CoefficientsOfParticipanceDataToExcel
         {

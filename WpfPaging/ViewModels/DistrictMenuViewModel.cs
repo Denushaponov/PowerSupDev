@@ -68,8 +68,8 @@ namespace WpfPaging.ViewModels
               {
                   Districts = new ObservableCollection<District>(s.Result);
               }, TaskContinuationOptions.OnlyOnRanToCompletion);
+
            
-            
 
             // Получаю микрорайон с изменениями от других моделей представления
             _messageBus.Receive<DistrictMessage>(this, async message =>

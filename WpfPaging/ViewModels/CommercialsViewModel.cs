@@ -13,6 +13,8 @@ using System.Windows;
 using System.Text;
 using OfficeOpenXml;
 using System.ComponentModel;
+using DistrictSupplySolution.ViewModels;
+using DistrictSupplySolution.Pages;
 
 namespace WpfPaging.ViewModels
 {
@@ -107,6 +109,12 @@ namespace WpfPaging.ViewModels
             await _eventBus.Publish(new SaveEvent());
         }
        );
+
+        public ICommand GoToDistrictLoadGrid => new AsyncCommand(async () => 
+        {
+            _pageService.ChangePage(new DistrictLoad());
+            await _messageBus.SendTo<LoadOfDistrictViewModel>(new DistrictMessage(SelectedDistrict));
+        });
 
         public void EntityPropertyChanged(object sender, PropertyChangedEventArgs e)
         {

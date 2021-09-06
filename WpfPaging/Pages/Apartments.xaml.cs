@@ -32,6 +32,10 @@ namespace WpfPaging.Pages
             ApartmentBuildingsLoadsTab.IsSelected = true;
         }
 
+        private void GoToApartmentsAsOne_Click(object sender, RoutedEventArgs e)
+        {
+            UnitedApartmentBuildingsTab.IsSelected = true;
+        }
       
     }
 

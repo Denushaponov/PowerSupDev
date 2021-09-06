@@ -437,7 +437,7 @@
                                     </Grid>
 
                                 </StackPanel>
-                                <Button Grid.Row="2"   Style="{StaticResource MenuControls}" Background="LimeGreen" Width="200" Content="Зберегти і продовжити"  HorizontalAlignment="Center" VerticalAlignment="Top" Grid.ColumnSpan="2" />
+                                <Button Grid.Row="2" Command="{Binding SaveAndGoToNextStepCommand}"  Style="{StaticResource MenuControls}" Background="LimeGreen" Width="200" Content="Зберегти і продовжити"  HorizontalAlignment="Center" VerticalAlignment="Top" Grid.ColumnSpan="2" />
                                 
                             </Grid>
 

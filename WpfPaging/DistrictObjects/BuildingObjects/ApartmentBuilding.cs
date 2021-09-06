@@ -1,4 +1,5 @@
 ﻿using DevExpress.Mvvm;
+using DistrictSupplySolution.DistrictObjects.ServiceClasses;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -76,6 +77,8 @@ namespace WpfPaging.DistrictObjects
         public double BuildingActiveLoad { get; set; }
         public double BuildingReactiveLoad { get; set; }
         public double BuildingFullLoad { get; set; }
+
+        public Coordinates BuildingCoordinates { get; set; } = new Coordinates();
 
         // База данных
         public DbnTables.DbnApartmentBuildings DbnApartmentBuildings = new DbnTables.DbnApartmentBuildings();

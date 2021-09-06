@@ -2,6 +2,7 @@
 using DevExpress.Mvvm;
 using System.Collections.Generic;
 using System.Text;
+using DistrictSupplySolution.DistrictObjects.ServiceClasses;
 
 namespace WpfPaging.DistrictObjects
 {
@@ -51,6 +52,7 @@ namespace WpfPaging.DistrictObjects
 
         // База дынных
         public DbnTables.DbnCommercialBuildings DbnCommercialBuildings;
+        public Coordinates BuildingCoordinates { get; set; } = new Coordinates();
 
         public CommercialBuilding()
         {
