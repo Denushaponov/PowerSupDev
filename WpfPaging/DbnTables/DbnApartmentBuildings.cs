@@ -105,11 +105,11 @@ namespace WpfPaging.DbnTables
         /// <summary>
         /// Функция выдаёт коэфициент спроса на насосы
         /// </summary>
-        /// <param name="pomps"> Число насосов</param>
+        /// <param name="pompsNumber"> Число насосов</param>
         /// <param name="pompPercentage"> Какую часть в общей удельной нагрузке занимают насосы</param>
         /// <param name="dbnData"> Таблица с коэфициентами спроса</param>
         /// <returns></returns>
-        public double GetPompsCoefficientofAsk(double pomps, double pompPercentage, double[,] dbnData)
+        public double GetPompsCoefficientofAsk(double pompsNumber, double pompPercentage,  double[,] dbnData, int numberOfElevators)
         {
             
             
@@ -129,32 +129,51 @@ namespace WpfPaging.DbnTables
                 loadAbove49[j] = dbnData[3, j];
                 loadAbove24[j] = dbnData[4, j];
                 loadBelow24[j] = dbnData[5, j];
+                // Описываю случай когда искомое значение находится среди табличных данных
+                if (pompsNumberArr[j]==(pompsNumber+numberOfElevators) && pompsNumber != 0)
+                {
+                    if (pompPercentage >= 84)
+                    { result = loadAbove84[j]; }
+                    else if (pompPercentage >= 74)
+                    { result = loadAbove74[j]; }
+                    else if (pompPercentage >= 49)
+                    { result = loadAbove49[j]; }
+                    else if (pompPercentage >= 24)
+                    { result = loadAbove24[j]; }
+                    else if (pompPercentage < 24)
+                    { result = loadBelow24[j]; }
+                    return result;
+                }
+                else if (pompsNumber ==0)
+                { result = 0; return result; }
             }
+
+    
 
             if (pompPercentage>84)
             {
-                result = Interpolate(pompsNumberArr, loadAbove84, (int)pomps);
+                result = Interpolate(pompsNumberArr, loadAbove84, (int)pompsNumber+numberOfElevators);
               
             }
 
             else if (pompPercentage>74)
             {
-                result = Interpolate(pompsNumberArr, loadAbove74, (int)pomps);
+                result = Interpolate(pompsNumberArr, loadAbove74, (int)pompsNumber + numberOfElevators);
             }
 
             else if (pompPercentage > 49)
             {
-                result = Interpolate(pompsNumberArr, loadAbove49, (int)pomps);
+                result = Interpolate(pompsNumberArr, loadAbove49, (int)pompsNumber + numberOfElevators);
             }
 
             else if (pompPercentage >= 25)
             {
-                result = Interpolate(pompsNumberArr, loadAbove24, (int)pomps);
+                result = Interpolate(pompsNumberArr, loadAbove24, (int)pompsNumber + numberOfElevators);
             }
 
             else if (pompPercentage < 25)
             {
-                result = Interpolate(pompsNumberArr, loadBelow24, (int)pomps);
+                result = Interpolate(pompsNumberArr, loadBelow24, (int)pompsNumber + numberOfElevators);
             }
             Console.WriteLine($"Результат: {result} кВт");
             result = Math.Round(result, 2);
@@ -190,17 +209,17 @@ namespace WpfPaging.DbnTables
             PompsCoefOfAsk = new double[,]
             {
                 // Кількість електроприймачів
-                {1, 2, 3,   5,   8,    10,  15,   20,  30,   50,  100 },
-                // 100-85
-                {1, 1, 0.9, 0.8, 0.75, 0.7, 0.65, 0.65, 0.6, 0.55, 0.55},
-                //84-75
-                {1, 1, 1, 0.75, 0.7, 0.65, 0.6, 0.6, 0.6, 0.55, 0.55 },
-                // 74-50
-                {1, 1, 1,   0.7, 0.65, 0.65, 0.6, 0.6, 0.55, 0.50, 0.5 },
-                // 49-25
-                {1, 1, 1,   0.65, 0.6, 0.6, 0.55, 0.5, 0.5, 0.5, 0.45 },
-                // 24 і менше
-                {1, 1, 1, 0.6, 0.6, 0.55, 0.5, 0.5, 0.5, 0.45, 0.45 }
+                {1, 2, 3,   5,    8,      10,    15,    20,    30,   50,     100 },
+                // 100-85                              
+                {1, 1, 0.9, 0.8,  0.75,   0.7,   0.65,  0.65,  0.6,   0.55,  0.55},
+                //84-75                                
+                {1, 1, 1,   0.75, 0.7,   0.65,   0.6,  0.6,    0.6,  0.55,   0.55 },
+                // 74-50                        
+                {1, 1, 1,   0.7,  0.65,   0.65,  0.6,   0.6,   0.55,  0.50,  0.5 },
+                // 49-25                 
+                {1, 1, 1,   0.65, 0.6,   0.6,    0.55,  0.5,   0.5,  0.5,    0.45 },
+                // 24 і менше            
+                {1, 1, 1,   0.6,  0.6,   0.55,   0.5,  0.5,    0.5,  0.45,    0.45 }
             };
 
           

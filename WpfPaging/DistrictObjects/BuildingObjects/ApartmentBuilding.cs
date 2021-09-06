@@ -154,7 +154,8 @@ namespace WpfPaging.DistrictObjects
                 pompsSpecificLoad += p.Load;
             }
             double pompPercentage = 100*pompsSpecificLoad/(elevatorsSpecificLoad+pompsSpecificLoad);
-            PompsCoefficientOfAsk = DbnApartmentBuildings.GetPompsCoefficientofAsk(PowerPlants.Pomps.Count, pompPercentage, DbnApartmentBuildings.PompsCoefOfAsk);
+            
+            PompsCoefficientOfAsk = DbnApartmentBuildings.GetPompsCoefficientofAsk(PowerPlants.Pomps.Count, pompPercentage,  DbnApartmentBuildings.PompsCoefOfAsk, PowerPlants.Elevators.Count);
             PompsActiveLoad = Math.Round(PompsCoefficientOfAsk * pompsSpecificLoad, 2);
             PompsReactiveLoad = PompsActiveLoad * DbnApartmentBuildings.tgFi.Pomps;
         }
