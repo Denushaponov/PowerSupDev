@@ -157,7 +157,7 @@
 
 
 
-                <ListBox   Name="StreetsList" ScrollViewer.CanContentScroll="False"   BorderThickness="0"  HorizontalAlignment="Center" Width="140" Height="330" ItemsSource="{Binding SelectedDistrict.Streets}" SelectedValue="{Binding SelectedStreet}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" >
+                <ListBox   Name="StreetsList" ScrollViewer.CanContentScroll="False"   BorderThickness="0"  HorizontalAlignment="Center" Width="140" Height="435" ItemsSource="{Binding SelectedDistrict.Streets}" SelectedValue="{Binding SelectedStreet}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" >
                     <ListBox.ItemTemplate>
                         <DataTemplate  x:Name="StreetsElement">
 

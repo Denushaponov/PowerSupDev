@@ -41,7 +41,7 @@ namespace WpfPaging.Pages
 
     public class ApartmentDataBase
     {
-        public static IEnumerable<double> LevelsColl { get; } = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 16, 24 };
+        public static IEnumerable<double> LevelsColl { get; } = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 16, 17, 24 };
         public static IEnumerable<double> EntrancesColl { get; } = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
         public static IEnumerable<double> ApartmentsOnSiteColl { get; } = new double[] { 2, 3, 4, 5, 6, 7, 8 };
         public static IEnumerable<double> ElectrificationLevelColl { get; } = new double[] { 1, 3 };

@@ -444,7 +444,36 @@ namespace WpfPaging.DistrictObjects
 
         public District()
         {
-            Streets = new ObservableCollection<Street> { new Street { Category = "A" }, new Street { Category = "B" }, new Street { Category = "C" } };
+            Streets = new ObservableCollection<Street> { new Street { Category = "A" }, new Street { Category = "B" }, new Street { Category = "C" }, new Street { Category = "D" } };
+        }
+
+        
+
+       public District Auto()
+        { 
+            District CalculatedDistrict = new District();
+            CalculatedDistrict.Building.ApartmentBuildings = Building.ApartmentBuildings;
+            CalculatedDistrict.Building.CommercialBuildings = Building.CommercialBuildings;
+            CalculatedDistrict.Building.UniteApartmentBuildings();
+            CalculatedDistrict.ConvertBuildingsToAbstractBuildings();
+            foreach (var ab in AbstractBuildings)
+            {
+                foreach (var abs in CalculatedDistrict.AbstractBuildings)
+                {
+                    if (abs.FullPower == ab.FullPower && abs.PlanNumber == ab.PlanNumber && ab.SpecialConsumerCoefficientsOfMax !=default)
+                    {
+                        abs.SpecialConsumerCoefficientsOfMax = ab.SpecialConsumerCoefficientsOfMax;
+                        abs.SideNote = ab.SideNote;
+                    }
+                }
+            }
+            CalculatedDistrict.DetermineCoefficientsOfParticipanceInMaximumLoad();
+            //Разобраться с логикой для освещения
+            CalculatedDistrict.DistrictTotalLightning = DistrictTotalLightning;
+            CalculatedDistrict.ConvertTotalLigtningToAbstractBuildings();
+
+            CalculatedDistrict.CalculateDistrictPower();
+            return CalculatedDistrict;
         }
 
     }

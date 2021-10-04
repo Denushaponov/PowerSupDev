@@ -118,6 +118,7 @@ namespace WpfPaging.ViewModels
 
         public void EntityPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            if (SelectedCommercialBuilding!=null)
             if (SelectedDistrict.Building.Validate(SelectedCommercialBuilding.Id, SelectedCommercialBuilding.PlanNumber))
                 SelectedCommercialBuilding.PlanNumber = 0;
 

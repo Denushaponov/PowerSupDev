@@ -195,7 +195,8 @@ namespace DistrictSupplySolution.ViewModels
             // Сохранить
             await _eventBus.Publish(new SaveEvent());
             // Перейти на следующее окно
-
+           // Рассчитать автоматически и присвоить как выбранный
+           // SelectedDistrict = SelectedDistrict.Auto();
 
         });
 

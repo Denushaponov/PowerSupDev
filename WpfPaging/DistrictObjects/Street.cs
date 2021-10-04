@@ -58,8 +58,10 @@ namespace DistrictSupplySolution.DistrictObjects
             { MinLoad = 80; MaxLoad = 100; }
         else if (Category == "B")
             { MinLoad = 30; MaxLoad = 80; }
-        else
+        else if (Category == "C")
             { MinLoad = 7; MaxLoad = 10; }
+       else
+            { MinLoad = 1; MaxLoad = 6; }
         }
 
     }

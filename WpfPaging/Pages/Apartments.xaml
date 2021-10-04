@@ -158,11 +158,15 @@
                     <TextBlock Style="{StaticResource BlockField}">Генплановий №</TextBlock>
                     <TextBox Style="{StaticResource TextField}" Text="{Binding SelectedApartmentBuilding.PlanNumber, UpdateSourceTrigger=LostFocus, NotifyOnTargetUpdated=True}"></TextBox>
 
-                    <TextBlock Style="{StaticResource BlockField}">Координата X</TextBlock>
-                    <TextBox Style="{StaticResource TextField}" Text="{Binding SelectedApartmentBuilding.BuildingCoordinates.X, UpdateSourceTrigger=LostFocus, NotifyOnTargetUpdated=True}"></TextBox>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"  Margin="0, 5">
+                        <TextBlock Style="{StaticResource BlockField}"  Width="40" >Вісь X:</TextBlock>
+                        <TextBox Style="{StaticResource TextField}" Width="78"  Margin="0, 0, 2, 0" BorderThickness="0, 2, 2,2"  Text="{Binding SelectedApartmentBuilding.BuildingCoordinates.X, UpdateSourceTrigger=LostFocus, NotifyOnTargetUpdated=True}"></TextBox>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"  Margin="0, 5">
+                        <TextBlock Style="{StaticResource BlockField}"  Width="40" >Вісь Y:</TextBlock>
+                        <TextBox Style="{StaticResource TextField}" Width="78"  Margin="0, 0, 2, 0" BorderThickness="0, 2, 2,2"  Text="{Binding SelectedApartmentBuilding.BuildingCoordinates.Y, UpdateSourceTrigger=LostFocus, NotifyOnTargetUpdated=True}"></TextBox>
+                    </StackPanel>
 
-                    <TextBlock Style="{StaticResource BlockField}">Координата Y</TextBlock>
-                    <TextBox Style="{StaticResource TextField}" Text="{Binding SelectedApartmentBuilding.BuildingCoordinates.Y, UpdateSourceTrigger=LostFocus, NotifyOnTargetUpdated=True}"></TextBox>
 
 
                     <TextBlock Style="{StaticResource BlockField}">Поверхів:</TextBlock>
