@@ -177,6 +177,13 @@ namespace WpfPaging.ViewModels
 
         });
 
+        public ICommand GoForCanvas => new AsyncCommand(async () =>
+        {
+            _pageService.ChangePage(new TSAndCoordinates());
+            await _messageBus.SendTo<LoadOfDistrictViewModel>(new DistrictMessage(SelectedDistrict));
+
+        });
+
 
     }
 }

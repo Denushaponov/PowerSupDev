@@ -6,11 +6,13 @@ using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using WpfPaging.DistrictObjects;
 using WpfPaging.Events;
 using WpfPaging.Messages;
@@ -19,18 +21,19 @@ using WpfPaging.ViewModels;
 
 namespace DistrictSupplySolution.ViewModels
 {
-  
+
     /// <summary>
     /// ViewModel для сбора информации о координатах потребителей и рассчёта трансформаторных подстанций
     /// </summary>
-    public class TSViewModel
+    public class TSViewModel:BindableBase
     {
         private readonly PageService _pageService;
         private readonly EventBus _eventBus;
         private readonly MessageBus _messageBus;
 
-        
+
         public District SelectedDistrict { get; set; }
+       
 
         public TSViewModel(PageService pageService, EventBus eventBus, MessageBus messageBus)
         {
@@ -44,5 +47,12 @@ namespace DistrictSupplySolution.ViewModels
             });
 
         }
+
+
+        
+
+       
     }
+
+  
 }

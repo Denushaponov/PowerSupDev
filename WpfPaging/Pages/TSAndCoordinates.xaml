@@ -5,10 +5,17 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:DistrictSupplySolution.Pages"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
-      Title="TSAndCoordinates">
+      DataContext="{Binding TSViewModel, Source={StaticResource ViewModelLocator}}"
+     d:DesignHeight="800" d:DesignWidth="1200"
+      Title="TSAndCoordinates" >
 
     <Grid>
+        <Button x:Name="ShowSituations" Width="100" Height="50" HorizontalAlignment="Left" Command="{Binding CalculatedCommercialBuildingsDataToExcel}" CommandParameter="{Binding CoordinatesGrid}">Старт</Button>
+        <Border BorderBrush="Black" BorderThickness="5" ClipToBounds="True">
+            <Canvas x:Name="CoordinatesGrid" Width="400" Background="White" Height="400" DataContext="{Binding can}">
+                
+            </Canvas>
+        </Border>
         
     </Grid>
 </Page>
