@@ -20,6 +20,9 @@ using WpfPaging.Services;
 
 namespace WpfPaging.ViewModels
 {
+    /// <summary>
+    /// From here districts are sent to child viewmodels
+    /// </summary>
     public class DistrictMenuViewModel:BindableBase
     {
         /// https://www.youtube.com/watch?v=9S5ATpelc8w
@@ -179,8 +182,8 @@ namespace WpfPaging.ViewModels
 
         public ICommand GoForCanvas => new AsyncCommand(async () =>
         {
-            _pageService.ChangePage(new TSAndCoordinates());
-            await _messageBus.SendTo<LoadOfDistrictViewModel>(new DistrictMessage(SelectedDistrict));
+            _pageService.ChangePage(new SubstationsPage());
+            await _messageBus.SendTo<SubstationsViewModel>(new DistrictMessage(SelectedDistrict));
 
         });
 

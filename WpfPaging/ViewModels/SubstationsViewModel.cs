@@ -25,17 +25,17 @@ namespace DistrictSupplySolution.ViewModels
     /// <summary>
     /// ViewModel для сбора информации о координатах потребителей и рассчёта трансформаторных подстанций
     /// </summary>
-    public class TSViewModel:BindableBase
+    public class SubstationsViewModel : BindableBase
     {
         private readonly PageService _pageService;
         private readonly EventBus _eventBus;
         private readonly MessageBus _messageBus;
 
-
         public District SelectedDistrict { get; set; }
-       
+        public Substation SelectedSubstation { get; set; } = new Substation();
 
-        public TSViewModel(PageService pageService, EventBus eventBus, MessageBus messageBus)
+
+        public SubstationsViewModel(PageService pageService, EventBus eventBus, MessageBus messageBus)
         {
             _pageService = pageService;
             _eventBus = eventBus;
@@ -43,16 +43,15 @@ namespace DistrictSupplySolution.ViewModels
 
             _messageBus.Receive<DistrictMessage>(this, async message =>
             {
+                SelectedDistrict = new District();
+                SelectedDistrict.Substations = new List<Substation>();
                 SelectedDistrict = message.SharedDistrict;
             });
-
         }
 
-
-        
-
-       
+        public ICommand DetermineNumberOfSubstations => new DelegateCommand(() =>
+        {
+            SelectedDistrict.Substations = SelectedDistrict.DetermineSubstationsList(0.7);
+        });
     }
-
-  
 }

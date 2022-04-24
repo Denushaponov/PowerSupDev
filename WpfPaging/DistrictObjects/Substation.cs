@@ -13,5 +13,6 @@ namespace DistrictSupplySolution.DistrictObjects
     {
         public Guid Id { get; set; } = Guid.NewGuid();
       //  public AbstractBuilding 
+         public string Name { get; set; }
     }
 }

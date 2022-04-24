@@ -21,7 +21,7 @@ namespace WpfPaging
             services.AddTransient<MainMenuViewModel>();
             services.AddTransient<LoadOfDistrictViewModel>();
             services.AddTransient<AbstractBuildingViewModel>();
-            services.AddTransient<TSViewModel>();
+            services.AddTransient<SubstationsViewModel>();
             services.AddScoped<DistrictMenuViewModel>();
 
             services.AddTransient<Repository>();
@@ -48,7 +48,7 @@ namespace WpfPaging
         public DistrictMenuViewModel DistrictViewModel => _provider.GetRequiredService<DistrictMenuViewModel>();
         public LoadOfDistrictViewModel LoadOfDistrictViewModel => _provider.GetRequiredService<LoadOfDistrictViewModel>();
         public AbstractBuildingViewModel AbstractBuildingViewModel => _provider.GetRequiredService<AbstractBuildingViewModel>();
-        public TSViewModel TSViewModel => _provider.GetRequiredService<TSViewModel>();
+        public SubstationsViewModel SubstationsViewModel => _provider.GetRequiredService<SubstationsViewModel>();
 
 
     }

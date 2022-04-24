@@ -120,11 +120,6 @@
                     <TextBlock Style="{StaticResource BlockField}">Генплановий №</TextBlock>
                     <TextBox Style="{StaticResource TextField}" Text="{Binding SelectedCommercialBuilding.PlanNumber}"></TextBox>
 
-                    <TextBlock Style="{StaticResource BlockField}">Координата X</TextBlock>
-                    <TextBox Style="{StaticResource TextField}" Text="{Binding SelectedCommercialBuilding.BuildingCoordinates.X}"></TextBox>
-                    <TextBlock Style="{StaticResource BlockField}">Координата Y</TextBlock>
-                    <TextBox Style="{StaticResource TextField}" Text="{Binding SelectedCommercialBuilding.BuildingCoordinates.Y}"></TextBox>
-
                     <TextBlock Style="{StaticResource BlockField}">Тип споживача:</TextBlock>
                     <ComboBox Name="TypeOfCommercialsBox" Style="{StaticResource ComboField}" ItemsSource="{Binding Source={x:Static local:CommercialsDataBase.CommercialTypeColl}}" Text="{Binding SelectedCommercialBuilding.TypeOfCommercial}" SelectionChanged="TypeOfCommercialsBox_SelectionChanged"></ComboBox>
 
@@ -180,8 +175,6 @@
                                     <DataGrid FontSize="12" Name="InitialDataCommercialBuildings"  AutoGenerateColumns="False" ItemsSource="{Binding SelectedDistrict.Building.CommercialBuildings}" SelectedItem="{Binding SelectedCommercialBuilding}">
                                         <DataGrid.Columns>
                                             <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Генплановий №" Width="0.4*" Binding="{Binding PlanNumber}"/>
-                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Координата Х" Width="0.4*" Binding="{Binding BuildingCoordinates.X}"/>
-                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Координата Y" Width="0.4*" Binding="{Binding BuildingCoordinates.Y}"/>
                                             <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Тип споживача" Width="0.9*" Binding="{Binding TypeOfCommercial}"/>
                                             <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Характеристика" Width="0.4*" Binding="{Binding ValueOfCharacteristics}"/>
                                             <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Од. вим." Width="0.3*" Binding="{Binding MeasurmentUnit}"/>

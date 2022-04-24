@@ -158,16 +158,6 @@
                     <TextBlock Style="{StaticResource BlockField}">Генплановий №</TextBlock>
                     <TextBox Style="{StaticResource TextField}" Text="{Binding SelectedApartmentBuilding.PlanNumber, UpdateSourceTrigger=LostFocus, NotifyOnTargetUpdated=True}"></TextBox>
 
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"  Margin="0, 5">
-                        <TextBlock Style="{StaticResource BlockField}"  Width="40" >Вісь X:</TextBlock>
-                        <TextBox Style="{StaticResource TextField}" Width="78"  Margin="0, 0, 2, 0" BorderThickness="0, 2, 2,2"  Text="{Binding SelectedApartmentBuilding.BuildingCoordinates.X, UpdateSourceTrigger=LostFocus, NotifyOnTargetUpdated=True}"></TextBox>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"  Margin="0, 5">
-                        <TextBlock Style="{StaticResource BlockField}"  Width="40" >Вісь Y:</TextBlock>
-                        <TextBox Style="{StaticResource TextField}" Width="78"  Margin="0, 0, 2, 0" BorderThickness="0, 2, 2,2"  Text="{Binding SelectedApartmentBuilding.BuildingCoordinates.Y, UpdateSourceTrigger=LostFocus, NotifyOnTargetUpdated=True}"></TextBox>
-                    </StackPanel>
-
-
 
                     <TextBlock Style="{StaticResource BlockField}">Поверхів:</TextBlock>
                     <ComboBox Style="{StaticResource ComboField}" ItemsSource="{Binding Source={x:Static local:ApartmentDataBase.LevelsColl}}" Text="{Binding SelectedApartmentBuilding.Levels}"></ComboBox>
@@ -267,8 +257,6 @@
                                     <DataGrid x:Name="InitialDataApartmentBuildings"  AutoGenerateColumns="False" HorizontalAlignment="Center" ItemsSource="{Binding  SelectedDistrict.Building.ApartmentBuildings}" SelectedItem="{Binding SelectedApartmentBuilding}">
                                         <DataGrid.Columns >
                                             <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Генплановий №" Width="0.6*" Binding="{Binding PlanNumber}"/>
-                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Координата Х" Width="0.5*" Binding="{Binding BuildingCoordinates.X}"/>
-                                            <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Координата Y" Width="0.5*" Binding="{Binding BuildingCoordinates.Y}"/>
                                             <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Поверхів" Width="0.4*" Binding="{Binding Levels}"/>
                                             <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Під'їздів" Width="0.4*" Binding="{Binding Entrances}"/>
                                             <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Квартир на площадці" Width="0.8*" Binding="{Binding ApartmentsOnSite}"/>

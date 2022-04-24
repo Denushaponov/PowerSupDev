@@ -94,8 +94,32 @@ namespace WpfPaging.DistrictObjects
         /// Число Трансформаторов на подстанции
         /// </summary>
         public int NumberOfTransformers { get; set; }
+        /// <summary>
+        /// Коеффициент загрузки ТП
+        /// </summary>
+        public double CoeffOfLoadSubstation { get; set; }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="CoefOfLoad">Юзер коефициент нагрузки</param>
+        /// <returns>Formed substation list</returns>
+        public List<Substation> DetermineSubstationsList(double CoefOfLoad)
+        {
+            List<Substation> SB = new List<Substation>();
+            string tp = "ТП";
+            //Входной = коеф загрузки норм режима 
+            CoeffOfLoadSubstation= CoefOfLoad;
+            // Результат = количество подстанций
+            int _ = Convert.ToInt32(Math.Ceiling(FullPowerOfDistrict / (CoeffOfLoadSubstation * TransformerLoad * NumberOfTransformers)));
+            for (int i = 0; i < _; i++)
+            {
+               Substation substation = new Substation();
+                substation.Name = tp + Convert.ToString(i+1);
+                SB.Add(substation);
+            }
+            return SB;
+        }
 
 
         public void ConvertBuildingsToAbstractBuildings()

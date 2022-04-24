@@ -1,5 +1,4 @@
-﻿using DistrictSupplySolution.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -15,14 +14,13 @@ using System.Windows.Shapes;
 namespace DistrictSupplySolution.Pages
 {
     /// <summary>
-    /// Логика взаимодействия для TSAndCoordinates.xaml
+    /// Логика взаимодействия для SubstationsPage.xaml
     /// </summary>
-    public partial class TSAndCoordinates : Page
+    public partial class SubstationsPage : Page
     {
-        public TSAndCoordinates()
+        public SubstationsPage()
         {
             InitializeComponent();
-           
         }
     }
 }
