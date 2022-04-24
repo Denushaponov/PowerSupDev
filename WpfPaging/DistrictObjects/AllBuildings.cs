@@ -10,7 +10,7 @@ using System.Text;
 
 namespace WpfPaging.DistrictObjects
 {
-    public class Building : BindableBase
+    public class AllBuildings : BindableBase
     {
         ObservableCollection<ApartmentBuilding> _apartmentBuildings = new ObservableCollection<ApartmentBuilding>();
         public ObservableCollection<ApartmentBuilding> ApartmentBuildings

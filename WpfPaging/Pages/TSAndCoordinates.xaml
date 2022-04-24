@@ -10,12 +10,8 @@
       Title="TSAndCoordinates" >
 
     <Grid>
-        <Button x:Name="ShowSituations" Width="100" Height="50" HorizontalAlignment="Left" Command="{Binding CalculatedCommercialBuildingsDataToExcel}" CommandParameter="{Binding CoordinatesGrid}">Старт</Button>
-        <Border BorderBrush="Black" BorderThickness="5" ClipToBounds="True">
-            <Canvas x:Name="CoordinatesGrid" Width="400" Background="White" Height="400" DataContext="{Binding can}">
-                
-            </Canvas>
-        </Border>
+        <Button x:Name="ShowSituations" Width="100" Height="50" HorizontalAlignment="Left">Старт</Button>
+     
         
     </Grid>
 </Page>

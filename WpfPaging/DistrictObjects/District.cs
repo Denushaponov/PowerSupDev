@@ -14,11 +14,11 @@ namespace WpfPaging.DistrictObjects
     {
         public Guid Id { get; set; } = Guid.NewGuid();
         public string Title { get; set; }
-        public Building Building { get; set; } = new Building();
+        public AllBuildings Building { get; set; } = new AllBuildings();
         /// <summary>
         /// Улицы
         /// </summary>
-       private ObservableCollection<Street> _streets = new ObservableCollection<Street>();
+        private ObservableCollection<Street> _streets = new ObservableCollection<Street>();
         public ObservableCollection<Street> Streets
         {
             get { return _streets; }
@@ -37,10 +37,10 @@ namespace WpfPaging.DistrictObjects
 
         double _quartalInnnerLightning;
 
-        public double QuartalInnerLightning 
-        { 
+        public double QuartalInnerLightning
+        {
             get
-            { 
+            {
                 return _quartalInnnerLightning;
             }
             set
@@ -49,7 +49,7 @@ namespace WpfPaging.DistrictObjects
                 // Проверка действительно ли программа провёла рассчёт  освещения
                 if (_quartalInnnerLightning != 0)
                 {
-                   IsLightningCalculated = true;
+                    IsLightningCalculated = true;
                 }
                 else
                 {
@@ -64,7 +64,7 @@ namespace WpfPaging.DistrictObjects
         // Рассчет нагрузки микроорайона
         public bool IsLightningCalculated { get; set; } = false;
         public bool IsReadyForCalculation { get; set; } = false;
-       
+
 
         // Нагрузка микрорайона c учётом потерь
         public double ActivePowerOfDistrict { get; set; }
@@ -77,16 +77,32 @@ namespace WpfPaging.DistrictObjects
         /// </summary>
         public bool IsReadyToDetermineCOP { get; set; } = false;
 
+        /// <summary>
+        /// Список вариантов микрорайона которые будут оптимизироваться
+        /// </summary>
+        public List<District> OptiDistricts { get; set; }
+
+        /// <summary>
+        /// List of all substations and is generated automatically
+        /// </summary>
+        public List<Substation> Substations { get; set; }
+        /// <summary>
+        /// Номинальная нагрузка  трансформатора
+        /// </summary>
+        public int TransformerLoad { get; set; }
+        /// <summary>
+        /// Число Трансформаторов на подстанции
+        /// </summary>
+        public int NumberOfTransformers { get; set; }
+
+
+
 
         public void ConvertBuildingsToAbstractBuildings()
         {
             // Создаю коллекцию специальніх обїектов для определения коеффициентов участия в максимуме
 
             // Создаю объекты и напоолняю их информацией соответсвтуюего жилого здания
-
-
-
-           
 
             foreach (var cb in Building.CommercialBuildings)
             {
@@ -103,36 +119,36 @@ namespace WpfPaging.DistrictObjects
                     AbstractBuildings[0].PlanNumber = cb.PlanNumber.ToString();
                 }
             }
-                // Также добавляю туда обьекты соответствующие жилым зданиям
-                 AbstractBuildings = GetUnitedApartmentBuildings(3, AbstractBuildings);
-                AbstractBuildings = GetUnitedApartmentBuildings(1, AbstractBuildings);
+            // Также добавляю туда обьекты соответствующие жилым зданиям
+            AbstractBuildings = GetUnitedApartmentBuildings(3, AbstractBuildings);
+            AbstractBuildings = GetUnitedApartmentBuildings(1, AbstractBuildings);
         }
 
 
-     
+
         /// <summary>
         /// Определение коэффициентов участия в максимуме
         /// </summary>
-        public void DetermineCoefficientsOfParticipanceInMaximumLoad() 
+        public void DetermineCoefficientsOfParticipanceInMaximumLoad()
         {
             // Нахожу максимальную нагрузку
             double maxLoad = AbstractBuildings.Max(ab => ab.FullPower);
             // Создаю объект который будет содержать информацию о здании с максимальной нагрузкой
-            AbstractBuilding buildingWithMaxLoad = new AbstractBuilding(); 
+            AbstractBuilding buildingWithMaxLoad = new AbstractBuilding();
             // Наполняю его информацией
             foreach (var ab in AbstractBuildings)
             {
                 if (ab.FullPower == maxLoad)
                 {
                     buildingWithMaxLoad = ab;
-                   
+
                     break;
                 }
             }
 
             Console.WriteLine(buildingWithMaxLoad.FullPower);
             // Определяю нужный ряд в таблице коеффициентов участия в максимуме  
-            int row=0;
+            int row = 0;
             // Создаю таблицу
             CoefficientsOfMembershipInMaximum DbnTable = new CoefficientsOfMembershipInMaximum();
             // Сопоставляю значение в Заметке о типе с номером ряда в таблице
@@ -233,12 +249,12 @@ namespace WpfPaging.DistrictObjects
                         || e.SideNote == "8"
                         || e.SideNote == "9"
                         || e.SideNote == "10"
-                        || e.SideNote =="11"
+                        || e.SideNote == "11"
                         || e.SideNote == "12"
                         || e.SideNote == "13"
                         // Для комунальніх потребителей если они будут добавлені в будущем
                         || e.SideNote == "14")
-                        { column = Convert.ToInt32(e.SideNote); }
+                    { column = Convert.ToInt32(e.SideNote); }
                     else if (e.SideNote == "Культові споруди")
                         column = 15;
 
@@ -257,14 +273,14 @@ namespace WpfPaging.DistrictObjects
                     {
                         e.CoefficientOfMax = 1;
                     }
-                  
 
-                   else if (e.Type == "Освітлення мікрорайону")
+
+                    else if (e.Type == "Освітлення мікрорайону")
                     { e.CoefficientOfMax = 1; }
 
 
-                } 
-            } 
+                }
+            }
         }
 
         /// <summary>
@@ -276,15 +292,12 @@ namespace WpfPaging.DistrictObjects
         public ObservableCollection<AbstractBuilding> GetUnitedApartmentBuildings(double ElectrificationLevel, ObservableCollection<AbstractBuilding> ab)
         {
             AbstractBuilding abstractBuilding = new AbstractBuilding();
-            
-          
-            
-            
+
             foreach (var uab in Building.UnitedApartmentBuildings.UnitedApartmentBuildingsCollection)
             {
-                
 
-                if (uab.ElectrificationLevel == ElectrificationLevel && ElectrificationLevel ==1)
+
+                if (uab.ElectrificationLevel == ElectrificationLevel && ElectrificationLevel == 1)
                 {
                     abstractBuilding.Type = "Житлові будинки з електроплитами";
                     abstractBuilding.SideNote = "0";
@@ -298,7 +311,7 @@ namespace WpfPaging.DistrictObjects
                 else if (uab.ElectrificationLevel == ElectrificationLevel && ElectrificationLevel == 3)
                 {
                     abstractBuilding.Type = "Житлові будинки з газовими плитами або на твердому паливі";
-                 
+
                     abstractBuilding.Id = Building.UnitedApartmentBuildings.UnitedApartmentBuildingsCollection[1].Id;
                     abstractBuilding.SideNote = "1";
                     abstractBuilding.ActivePower = Building.UnitedApartmentBuildings.UnitedApartmentBuildingsCollection[1].BuildingActiveLoad;
@@ -309,14 +322,14 @@ namespace WpfPaging.DistrictObjects
             }
 
             if (ValidationRuleAbstractBuildings(AbstractBuildings, abstractBuilding.PlanNumber, abstractBuilding.FullPower) == true)
-            ab.Insert(0, abstractBuilding);
+                ab.Insert(0, abstractBuilding);
             return ab;
         }
 
         public bool ValidationRuleAbstractBuildings(ObservableCollection<AbstractBuilding> abstractBuildings, string PlanNumber, double FullPower)
         {
-           
-            bool abNeedsUpdate=false;
+
+            bool abNeedsUpdate = false;
 
 
             // Проверяю наличие зданий с параметрами переданными функции в коллекции abstractBuildings
@@ -327,7 +340,7 @@ namespace WpfPaging.DistrictObjects
             // Если параметры функции и параметры здания совпадают, здание добавлено в коллекцию
             // Тогда не требуется обновление данного здания и я его оставляю
             if (trackerOfExistingAb >= 1)
-            { abNeedsUpdate = false;  return abNeedsUpdate; }
+            { abNeedsUpdate = false; return abNeedsUpdate; }
 
             // Если PlanNumber здания и параметра функции совпадают тогда 
             // Здание добавляется в коллекцию изменённых
@@ -346,36 +359,36 @@ namespace WpfPaging.DistrictObjects
                     // Если они не совпадают 
                     if (a.PlanNumber != PlanNumber)
                     {
-                      // Тогда счетчик добавляет единицу
-                        i++; 
+                        // Тогда счетчик добавляет единицу
+                        i++;
                     }
                     // Совпадают
                     else
                     {
                         // Значит текущее здание нужно запомнить как подлежащее удалению
                         abstractBuildingToRemove = a;
-                        break; 
+                        break;
                     }
                 }
                 // Если подлежаще удалению здание было определено, то удаляем его из кооллекции
-                if (abstractBuildingToRemove!=null) AbstractBuildings.Remove(abstractBuildingToRemove); 
+                if (abstractBuildingToRemove != null) AbstractBuildings.Remove(abstractBuildingToRemove);
             }
             // Если здание не существует в коллекции AbstractBuildings и не было изменено 
-            if (trackerOfExistingAb ==0 && trackerOfChangedAb ==0)
+            if (trackerOfExistingAb == 0 && trackerOfChangedAb == 0)
             {
                 // То следует его добавить в коллекцию
                 abNeedsUpdate = true;
-            }    
+            }
 
             return abNeedsUpdate;
         }
 
-       
 
 
-       public void CalculateApartmentBuildings() 
+
+        public void CalculateApartmentBuildings()
         {
-         foreach (var ab in Building.ApartmentBuildings)
+            foreach (var ab in Building.ApartmentBuildings)
             {
                 ab.ExecuteCalculation();
             }
@@ -391,25 +404,25 @@ namespace WpfPaging.DistrictObjects
 
         public void CalculateLightning()
         {
-            QuartalInnerLightning = Math.Round( Area * 1.2, 2);
+            QuartalInnerLightning = Math.Round(Area * 1.2, 2);
             StreetsTotalLightning = 0;
             foreach (var s in Streets)
             {
-                StreetsTotalLightning += Math.Round(s.SpecificLoad * s.TotalLength,2);
+                StreetsTotalLightning += Math.Round(s.SpecificLoad * s.TotalLength, 2);
             }
-            DistrictTotalLightning = Math.Round( QuartalInnerLightning + StreetsTotalLightning,2);
+            DistrictTotalLightning = Math.Round(QuartalInnerLightning + StreetsTotalLightning, 2);
             ConvertTotalLigtningToAbstractBuildings();
         }
 
         /// <summary>
         /// конверитрую освещение в формат для рассчёта коефициента участия в максимуме
         /// </summary>
-        public void ConvertTotalLigtningToAbstractBuildings() 
+        public void ConvertTotalLigtningToAbstractBuildings()
         {
 
-           if( ValidationRuleAbstractBuildings(AbstractBuildings, "0", DistrictTotalLightning))
-           {
-                
+            if (ValidationRuleAbstractBuildings(AbstractBuildings, "0", DistrictTotalLightning))
+            {
+
                 AbstractBuilding ab = new AbstractBuilding();
                 ab.ActivePower = DistrictTotalLightning;
                 ab.FullPower = ab.ActivePower;
@@ -423,15 +436,15 @@ namespace WpfPaging.DistrictObjects
 
         public void CalculateDistrictPower()
         {
-            double PreliminaryActivePowerOfDistrict=0;
+            double PreliminaryActivePowerOfDistrict = 0;
             double PreliminaryReactivePowerOfDistrict = 0;
             double PreliminaryFullPowerOfDistrict = 0;
 
             foreach (var ab in AbstractBuildings)
             {
-                PreliminaryActivePowerOfDistrict += Math.Round( ab.ActivePower,2);
-                PreliminaryReactivePowerOfDistrict += Math.Round( ab.ReactivePower, 2);
-                PreliminaryFullPowerOfDistrict = Math.Round(Math.Sqrt(Math.Pow(PreliminaryActivePowerOfDistrict,2)+Math.Pow(PreliminaryReactivePowerOfDistrict,2)),2);
+                PreliminaryActivePowerOfDistrict += Math.Round(ab.ActivePower, 2);
+                PreliminaryReactivePowerOfDistrict += Math.Round(ab.ReactivePower, 2);
+                PreliminaryFullPowerOfDistrict = Math.Round(Math.Sqrt(Math.Pow(PreliminaryActivePowerOfDistrict, 2) + Math.Pow(PreliminaryReactivePowerOfDistrict, 2)), 2);
             }
             double ActivePowerLossesInVT = 0.02 * PreliminaryFullPowerOfDistrict;
             double ReactivePowerLossesInVT = 0.01 * PreliminaryFullPowerOfDistrict;
@@ -447,10 +460,10 @@ namespace WpfPaging.DistrictObjects
             Streets = new ObservableCollection<Street> { new Street { Category = "A" }, new Street { Category = "B" }, new Street { Category = "C" }, new Street { Category = "D" } };
         }
 
-        
 
-       public District Auto()
-        { 
+
+        public District Auto()
+        {
             District CalculatedDistrict = new District();
             CalculatedDistrict.Building.ApartmentBuildings = Building.ApartmentBuildings;
             CalculatedDistrict.Building.CommercialBuildings = Building.CommercialBuildings;
@@ -460,7 +473,7 @@ namespace WpfPaging.DistrictObjects
             {
                 foreach (var abs in CalculatedDistrict.AbstractBuildings)
                 {
-                    if (abs.FullPower == ab.FullPower && abs.PlanNumber == ab.PlanNumber && ab.SpecialConsumerCoefficientsOfMax !=default)
+                    if (abs.FullPower == ab.FullPower && abs.PlanNumber == ab.PlanNumber && ab.SpecialConsumerCoefficientsOfMax != default)
                     {
                         abs.SpecialConsumerCoefficientsOfMax = ab.SpecialConsumerCoefficientsOfMax;
                         abs.SideNote = ab.SideNote;

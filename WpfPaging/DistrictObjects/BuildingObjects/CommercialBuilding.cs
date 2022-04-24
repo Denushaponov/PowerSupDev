@@ -2,16 +2,16 @@
 using DevExpress.Mvvm;
 using System.Collections.Generic;
 using System.Text;
-using DistrictSupplySolution.DistrictObjects.ServiceClasses;
+using DistrictSupplySolution.DistrictObjects;
 
 namespace WpfPaging.DistrictObjects
 {
-     public class CommercialBuilding:BindableBase
+    public class CommercialBuilding : BindableBase
     {
-        public Guid Id =  Guid.NewGuid();
+        public Guid Id = Guid.NewGuid();
         public byte PlanNumber { get; set; }
         private string _typeOfCommercial;
-        public string TypeOfCommercial 
+        public string TypeOfCommercial
         {
             get { return _typeOfCommercial; }
             set
@@ -28,7 +28,7 @@ namespace WpfPaging.DistrictObjects
         public string TypeSideNote { get; set; }
 
         private double _valueOfCharacteristics;
-        public double ValueOfCharacteristics 
+        public double ValueOfCharacteristics
         {
             get { return _valueOfCharacteristics; }
             set
@@ -52,11 +52,11 @@ namespace WpfPaging.DistrictObjects
 
         // База дынных
         public DbnTables.DbnCommercialBuildings DbnCommercialBuildings;
-        public Coordinates BuildingCoordinates { get; set; } = new Coordinates();
+  
 
         public CommercialBuilding()
         {
-          
+
         }
 
         public void CalculateCommercialBuildings()
@@ -78,7 +78,7 @@ namespace WpfPaging.DistrictObjects
 
         public void CalculateFullLoad()
         {
-           FullLoad = Math.Round(Math.Sqrt(Math.Pow(ActiveLoad, 2) + Math.Pow(ReactiveLoad, 2)), 2);
+            FullLoad = Math.Round(Math.Sqrt(Math.Pow(ActiveLoad, 2) + Math.Pow(ReactiveLoad, 2)), 2);
         }
 
         public void FindAppropriateCommercial()
@@ -87,24 +87,24 @@ namespace WpfPaging.DistrictObjects
             DbnCommercialBuildings = new DbnTables.DbnCommercialBuildings();
             foreach (var c in DbnCommercialBuildings.CommercialBuildingsList)
             {
-              
-                if (c.TypeOfCommercial == TypeOfCommercial && c.ValueOfCharacteristics >= ValueOfCharacteristics && ValueOfCharacteristics>=i)
-                    {
-                       
-                        MeasurmentUnit = c.MeasurmentUnit;
-                        SpecificActiveLoad = c.SpecificActiveLoad;
-                        CosFi = c.CosFi;
-                        TgFi = c.TgFi;
-                    if (c.TypeSideNote!=null)
-                    TypeSideNote = c.TypeSideNote;
-                      
-                    
+
+                if (c.TypeOfCommercial == TypeOfCommercial && c.ValueOfCharacteristics >= ValueOfCharacteristics && ValueOfCharacteristics >= i)
+                {
+
+                    MeasurmentUnit = c.MeasurmentUnit;
+                    SpecificActiveLoad = c.SpecificActiveLoad;
+                    CosFi = c.CosFi;
+                    TgFi = c.TgFi;
+                    if (c.TypeSideNote != null)
+                        TypeSideNote = c.TypeSideNote;
+
+
                 }
                 if (c.TypeOfCommercial == TypeOfCommercial) i = c.ValueOfCharacteristics;
                 else
                     i = 0;
             }
-            
+
 
         }
     }

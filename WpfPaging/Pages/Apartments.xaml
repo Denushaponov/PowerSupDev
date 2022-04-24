@@ -132,7 +132,7 @@
                     <!--Для таблицы-->
                     <ColumnDefinition Width="7*"/>
                 </Grid.ColumnDefinitions>
-
+                <ScrollViewer>
                 <StackPanel x:Name="UserInputPanel">
                     <StackPanel.Style>
                     <Style TargetType="StackPanel">
@@ -243,6 +243,7 @@
 
 
                 </StackPanel>
+                </ScrollViewer>
 
                 <!-- Таблица вывода информации о жилых домах-->
 

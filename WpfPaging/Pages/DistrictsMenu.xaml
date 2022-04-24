@@ -77,8 +77,9 @@
 
 
         <Grid Grid.Row="1">
-            <StackPanel>
-            <ListBox ItemsSource="{Binding Districts}" Name="DistrictsList" BorderThickness="0" Width="500" MaxHeight="200" SelectedItem="{Binding SelectedDistrict}" SelectionChanged="DistrictsList_SelectionChanged" >
+            <ScrollViewer>
+                <StackPanel>
+                 <ListBox ItemsSource="{Binding Districts}" Name="DistrictsList" BorderThickness="0" Width="500" MaxHeight="200" SelectedItem="{Binding SelectedDistrict}" SelectionChanged="DistrictsList_SelectionChanged" >
                 <ListBox.ItemTemplate>
                     <DataTemplate x:Name="DistrictElement">
                         
@@ -103,47 +104,42 @@
                 
                     
                </StackPanel>
-              
-                    <StackPanel Background="FloralWhite" Height="500">
-                        <TextBox x:Name="TextBoxTitleEdit"  Text="{Binding SelectedDistrict.Title}" Style="{StaticResource BaseTextBox}" Tag="Оберіть мікрорайон та введіть назву" />
-                        <Button Grid.Column="1" Content="Зберегти" Width="80" Margin="0, 3, 5, 3" Background="Fuchsia" Command="{Binding RelativeSource= {RelativeSource AncestorType=Page}, Path=DataContext.SaveDistrict}"/>
-                        <Button x:Name="MenuButton" Width="80" Content="Меню" Margin="0,3,5,3" Background="Gold"  Click="Button_Click">
-                        
-                        </Button>
-                        <StackPanel x:Name="MenuPanel" Visibility="Hidden">
-                            <RadioButton x:Name="BuildingIsSelected" Width="150" Content="Будівлі" Background="PeachPuff" Margin="0, 10, 0, 5"/>
-                            <RadioButton  Width="150" Content="Трансформаторні ПС" Background="PeachPuff" Margin="0, 5, 0, 5"/>
-                            <RadioButton  Width="150" Content="Лінії живлення" Background="PeachPuff" Margin="0, 5, 0, 5"/>
-                            <StackPanel Background="FloralWhite" Height="180">
+               
+                <StackPanel Background="FloralWhite" Height="500">
+                    <TextBox x:Name="TextBoxTitleEdit"  Text="{Binding SelectedDistrict.Title}" Style="{StaticResource BaseTextBox}" Tag="Оберіть мікрорайон та введіть назву" />
+                    <Button Grid.Column="1" Content="Зберегти" Width="80" Margin="0, 3, 5, 3" Background="Fuchsia" Command="{Binding RelativeSource= {RelativeSource AncestorType=Page}, Path=DataContext.SaveDistrict}"/>
+                    <Button x:Name="MenuButton" Width="80" Content="Меню" Margin="0,3,5,3" Background="Gold"  Click="Button_Click">
 
-                                <StackPanel.Style>
-                                    <Style TargetType="StackPanel">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding ElementName=BuildingIsSelected, Path=IsChecked}" Value="False">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                <Setter Property="IsEnabled" Value="False"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </StackPanel.Style> 
-                                <TextBlock FontSize="24" FontWeight="SemiBold" Text="Будівлі" HorizontalAlignment="Center" Padding="0,20,0,0" />
-                                <Button  Width="150" Content="Багатоповерхові будинки" Command="{Binding GoForApartmentBuildings}" Background="PeachPuff" Margin="0, 10, 0, 5"/>
-                                <Button  Width="150" Content="Комерційні будівлі" Command="{Binding GoForCommercialBuildings}" Background="PeachPuff" Margin="0, 5, 0, 5"/>
-                                <Button  Width="150" Content="Навантаження мр-ну" Command="{Binding GoForDistrictLoad}" Background="PeachPuff" Margin="0, 5, 0, 5"/>
+                    </Button>
+
+                     <StackPanel x:Name="MenuPanel" Visibility="Hidden">
+                        <RadioButton x:Name="BuildingIsSelected" Width="150" Content="Будівлі" Background="PeachPuff" Margin="0, 10, 0, 5"/>
+                        <RadioButton  Width="150" Content="Трансформаторні ПС" Background="PeachPuff" Margin="0, 5, 0, 5"/>
+                        <RadioButton  Width="150" Content="Лінії живлення" Background="PeachPuff" Margin="0, 5, 0, 5"/>
+                      
+                        <StackPanel Background="FloralWhite" Height="180" CanVerticallyScroll="True">
+
+                            <StackPanel.Style>
+                                <Style TargetType="StackPanel">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ElementName=BuildingIsSelected, Path=IsChecked}" Value="False">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Setter Property="IsEnabled" Value="False"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </StackPanel.Style>
+                            <TextBlock FontSize="24" FontWeight="SemiBold" Text="Будівлі" HorizontalAlignment="Center" Padding="0,20,0,0" />
+                            <Button  Width="150" Content="Багатоповерхові будинки" Command="{Binding GoForApartmentBuildings}" Background="PeachPuff" Margin="0, 10, 0, 5"/>
+                            <Button  Width="150" Content="Комерційні будівлі" Command="{Binding GoForCommercialBuildings}" Background="PeachPuff" Margin="0, 5, 0, 5"/>
+                            <Button  Width="150" Content="Навантаження мр-ну" Command="{Binding GoForDistrictLoad}" Background="PeachPuff" Margin="0, 5, 0, 5"/>
                             <Button  Width="150" Content="TP" Command="{Binding GoForCanvas}" Background="PeachPuff" Margin="0, 5, 0, 5"/>
 
                         </StackPanel>
-                       
                     </StackPanel>
-                        
-           
-                    
-                  
-
-                   </StackPanel>
-
-              
-            </StackPanel>
+                     </StackPanel>
+                 </StackPanel>
+            </ScrollViewer>
             
            
             
