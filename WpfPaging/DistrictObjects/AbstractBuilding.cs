@@ -19,6 +19,7 @@ namespace DistrictSupplySolution.DistrictObjects
         public double ReactivePower { get; set; }
         public double FullPower { get; set; }
         public double CoefficientOfMax { get; set; }
+        public double CableLength { get; set; } = 0;
 
         public ObservableCollection<SpecialCoefficientOfMax> SpecialConsumerCoefficientsOfMax { get; set; } = new ObservableCollection<SpecialCoefficientOfMax>();
 

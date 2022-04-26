@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:DistrictSupplySolution.Pages"
       mc:Ignorable="d" 
        DataContext="{Binding SubstationsViewModel, Source={StaticResource ViewModelLocator}}"
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="800" d:DesignWidth="1200"
       Title="SubstationsPage">
 
     <Page.Resources>
@@ -131,8 +131,18 @@
             </Grid.ColumnDefinitions>
 
 
-
+                <!--Input panel determine subsrtations tab START-->
             <StackPanel x:Name="UserInputPanel" Grid.Column="0">
+                <StackPanel.Style>
+                    <Style TargetType="StackPanel">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=DetermineSubstationsTab, Path=IsSelected}" Value="False">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Setter Property="IsEnabled" Value="False"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </StackPanel.Style>
 
                 <TextBlock Style="{StaticResource BlockField}" FontWeight="Bold">Коефіцієнт середньої завантаженості</TextBlock>
                 <TextBox Style="{StaticResource TextField}" Text="{Binding SelectedDistrict.CoeffOfLoadSubstation, UpdateSourceTrigger=LostFocus}"></TextBox>
@@ -141,14 +151,53 @@
                 <TextBlock Style="{StaticResource BlockField}" FontWeight="Bold">Номінал трансформатору</TextBlock>
                 <TextBox Style="{StaticResource TextField}" Text="{Binding SelectedDistrict.TransformerLoad, UpdateSourceTrigger=LostFocus}"></TextBox>
                 <!--Text="{Binding SelectedSpecialCoefficientOfMax.CoefficientOfMax, UpdateSourceTrigger=LostFocus, NotifyOnTargetUpdated=True}"-->
-                
-                
                 <Button VerticalAlignment="Top" Margin="0, 25, 0,0"  Style="{StaticResource MenuControls}" Background="LimeGreen" Command="{Binding DetermineNumberOfSubstations}" x:Name="SaveThisCoefficients" Content="Зберегти внесені коефіцієнти" Width="240"></Button>
-
+                <Button Command="{Binding Optimize}">Optimize</Button>
             </StackPanel>
+            <!--Input panel determine subsrtations tab END-->
+
+            <!--Input panel Lengths tab START-->
+            <StackPanel x:Name="ToLengthsPanel" Grid.Column="0">
+                <StackPanel.Style>
+                    <Style TargetType="StackPanel">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=SubstationsLengthsTab, Path=IsSelected}" Value="False">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Setter Property="IsEnabled" Value="False"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </StackPanel.Style>
+                <Button VerticalAlignment="Top" Margin="0, 25, 0,0"  Style="{StaticResource MenuControls}" Background="LimeGreen" Command="{Binding GoForLengths}" x:Name="ChangeLengths" Content="Внести значення двожини" Width="240"></Button>
+            </StackPanel>
+            <!--Input panel Lengths tab END-->
+
+            <!--Input panel  opti params  tab START-->
+            <StackPanel x:Name="OptimizationParamsPanel" Grid.Column="0">
+                <StackPanel.Style>
+                    <Style TargetType="StackPanel">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=OptimizationParametersTab, Path=IsSelected}" Value="False">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Setter Property="IsEnabled" Value="False"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </StackPanel.Style>
+
+                <TextBlock Style="{StaticResource BlockField}" FontWeight="Bold">Мін. коєф. завантаж</TextBlock>
+                <TextBox Style="{StaticResource TextField}" Text="{Binding SelectedDistrict.MinCoeffOfLoadSubstation, UpdateSourceTrigger=LostFocus}"></TextBox>
+                <TextBlock Style="{StaticResource BlockField}" FontWeight="Bold">Макс. коєф. завантаженості .</TextBlock>
+                <TextBox Style="{StaticResource TextField}" Text="{Binding SelectedDistrict.MaxCoeffOfLoadSubstation, UpdateSourceTrigger=LostFocus}"></TextBox>
+                <TextBlock Style="{StaticResource BlockField}" FontWeight="Bold">Максимальна довжина кабелю</TextBlock>
+                <TextBox Style="{StaticResource TextField}" Text="{Binding SelectedDistrict.MaxCalbeLength, UpdateSourceTrigger=LostFocus}"></TextBox>
+                <!--Text="{Binding SelectedSpecialCoefficientOfMax.CoefficientOfMax, UpdateSourceTrigger=LostFocus, NotifyOnTargetUpdated=True}"-->
+                <Button VerticalAlignment="Top" Margin="0, 25, 0,0"  Style="{StaticResource MenuControls}" Background="LimeGreen" Command="{Binding DetermineNumberOfSubstations}" x:Name="OptimizeButton" Content="Визначити оптимальні варіанти" Width="240"></Button>
+            </StackPanel>
+            <!--Input panel opti params  tab END-->
 
             <TabControl Grid.Column="1">
-                <TabItem>
+                <TabItem x:Name="DetermineSubstationsTab">
                     <TabItem.Header>Підстанції</TabItem.Header>
                     <DataGrid x:Name="SubstationsGrid" Grid.Column="1" Margin="0,0,43.5,43.5"  AutoGenerateColumns="False" CanUserDeleteRows="False"  HorizontalAlignment="Left" ItemsSource="{Binding SelectedDistrict.Substations}" SelectedItem="{Binding SelectedSubstation}" Grid.ColumnSpan="2">
                 <DataGrid.Columns>
@@ -157,11 +206,31 @@
                 </DataGrid.Columns>
             </DataGrid>
                 </TabItem>
-                <TabItem>
+                <TabItem x:Name="SubstationsLengthsTab">
                     <TabItem.Header>Визначення довжин кабелів</TabItem.Header>
+                    <DataGrid x:Name="SubstationsLengths" Grid.Column="1" Margin="0,0,43.5,43.5"  AutoGenerateColumns="False" CanUserDeleteRows="False"  HorizontalAlignment="Left" ItemsSource="{Binding SelectedDistrict.Substations}" SelectedItem="{Binding SelectedSubstation}" Grid.ColumnSpan="2">
+                        <DataGrid.Columns>
+                             <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Назва" Width="1*" Binding="{Binding Name}"/>
+                            <DataGridTextColumn x:Name="IsCompleted" CanUserResize="False" IsReadOnly="True"  Foreground="Transparent"  Width="0.2" Binding="{Binding IsLengthsCompleted}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="{x:Type TextBlock}">
+                                        <Style.Triggers>
+                                            <Trigger Property="Text" Value="False">
+                                                <Setter Property="Background" Value="Coral"/>
+                                            </Trigger>
+                                            <Trigger Property="Text" Value="True">
+                                                <Setter Property="Background" Value="LimeGreen"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
                 </TabItem>
-                <TabItem>
-                    <TabItem.Header>??</TabItem.Header>
+                <TabItem x:Name="OptimizationParametersTab">
+                    <TabItem.Header>Параметри потимізації</TabItem.Header>
+                  
                 </TabItem>
             </TabControl>
         </Grid>

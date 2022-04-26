@@ -62,8 +62,6 @@ namespace DistrictSupplySolution.ViewModels
                 {
                     SelectedDistrict.IsReadyForCalculation = false;
                 }
-
-
             });
 
             // получение абстрактного здания с отредактироваными значениями

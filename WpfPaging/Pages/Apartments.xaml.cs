@@ -23,8 +23,6 @@ namespace WpfPaging.Pages
         public Apartments()
         {
             InitializeComponent();
-           
-
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

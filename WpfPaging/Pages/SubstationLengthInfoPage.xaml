@@ -1,15 +1,14 @@
-﻿<Page x:Class="DistrictSupplySolution.Pages.CustomCoefficientsOfMaxPage"
+﻿<Page x:Class="DistrictSupplySolution.Pages.SubstationLengthInfoPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:DistrictSupplySolution.Pages"
-      DataContext="{Binding AbstractBuildingViewModel, Source={StaticResource ViewModelLocator}}"
       mc:Ignorable="d" 
-      d:DesignHeight="800" d:DesignWidth="1200"
-      Title="CustomCoefficientsOfMaxPage">
+        d:DesignHeight="800" d:DesignWidth="1200"
+             DataContext="{Binding LengthHandlingViewModel, Source={StaticResource ViewModelLocator}}"
+      Title="SubstationLengthInfoPage">
     <Page.Resources>
-
         <!-- Стили для кнопок меню -->
         <Style TargetType="Button" x:Key="MenuControls">
             <Setter Property="BorderThickness" Value="0"/>
@@ -32,7 +31,7 @@
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Padding" Value="0"/>
         </Style>
-        
+
 
         <!--Стили для заголовка страницы-->
         <Style TargetType="TextBlock" x:Key="PageTitle">
@@ -78,10 +77,10 @@
 
         <StackPanel Background="Transparent" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.ColumnSpan="2">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Коефіціенти участі в максимумі споживача №" FontSize="40" FontWeight="DemiBold"  Foreground="LightGray" TextAlignment="Center" Style="{StaticResource PageTitle}"/>
-                <TextBlock  Text="{Binding SelectedAbstractBuilding.PlanNumber}" FontSize="40" FontWeight="DemiBold" Style="{StaticResource PageTitle}" ></TextBlock>
+                <TextBlock Text="Внесення даних про довжини кабелів від будівель до " FontSize="40" FontWeight="DemiBold"  Foreground="LightGray" TextAlignment="Center" Style="{StaticResource PageTitle}"/>
+                <TextBlock  Text="{Binding SelectedSubstation.Name}" FontSize="40" FontWeight="DemiBold" Style="{StaticResource PageTitle}" ></TextBlock>
             </StackPanel>
-           
+
 
             <!--Меню переключатели-->
 
@@ -99,21 +98,20 @@
 
 
             <StackPanel x:Name="UserInputPanel" Grid.Column="0">
-                
-                <TextBlock Style="{StaticResource BlockField}" FontWeight="Bold">Назва</TextBlock>
+                 <TextBlock Style="{StaticResource BlockField}" FontWeight="Bold">Назва</TextBlock>
                 <TextBlock Style="{StaticResource BlockField}" Text="{Binding SelectedSpecialCoefficientOfMax.Type, UpdateSourceTrigger=LostFocus, NotifyOnTargetUpdated=True}"></TextBlock>
-                <TextBlock Style="{StaticResource BlockField}" FontWeight="Bold">Коефіцієнт участі</TextBlock>
-                <TextBox Style="{StaticResource TextField}" Text="{Binding SelectedSpecialCoefficientOfMax.CoefficientOfMax, UpdateSourceTrigger=LostFocus, NotifyOnTargetUpdated=True}"></TextBox>
-                <Button VerticalAlignment="Top" Margin="0, 25, 0,0"  Style="{StaticResource MenuControls}" Background="LimeGreen" Command="{Binding SaveCommand}" x:Name="SaveThisCoefficients" Content="Зберегти внесені коефіцієнти" Width="240" Click="SaveThisCoefficients_Click"></Button>
-               
+                <TextBlock Style="{StaticResource BlockField}" FontWeight="Bold">Довжина кабелю на ділянці</TextBlock>
+                <TextBox Style="{StaticResource TextField}" Text="{Binding selectedAbstractBuilding.CableLength, UpdateSourceTrigger=LostFocus, NotifyOnTargetUpdated=True}"></TextBox>
+                <Button VerticalAlignment="Top" Margin="0, 25, 0,0"  Style="{StaticResource MenuControls}" Background="LimeGreen" Command="{Binding SaveCommand}" x:Name="SaveThisCoefficients" Content="Зберегти внесені довжини" Width="240"></Button>
+
             </StackPanel>
 
 
-            <DataGrid x:Name="CoefficientsOfParticipanceInMaximumGrid" Grid.Column="1" Margin="0,0,43.5,43.5"  AutoGenerateColumns="False" CanUserDeleteRows="False"  HorizontalAlignment="Left" ItemsSource="{Binding SelectedAbstractBuilding.SpecialConsumerCoefficientsOfMax}" SelectedItem="{Binding SelectedSpecialCoefficientOfMax}" Grid.ColumnSpan="2">
-               
+            <DataGrid x:Name="CoefficientsOfParticipanceInMaximumGrid" Grid.Column="1" Margin="0,0,43.5,43.5"  AutoGenerateColumns="False" CanUserDeleteRows="False"  HorizontalAlignment="Left" ItemsSource="{Binding SelectedSubstation.AbstractBuildings}" SelectedItem="{Binding selectedAbstractBuilding}" Grid.ColumnSpan="2">
+
                 <DataGrid.Columns>
                     <DataGridTextColumn CanUserResize="False" IsReadOnly="True"  Header="Тип" Width="1*" Binding="{Binding Type}"/>
-                    <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Коефіціент попиту" Width="0.2*" Binding="{Binding CoefficientOfMax}"/>
+                    <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Довжина ділянки кабелю " Width="0.3*" Binding="{Binding CableLength}"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

@@ -21,6 +21,22 @@ using WpfPaging.ViewModels;
 
 namespace DistrictSupplySolution.ViewModels
 {
+    #region
+    /*
+     Цель: Выводить цевт ячейки - красный или зелёный в зависимости 
+    от того все ли длины данной ТП != 0, или если добавляется новое
+    здание его длина = 0
+
+    Нужно ли сравнивать со староц коллекцией? (нет, потомку что проверка
+    =0 идёт
+    где поводить проверку на 0
+
+    Если происходит изменение данных в коллекции Длин,  
+    То производить проверку на 0
+    Если есть 0 - то запретить дальнейший рассчёт и покрасить ячейку
+    в красный цвет.
+     */
+    #endregion
 
     /// <summary>
     /// ViewModel для сбора информации о координатах потребителей и рассчёта трансформаторных подстанций
@@ -31,7 +47,9 @@ namespace DistrictSupplySolution.ViewModels
         private readonly EventBus _eventBus;
         private readonly MessageBus _messageBus;
 
-        public District SelectedDistrict { get; set; }
+
+        public District SelectedDistrict { get; set; } = new District();
+        
         public Substation SelectedSubstation { get; set; } = new Substation();
 
 
@@ -51,7 +69,25 @@ namespace DistrictSupplySolution.ViewModels
 
         public ICommand DetermineNumberOfSubstations => new DelegateCommand(() =>
         {
-            SelectedDistrict.Substations = SelectedDistrict.DetermineSubstationsList(0.7);
+            SelectedDistrict.Substations = SelectedDistrict.DetermineSubstationsList();
+            if (SelectedDistrict.Substations==default)
+            {
+                MessageBox.Show("Значення у полях мають бути більше нуля");
+            }
+        });
+
+        public ICommand GoForLengths => new AsyncCommand(async () =>
+        {
+            _pageService.ChangePage(new SubstationLengthInfoPage());
+            await _messageBus.SendTo<LengthHandlingViewModel>(new SubstationMessage(SelectedSubstation));
+        });
+
+        public ICommand Optimize => new AsyncCommand(async () =>
+        {
+            foreach (var ts in SelectedDistrict.Substations)
+            {
+                List<List<int>> hyy = ts.DefineCombinationsPerSubstation(SelectedDistrict.NumberOfTransformers, SelectedDistrict.TransformerLoad, SelectedDistrict.MinCoeffOfLoadSubstation, SelectedDistrict.MaxCoeffOfLoadSubstation, SelectedDistrict.MaxCalbeLength);
+            }
         });
     }
 }

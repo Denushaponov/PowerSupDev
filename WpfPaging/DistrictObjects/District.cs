@@ -81,6 +81,7 @@ namespace WpfPaging.DistrictObjects
         /// Список вариантов микрорайона которые будут оптимизироваться
         /// </summary>
         public List<District> OptiDistricts { get; set; }
+        public List<OptimizationDataBuilding> OptimizationDataBuildings {get;set;}
 
         /// <summary>
         /// List of all substations and is generated automatically
@@ -99,26 +100,37 @@ namespace WpfPaging.DistrictObjects
         /// </summary>
         public double CoeffOfLoadSubstation { get; set; }
 
+        #region Optimization parameters
+        public double MinCoeffOfLoadSubstation { get; set; }
+        public double MaxCoeffOfLoadSubstation { get; set; }
+        public double MaxCalbeLength { get; set; }
+        #endregion
+
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="CoefOfLoad">Юзер коефициент нагрузки</param>
         /// <returns>Formed substation list</returns>
-        public List<Substation> DetermineSubstationsList(double CoefOfLoad)
+        public List<Substation> DetermineSubstationsList()
         {
             List<Substation> SB = new List<Substation>();
             string tp = "ТП";
-            //Входной = коеф загрузки норм режима 
-            CoeffOfLoadSubstation= CoefOfLoad;
             // Результат = количество подстанций
-            int _ = Convert.ToInt32(Math.Ceiling(FullPowerOfDistrict / (CoeffOfLoadSubstation * TransformerLoad * NumberOfTransformers)));
-            for (int i = 0; i < _; i++)
+            if (TransformerLoad * CoeffOfLoadSubstation * NumberOfTransformers != 0)
             {
-               Substation substation = new Substation();
-                substation.Name = tp + Convert.ToString(i+1);
-                SB.Add(substation);
+                int _ = Convert.ToInt32(Math.Ceiling(FullPowerOfDistrict / (CoeffOfLoadSubstation * TransformerLoad * NumberOfTransformers)));
+                for (int i = 0; i < _; i++)
+                {
+                    Substation substation = new Substation();
+                    substation.Name = tp + Convert.ToString(i + 1);
+                    substation.IsLengthsCompleted = false;
+                    substation.AbstractBuildings = AbstractBuildings;
+                    SB.Add(substation);
+                }
+                return SB;
             }
-            return SB;
+            else return default;
         }
 
 
@@ -146,6 +158,38 @@ namespace WpfPaging.DistrictObjects
             // Также добавляю туда обьекты соответствующие жилым зданиям
             AbstractBuildings = GetUnitedApartmentBuildings(3, AbstractBuildings);
             AbstractBuildings = GetUnitedApartmentBuildings(1, AbstractBuildings);
+        }
+
+
+        public void ConvertBuildingsToOptiDataBuildings()
+        {
+            // Создаю коллекцию специальніх обїектов для определения коеффициентов участия в максимуме
+
+            // Создаю объекты и напоолняю их информацией соответсвтуюего жилого здания
+
+            foreach (var cb in Building.CommercialBuildings)
+            {
+                if (ValidationRuleOptiData(OptimizationDataBuildings, cb.PlanNumber, cb.FullLoad))
+                {
+                    OptimizationDataBuilding odb = new OptimizationDataBuilding();
+                    OptimizationDataBuildings.Insert(0, odb);
+                    OptimizationDataBuildings[0].Id = cb.Id;
+                    OptimizationDataBuildings[0].PlanNumber = cb.PlanNumber;
+                    OptimizationDataBuildings[0].FullPower = cb.FullLoad;
+                }
+            }
+            // Также добавляю туда обьекты соответствующие жилым зданиям
+            foreach (var ab in Building.ApartmentBuildings)
+            {
+                if (ValidationRuleOptiData(OptimizationDataBuildings, ab.PlanNumber, ab.BuildingFullLoad))
+                {
+                    OptimizationDataBuilding odb = new OptimizationDataBuilding();
+                    OptimizationDataBuildings.Insert(0, odb);
+                    OptimizationDataBuildings[0].Id = ab.Id;
+                    OptimizationDataBuildings[0].PlanNumber = ab.PlanNumber;
+                    OptimizationDataBuildings[0].FullPower = ab.BuildingFullLoad;
+                }
+            }
         }
 
 
@@ -396,6 +440,64 @@ namespace WpfPaging.DistrictObjects
                 }
                 // Если подлежаще удалению здание было определено, то удаляем его из кооллекции
                 if (abstractBuildingToRemove != null) AbstractBuildings.Remove(abstractBuildingToRemove);
+            }
+            // Если здание не существует в коллекции AbstractBuildings и не было изменено 
+            if (trackerOfExistingAb == 0 && trackerOfChangedAb == 0)
+            {
+                // То следует его добавить в коллекцию
+                abNeedsUpdate = true;
+            }
+
+            return abNeedsUpdate;
+        }
+
+
+        public bool ValidationRuleOptiData(List<OptimizationDataBuilding> optimizationDataBuildings, int PlanNumber, double FullPower)
+        {
+
+            bool abNeedsUpdate = false;
+
+
+            // Проверяю наличие зданий с параметрами переданными функции в коллекции abstractBuildings
+            int trackerOfExistingAb = optimizationDataBuildings.Where(abs => abs.PlanNumber == PlanNumber && abs.FullPower == FullPower).Count();
+            // Проверяю наличие зданий с параметром PlanNumber переданными функции  и отличным 
+            // от переданного функции FullPower в коллекции abstractBuildings
+            int trackerOfChangedAb = optimizationDataBuildings.Where(abs => abs.PlanNumber == PlanNumber && abs.FullPower != FullPower).Count();
+            // Если параметры функции и параметры здания совпадают, здание добавлено в коллекцию
+            // Тогда не требуется обновление данного здания и я его оставляю
+            if (trackerOfExistingAb >= 1)
+            { abNeedsUpdate = false; return abNeedsUpdate; }
+
+            // Если PlanNumber здания и параметра функции совпадают тогда 
+            // Здание добавляется в коллекцию изменённых
+            // В случае когда полученное здние является измнненым
+            if (trackerOfChangedAb >= 1)
+            {
+                //  нужно обновлять соответствующий обьект
+                abNeedsUpdate = true;
+                // Добавляю счётчик порядкового номера
+                int i = 0;
+                OptimizationDataBuilding optiDataBuildingToRemove = new OptimizationDataBuilding();
+                // Перебираю коллекцию АбстрактБилдинг
+                foreach (var a in OptimizationDataBuildings)
+                {
+                    // Сравниваю каждый абстракт билдинг с параметром функции 
+                    // Если они не совпадают 
+                    if (a.PlanNumber != PlanNumber)
+                    {
+                        // Тогда счетчик добавляет единицу
+                        i++;
+                    }
+                    // Совпадают
+                    else
+                    {
+                        // Значит текущее здание нужно запомнить как подлежащее удалению
+                        optiDataBuildingToRemove = a;
+                        break;
+                    }
+                }
+                // Если подлежаще удалению здание было определено, то удаляем его из кооллекции
+                if (optiDataBuildingToRemove != null) OptimizationDataBuildings.Remove(optiDataBuildingToRemove);
             }
             // Если здание не существует в коллекции AbstractBuildings и не было изменено 
             if (trackerOfExistingAb == 0 && trackerOfChangedAb == 0)

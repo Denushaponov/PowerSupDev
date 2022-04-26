@@ -43,9 +43,6 @@ namespace WpfPaging.ViewModels
                 {
                     e.PropertyChanged += ValidationRuleApartmentBuildings;
                 }
-
-
-
             }
         }
 
