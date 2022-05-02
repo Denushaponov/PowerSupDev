@@ -1,4 +1,5 @@
 ﻿using DevExpress.Mvvm;
+using DistrictSupplySolution;
 using DistrictSupplySolution.DbnTables;
 using DistrictSupplySolution.DistrictObjects;
 using DistrictSupplySolution.DistrictObjects.BuildingObjects;
@@ -81,12 +82,12 @@ namespace WpfPaging.DistrictObjects
         /// Список вариантов микрорайона которые будут оптимизироваться
         /// </summary>
         public List<District> OptiDistricts { get; set; }
-        public List<OptimizationDataBuilding> OptimizationDataBuildings {get;set;}
+        public ObservableCollection<OptimizationDataBuilding> OptimizationDataBuildings { get; set; } = new ObservableCollection<OptimizationDataBuilding>();
 
         /// <summary>
         /// List of all substations and is generated automatically
         /// </summary>
-        public List<Substation> Substations { get; set; }
+        public ObservableCollection<Substation> Substations { get; set; }
         /// <summary>
         /// Номинальная нагрузка  трансформатора
         /// </summary>
@@ -112,9 +113,11 @@ namespace WpfPaging.DistrictObjects
         /// </summary>
         /// <param name="CoefOfLoad">Юзер коефициент нагрузки</param>
         /// <returns>Formed substation list</returns>
-        public List<Substation> DetermineSubstationsList()
+        public ObservableCollection<Substation> DetermineSubstationsList()
         {
-            List<Substation> SB = new List<Substation>();
+            OptimizationDataBuildings = new ObservableCollection<OptimizationDataBuilding>();
+            ConvertBuildingsToOptiDataBuildings();
+            ObservableCollection<Substation> SB = new ObservableCollection<Substation>();
             string tp = "ТП";
             // Результат = количество подстанций
             if (TransformerLoad * CoeffOfLoadSubstation * NumberOfTransformers != 0)
@@ -123,9 +126,10 @@ namespace WpfPaging.DistrictObjects
                 for (int i = 0; i < _; i++)
                 {
                     Substation substation = new Substation();
+                    substation.Id = Guid.NewGuid();
                     substation.Name = tp + Convert.ToString(i + 1);
                     substation.IsLengthsCompleted = false;
-                    substation.AbstractBuildings = AbstractBuildings;
+                    substation.OptimizationDataBuildings = OptimizationDataBuildings;
                     SB.Add(substation);
                 }
                 return SB;
@@ -171,11 +175,14 @@ namespace WpfPaging.DistrictObjects
             {
                 if (ValidationRuleOptiData(OptimizationDataBuildings, cb.PlanNumber, cb.FullLoad))
                 {
+                    if (cb.PlanNumber !=0)
+                    {
                     OptimizationDataBuilding odb = new OptimizationDataBuilding();
                     OptimizationDataBuildings.Insert(0, odb);
                     OptimizationDataBuildings[0].Id = cb.Id;
                     OptimizationDataBuildings[0].PlanNumber = cb.PlanNumber;
                     OptimizationDataBuildings[0].FullPower = cb.FullLoad;
+                    }
                 }
             }
             // Также добавляю туда обьекты соответствующие жилым зданиям
@@ -183,11 +190,14 @@ namespace WpfPaging.DistrictObjects
             {
                 if (ValidationRuleOptiData(OptimizationDataBuildings, ab.PlanNumber, ab.BuildingFullLoad))
                 {
-                    OptimizationDataBuilding odb = new OptimizationDataBuilding();
-                    OptimizationDataBuildings.Insert(0, odb);
-                    OptimizationDataBuildings[0].Id = ab.Id;
-                    OptimizationDataBuildings[0].PlanNumber = ab.PlanNumber;
-                    OptimizationDataBuildings[0].FullPower = ab.BuildingFullLoad;
+                    if (ab.PlanNumber != 0)
+                    {
+                        OptimizationDataBuilding odb = new OptimizationDataBuilding();
+                        OptimizationDataBuildings.Insert(0, odb);
+                        OptimizationDataBuildings[0].Id = ab.Id;
+                        OptimizationDataBuildings[0].PlanNumber = ab.PlanNumber;
+                        OptimizationDataBuildings[0].FullPower = ab.BuildingFullLoad;
+                    }
                 }
             }
         }
@@ -452,59 +462,63 @@ namespace WpfPaging.DistrictObjects
         }
 
 
-        public bool ValidationRuleOptiData(List<OptimizationDataBuilding> optimizationDataBuildings, int PlanNumber, double FullPower)
+        public bool ValidationRuleOptiData(ObservableCollection<OptimizationDataBuilding> optimizationDataBuildings, int PlanNumber, double FullPower)
         {
 
             bool abNeedsUpdate = false;
 
-
-            // Проверяю наличие зданий с параметрами переданными функции в коллекции abstractBuildings
-            int trackerOfExistingAb = optimizationDataBuildings.Where(abs => abs.PlanNumber == PlanNumber && abs.FullPower == FullPower).Count();
-            // Проверяю наличие зданий с параметром PlanNumber переданными функции  и отличным 
-            // от переданного функции FullPower в коллекции abstractBuildings
-            int trackerOfChangedAb = optimizationDataBuildings.Where(abs => abs.PlanNumber == PlanNumber && abs.FullPower != FullPower).Count();
-            // Если параметры функции и параметры здания совпадают, здание добавлено в коллекцию
-            // Тогда не требуется обновление данного здания и я его оставляю
-            if (trackerOfExistingAb >= 1)
-            { abNeedsUpdate = false; return abNeedsUpdate; }
-
-            // Если PlanNumber здания и параметра функции совпадают тогда 
-            // Здание добавляется в коллекцию изменённых
-            // В случае когда полученное здние является измнненым
-            if (trackerOfChangedAb >= 1)
+            if (optimizationDataBuildings != null)
             {
-                //  нужно обновлять соответствующий обьект
-                abNeedsUpdate = true;
-                // Добавляю счётчик порядкового номера
-                int i = 0;
-                OptimizationDataBuilding optiDataBuildingToRemove = new OptimizationDataBuilding();
-                // Перебираю коллекцию АбстрактБилдинг
-                foreach (var a in OptimizationDataBuildings)
+
+                // Проверяю наличие зданий с параметрами переданными функции в коллекции abstractBuildings
+                int trackerOfExistingAb = optimizationDataBuildings.Where(abs => abs.PlanNumber == PlanNumber && abs.FullPower == FullPower).Count();
+                // Проверяю наличие зданий с параметром PlanNumber переданными функции  и отличным 
+                // от переданного функции FullPower в коллекции abstractBuildings
+                int trackerOfChangedAb = optimizationDataBuildings.Where(abs => abs.PlanNumber == PlanNumber && abs.FullPower != FullPower).Count();
+                // Если параметры функции и параметры здания совпадают, здание добавлено в коллекцию
+                // Тогда не требуется обновление данного здания и я его оставляю
+                if (trackerOfExistingAb >= 1)
+                { abNeedsUpdate = false; return abNeedsUpdate; }
+
+                // Если PlanNumber здания и параметра функции совпадают тогда 
+                // Здание добавляется в коллекцию изменённых
+                // В случае когда полученное здние является измнненым
+                if (trackerOfChangedAb >= 1)
                 {
-                    // Сравниваю каждый абстракт билдинг с параметром функции 
-                    // Если они не совпадают 
-                    if (a.PlanNumber != PlanNumber)
+                    //  нужно обновлять соответствующий обьект
+                    abNeedsUpdate = true;
+                    // Добавляю счётчик порядкового номера
+                    int i = 0;
+                    OptimizationDataBuilding optiDataBuildingToRemove = new OptimizationDataBuilding();
+                    // Перебираю коллекцию АбстрактБилдинг
+                    foreach (var a in OptimizationDataBuildings)
                     {
-                        // Тогда счетчик добавляет единицу
-                        i++;
+                        // Сравниваю каждый абстракт билдинг с параметром функции 
+                        // Если они не совпадают 
+                        if (a.PlanNumber != PlanNumber)
+                        {
+                            // Тогда счетчик добавляет единицу
+                            i++;
+                        }
+                        // Совпадают
+                        else
+                        {
+                            // Значит текущее здание нужно запомнить как подлежащее удалению
+                            optiDataBuildingToRemove = a;
+                            break;
+                        }
                     }
-                    // Совпадают
-                    else
-                    {
-                        // Значит текущее здание нужно запомнить как подлежащее удалению
-                        optiDataBuildingToRemove = a;
-                        break;
-                    }
+                    // Если подлежаще удалению здание было определено, то удаляем его из кооллекции
+                    if (optiDataBuildingToRemove != null) OptimizationDataBuildings.Remove(optiDataBuildingToRemove);
                 }
-                // Если подлежаще удалению здание было определено, то удаляем его из кооллекции
-                if (optiDataBuildingToRemove != null) OptimizationDataBuildings.Remove(optiDataBuildingToRemove);
+                // Если здание не существует в коллекции AbstractBuildings и не было изменено 
+                if (trackerOfExistingAb == 0 && trackerOfChangedAb == 0)
+                {
+                    // То следует его добавить в коллекцию
+                    abNeedsUpdate = true;
+                }
             }
-            // Если здание не существует в коллекции AbstractBuildings и не было изменено 
-            if (trackerOfExistingAb == 0 && trackerOfChangedAb == 0)
-            {
-                // То следует его добавить в коллекцию
-                abNeedsUpdate = true;
-            }
+            else abNeedsUpdate = true;
 
             return abNeedsUpdate;
         }
@@ -581,6 +595,129 @@ namespace WpfPaging.DistrictObjects
             FullPowerOfDistrict = Math.Round(Math.Sqrt(Math.Pow(ActivePowerOfDistrict, 2) + Math.Pow(ReactivePowerOfDistrict, 2)), 2);
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void OptiProc()
+        {
+            System.Diagnostics.Debug.WriteLine(DateTime.Now + " ");
+            int i = 0;
+            //тут можно рассчитать каждый микрорайон
+            List<List<List<int>>> combinationsList = new List<List<List<int>>>();
+            foreach (var ts in Substations)
+            {
+                List<List<int>> hyy = ts.DefineCombinationsPerSubstation(NumberOfTransformers, TransformerLoad, MinCoeffOfLoadSubstation, MaxCoeffOfLoadSubstation, MaxCalbeLength);
+                combinationsList.Insert(i,hyy);
+                i++;
+            }
+            System.Diagnostics.Debug.WriteLine(DateTime.Now + " CPS");
+            List<List<List<int>>> result = new List<List<List<int>>>();
+             result = CPS(combinationsList);
+            //result = WithoutintersectionsProduct(result.ToList());
+            ///11111111111
+          //  System.Diagnostics.Debug.WriteLine(DateTime.Now + " Listing");
+          //  foreach (var e in result)
+          //  {
+          //      List<int> comparer = new List<int>();
+          //      foreach (var u in e)
+          //      {
+          //          comparer.AddRange(u);  
+          //      }
+                
+          //      if (comparer.GroupBy(x => x).All(g => g.Count() == 1))
+          //      {
+          //           List<List<int>> x = e.ToList();
+          //          combinationsList2.Insert(0, x);
+          //      }
+          //  }
+          //  System.Diagnostics.Debug.WriteLine(DateTime.Now + " Intersection");
+          // // combinationsList2 = WithoutintersectionsProduct(combinationsList2);
+            
+            
+          // ///1111111111111
+          //  System.Diagnostics.Debug.WriteLine(combinationsList2.Count());
+          //  System.Diagnostics.Debug.WriteLine(DateTime.Now + " Intersection");
+          ////  var JK = result.Inrersec();
+          // // System.Diagnostics.Debug.WriteLine(JK.Count());
+          //  Console.WriteLine(DateTime.Now);
+
+          //  Console.WriteLine(result.Count());
+          //  Console.ReadKey();
+        }
+
+
+        public static List<List<List<int>>> WithoutintersectionsProduct(List<List<List<int>>> sequences)
+        {
+            List<List<List<int>>> result = new List<List<List<int>>>();
+
+            // START Alghorithm
+            foreach (var district in sequences)
+            {
+                var DistrictChanges = district.Take(1).ToList();
+                district.Aggregate((last, curr) =>
+                {
+                    bool contains = false;
+                    bool numExists = false;
+
+                    // Добавить сисок Int  и при каждой итерации добавлять в него пердыдущие элементы чтобы потом
+                    // проверя ть их на наличие дубликатов
+                    // Для каждого елемента n в текущей последовательности
+                    foreach (var n in curr)
+                    {
+                        // Если предідущая поледовательность содержит елемент из текущей
+                        // Или номер существует в одной из пердыдущих последоваельностей
+                        // То есть Если во время предыдущей итерации выявлено что
+                        // Набор содержит дубликат
+                        if (last.Contains(n) || numExists == true)
+                        {
+                            //Содержится дубликат
+                            contains = true;
+                            // Выйти из цикла чтобы перейти к следующему набору
+                            // Последовательности
+                            break;
+                        }
+                        else
+                        {
+                            // Если верхние уусловия не удовлетворены
+                            // дубликата нет
+                            contains = false;
+                        }
+
+                        // CHECK PREVIOUS SRQUENCES FOR PURPOSE OF DUPLICATES
+                        // каждый добавленый в набор список проверяется
+                        foreach (var lt in DistrictChanges)
+                        {
+                            // Если этот список содержит 
+                            // елемент цикла верхнего уровня
+
+                            if (lt.Contains(n))
+                            {
+                                // Число есть в списке, выйти из цикла
+                                numExists = true;
+                                break;
+                            }
+                        }
+                        // Если число есть в списке выйти из цикла верхнего уровня
+                        // Поменяв соответствующий флаг
+                        if (numExists == true)
+                        {
+                            contains = true;
+                            break;
+                        }
+                    }
+
+                    if (contains == false) DistrictChanges.Add(curr);
+                    return curr;
+                });
+                if (DistrictChanges.Count() == district.Count())
+                    result.Add(DistrictChanges);
+
+            }
+            // END Alghorithm
+            return result;
+
+        }
         public District()
         {
             Streets = new ObservableCollection<Street> { new Street { Category = "A" }, new Street { Category = "B" }, new Street { Category = "C" }, new Street { Category = "D" } };
@@ -613,6 +750,68 @@ namespace WpfPaging.DistrictObjects
 
             CalculatedDistrict.CalculateDistrictPower();
             return CalculatedDistrict;
+        }
+
+
+
+        //!!!!!!!!!!!!!!!!!!!1 FOR TEST
+        public List<List<List<int>>> CPS(List<List<List<int>>> sequences)
+        {
+            int i = 0;
+            List<List<List<int>>> result = new List<List<List<int>>>();
+            foreach (var sequence in sequences)
+            {
+                // List<List<int>> localSequence = sequence.OrderBy(a => a.Sort(b => b)).Distinct().ToList();
+                List<List<int>> localSequence = new List<List<int>>(); //sequence.OrderByDescending(a => a.(b => b.)).Distinct().ToList();
+                System.Diagnostics.Debug.WriteLine("Number of elements: " + sequence.Count() + " before removing duplicates");
+                foreach (var seq in sequence)
+                {
+                    List<int> seqOrdered = seq.OrderByDescending(s => s).ToList();
+                    localSequence.Add(seqOrdered);
+                }
+                    localSequence = localSequence.Distinct().ToList();
+                System.Diagnostics.Debug.WriteLine("Number of elements: " + localSequence.Count() + " after removing duplicates");
+
+                System.Diagnostics.Debug.WriteLine(DateTime.Now + " Iteration #" + i + " Start");
+                if (i == 0)
+                {
+                    foreach (var x in localSequence)
+                    {
+                        List<List<int>> tempRes = new List<List<int>>();
+                       
+                        tempRes.Add(x.OrderBy(s => s).ToList());
+                        result.Add(tempRes.Distinct().ToList());
+                    }
+                }
+                else
+                {
+                    List<List<List<int>>> tempResult = new List<List<List<int>>>();
+                    //tempResult = result;
+                    // result = new List<List<List<int>>>();
+
+                    foreach (var prev in result)
+                    {
+                        foreach (var curr in localSequence)
+                        {
+
+                            List<List<int>> temp = new List<List<int>>();
+                            temp.AddRange(prev);
+                            List<int> orderedCurr = curr.OrderBy(s => s).ToList();
+                            temp.Add(orderedCurr);
+                            List<int> comparer = temp.SelectMany(x => x).ToList();
+                            if (comparer.GroupBy(x => x).All(g => g.Count() == 1))
+                                tempResult.Add(temp);
+                        }
+                    }
+                    result = new List<List<List<int>>>(tempResult.Distinct());
+                    result = tempResult;
+                }
+                System.Diagnostics.Debug.WriteLine(DateTime.Now + " Iteration #" + i + " END");
+                System.Diagnostics.Debug.WriteLine("Number of elements: " + result.Count());
+                i++;
+            }
+
+            return result;
         }
 
     }

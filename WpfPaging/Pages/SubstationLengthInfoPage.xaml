@@ -99,19 +99,19 @@
 
             <StackPanel x:Name="UserInputPanel" Grid.Column="0">
                  <TextBlock Style="{StaticResource BlockField}" FontWeight="Bold">Назва</TextBlock>
-                <TextBlock Style="{StaticResource BlockField}" Text="{Binding SelectedSpecialCoefficientOfMax.Type, UpdateSourceTrigger=LostFocus, NotifyOnTargetUpdated=True}"></TextBlock>
+                <TextBlock Style="{StaticResource BlockField}" Text="{Binding SelectedSubstation.Name, UpdateSourceTrigger=LostFocus, NotifyOnTargetUpdated=True}"></TextBlock>
                 <TextBlock Style="{StaticResource BlockField}" FontWeight="Bold">Довжина кабелю на ділянці</TextBlock>
-                <TextBox Style="{StaticResource TextField}" Text="{Binding selectedAbstractBuilding.CableLength, UpdateSourceTrigger=LostFocus, NotifyOnTargetUpdated=True}"></TextBox>
+                <TextBox Style="{StaticResource TextField}" Text="{Binding SelectedOptiBuilding.CableLength, UpdateSourceTrigger=LostFocus, NotifyOnTargetUpdated=True}"></TextBox>
                 <Button VerticalAlignment="Top" Margin="0, 25, 0,0"  Style="{StaticResource MenuControls}" Background="LimeGreen" Command="{Binding SaveCommand}" x:Name="SaveThisCoefficients" Content="Зберегти внесені довжини" Width="240"></Button>
 
             </StackPanel>
 
 
-            <DataGrid x:Name="CoefficientsOfParticipanceInMaximumGrid" Grid.Column="1" Margin="0,0,43.5,43.5"  AutoGenerateColumns="False" CanUserDeleteRows="False"  HorizontalAlignment="Left" ItemsSource="{Binding SelectedSubstation.AbstractBuildings}" SelectedItem="{Binding selectedAbstractBuilding}" Grid.ColumnSpan="2">
+            <DataGrid x:Name="CoefficientsOfParticipanceInMaximumGrid" Grid.Column="1" Margin="0,0,43.5,43.5"  AutoGenerateColumns="False" CanUserDeleteRows="False"  HorizontalAlignment="Left" ItemsSource="{Binding SelectedSubstation.OptimizationDataBuildings}" SelectedItem="{Binding SelectedOptiBuilding}" Grid.ColumnSpan="2">
 
                 <DataGrid.Columns>
-                    <DataGridTextColumn CanUserResize="False" IsReadOnly="True"  Header="Тип" Width="1*" Binding="{Binding Type}"/>
-                    <DataGridTextColumn CanUserResize="False" IsReadOnly="True" Header="Довжина ділянки кабелю " Width="0.3*" Binding="{Binding CableLength}"/>
+                    <DataGridTextColumn CanUserResize="False" IsReadOnly="True"  Header="Тип" Width="1*" Binding="{Binding PlanNumber}"/>
+                    <DataGridTextColumn CanUserResize="False" IsReadOnly="False" Header="Довжина ділянки кабелю " Width="0.3*" Binding="{Binding CableLength}"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

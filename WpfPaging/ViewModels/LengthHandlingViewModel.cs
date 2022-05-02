@@ -26,7 +26,7 @@ namespace DistrictSupplySolution.ViewModels
         /// </summary>
         private Substation _backupSelectedSubstation;
         public Substation SelectedSubstation { get; set; }
-        public AbstractBuilding selectedAbstractBuilding { get; set; }
+        public OptimizationDataBuilding SelectedOptiBuilding { get; set; }
         public LengthHandlingViewModel(PageService pageService, EventBus eventBus, MessageBus messageBus)
         {
             _pageService = pageService;
@@ -44,7 +44,7 @@ namespace DistrictSupplySolution.ViewModels
         public ICommand SaveCommand => new AsyncCommand(async () =>
         {
             byte i = 0;
-            foreach (var cm in SelectedSubstation.AbstractBuildings)
+            foreach (var cm in SelectedSubstation.OptimizationDataBuildings)
             {
                  if (cm.CableLength == 0)
                     i++;
@@ -53,7 +53,7 @@ namespace DistrictSupplySolution.ViewModels
             { SelectedSubstation.IsLengthsCompleted = false; }
             else
             { SelectedSubstation.IsLengthsCompleted = true; }
-            await _messageBus.SendTo<LoadOfDistrictViewModel>(new SubstationMessage(SelectedSubstation));
+            await _messageBus.SendTo<SubstationsViewModel>(new SubstationMessage(SelectedSubstation));
 
         });
 

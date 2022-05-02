@@ -61,11 +61,37 @@ namespace DistrictSupplySolution.ViewModels
 
             _messageBus.Receive<DistrictMessage>(this, async message =>
             {
-                SelectedDistrict = new District();
-                SelectedDistrict.Substations = new List<Substation>();
+                if(SelectedDistrict.Substations==default)
+                SelectedDistrict.Substations = new ObservableCollection<Substation>();
                 SelectedDistrict = message.SharedDistrict;
             });
-        }
+            // Получаю SelectedSubstation с изменениями от других моделей представления
+          
+            _messageBus.Receive<SubstationMessage>(this, async message =>
+            {
+
+                int i = 0;
+                foreach (var ab in SelectedDistrict.Substations)
+                {
+                    if (ab.Id == message.SharedSubstation.Id)
+                    {
+                        break;
+                    }
+                    else
+                        i++;
+                }
+
+                SelectedDistrict.Substations[i] = message.SharedSubstation;
+            });
+            }
+
+        public ICommand SendApartmentBuildings => new AsyncCommand(async () =>
+        {
+            await _messageBus.SendTo<DistrictMenuViewModel>(new DistrictMessage(SelectedDistrict));
+            await _eventBus.Publish(new SaveEvent());
+        });
+
+
 
         public ICommand DetermineNumberOfSubstations => new DelegateCommand(() =>
         {
@@ -84,10 +110,7 @@ namespace DistrictSupplySolution.ViewModels
 
         public ICommand Optimize => new AsyncCommand(async () =>
         {
-            foreach (var ts in SelectedDistrict.Substations)
-            {
-                List<List<int>> hyy = ts.DefineCombinationsPerSubstation(SelectedDistrict.NumberOfTransformers, SelectedDistrict.TransformerLoad, SelectedDistrict.MinCoeffOfLoadSubstation, SelectedDistrict.MaxCoeffOfLoadSubstation, SelectedDistrict.MaxCalbeLength);
-            }
+            SelectedDistrict.OptiProc();
         });
     }
 }
