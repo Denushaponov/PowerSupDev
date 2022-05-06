@@ -61,8 +61,6 @@ namespace DistrictSupplySolution.ViewModels
 
             _messageBus.Receive<DistrictMessage>(this, async message =>
             {
-                if(SelectedDistrict.Substations==default)
-                SelectedDistrict.Substations = new ObservableCollection<Substation>();
                 SelectedDistrict = message.SharedDistrict;
             });
             // Получаю SelectedSubstation с изменениями от других моделей представления
@@ -83,9 +81,9 @@ namespace DistrictSupplySolution.ViewModels
 
                 SelectedDistrict.Substations[i] = message.SharedSubstation;
             });
-            }
+       }
 
-        public ICommand SendApartmentBuildings => new AsyncCommand(async () =>
+        public ICommand SaveSubstationsCom => new AsyncCommand(async () =>
         {
             await _messageBus.SendTo<DistrictMenuViewModel>(new DistrictMessage(SelectedDistrict));
             await _eventBus.Publish(new SaveEvent());

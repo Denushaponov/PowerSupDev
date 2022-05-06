@@ -573,7 +573,6 @@ namespace WpfPaging.DistrictObjects
         }
 
 
-
         public void CalculateDistrictPower()
         {
             double PreliminaryActivePowerOfDistrict = 0;
@@ -595,10 +594,6 @@ namespace WpfPaging.DistrictObjects
             FullPowerOfDistrict = Math.Round(Math.Sqrt(Math.Pow(ActivePowerOfDistrict, 2) + Math.Pow(ReactivePowerOfDistrict, 2)), 2);
         }
 
-
-        /// <summary>
-        /// 
-        /// </summary>
         public void OptiProc()
         {
             System.Diagnostics.Debug.WriteLine(DateTime.Now + " ");
@@ -613,7 +608,10 @@ namespace WpfPaging.DistrictObjects
             }
             System.Diagnostics.Debug.WriteLine(DateTime.Now + " CPS");
             List<List<List<int>>> result = new List<List<List<int>>>();
-             result = CPS(combinationsList);
+            result = CPS(combinationsList);
+            combinationsList.Clear();
+            var x = CalculateDistricts(result);
+
             //result = WithoutintersectionsProduct(result.ToList());
             ///11111111111
           //  System.Diagnostics.Debug.WriteLine(DateTime.Now + " Listing");
@@ -646,85 +644,11 @@ namespace WpfPaging.DistrictObjects
           //  Console.ReadKey();
         }
 
-
-        public static List<List<List<int>>> WithoutintersectionsProduct(List<List<List<int>>> sequences)
-        {
-            List<List<List<int>>> result = new List<List<List<int>>>();
-
-            // START Alghorithm
-            foreach (var district in sequences)
-            {
-                var DistrictChanges = district.Take(1).ToList();
-                district.Aggregate((last, curr) =>
-                {
-                    bool contains = false;
-                    bool numExists = false;
-
-                    // Добавить сисок Int  и при каждой итерации добавлять в него пердыдущие элементы чтобы потом
-                    // проверя ть их на наличие дубликатов
-                    // Для каждого елемента n в текущей последовательности
-                    foreach (var n in curr)
-                    {
-                        // Если предідущая поледовательность содержит елемент из текущей
-                        // Или номер существует в одной из пердыдущих последоваельностей
-                        // То есть Если во время предыдущей итерации выявлено что
-                        // Набор содержит дубликат
-                        if (last.Contains(n) || numExists == true)
-                        {
-                            //Содержится дубликат
-                            contains = true;
-                            // Выйти из цикла чтобы перейти к следующему набору
-                            // Последовательности
-                            break;
-                        }
-                        else
-                        {
-                            // Если верхние уусловия не удовлетворены
-                            // дубликата нет
-                            contains = false;
-                        }
-
-                        // CHECK PREVIOUS SRQUENCES FOR PURPOSE OF DUPLICATES
-                        // каждый добавленый в набор список проверяется
-                        foreach (var lt in DistrictChanges)
-                        {
-                            // Если этот список содержит 
-                            // елемент цикла верхнего уровня
-
-                            if (lt.Contains(n))
-                            {
-                                // Число есть в списке, выйти из цикла
-                                numExists = true;
-                                break;
-                            }
-                        }
-                        // Если число есть в списке выйти из цикла верхнего уровня
-                        // Поменяв соответствующий флаг
-                        if (numExists == true)
-                        {
-                            contains = true;
-                            break;
-                        }
-                    }
-
-                    if (contains == false) DistrictChanges.Add(curr);
-                    return curr;
-                });
-                if (DistrictChanges.Count() == district.Count())
-                    result.Add(DistrictChanges);
-
-            }
-            // END Alghorithm
-            return result;
-
-        }
         public District()
         {
             Streets = new ObservableCollection<Street> { new Street { Category = "A" }, new Street { Category = "B" }, new Street { Category = "C" }, new Street { Category = "D" } };
         }
-
-
-
+        // Create funtion of auto calculate district
         public District Auto()
         {
             District CalculatedDistrict = new District();
@@ -752,11 +676,196 @@ namespace WpfPaging.DistrictObjects
             return CalculatedDistrict;
         }
 
+        // Create funtion of auto calculate district modified
+        public District Auto2(District source, List<int> PlanNumbers)
+        {
+            District CalculatedDistrict = new District();
+           // CalculatedDistrict.Building.ApartmentBuildings = Building.ApartmentBuildings;
+            foreach (var p in PlanNumbers)
+            {
+                foreach (var ab in source.Building.ApartmentBuildings)
+                { if (ab.PlanNumber == p) CalculatedDistrict.Building.ApartmentBuildings.Add(ab); }
+                foreach (var cb in source.Building.CommercialBuildings)
+                { if (cb.PlanNumber == p) CalculatedDistrict.Building.CommercialBuildings.Add(cb); }
+            }
+          // CalculatedDistrict.Building.CommercialBuildings = Building.CommercialBuildings;
+            CalculatedDistrict.Building.UniteApartmentBuildings();
+            CalculatedDistrict.ConvertBuildingsToAbstractBuildings();
+            foreach (var ab in source.AbstractBuildings)
+            {
+                foreach (var abs in CalculatedDistrict.AbstractBuildings)
+                {
+                    // Если абс ьланк то удалить абс ТОДО
+                    if (abs.FullPower == ab.FullPower && abs.PlanNumber == ab.PlanNumber && ab.SpecialConsumerCoefficientsOfMax != default)
+                    {
+                        abs.SpecialConsumerCoefficientsOfMax = ab.SpecialConsumerCoefficientsOfMax;
+                        abs.SideNote = ab.SideNote;
+                    }
+                }
+            }
+            CalculatedDistrict.DetermineCoefficientsOfParticipanceInMaximumLoad();
+            //Разобраться с логикой для освещения
+          //  CalculatedDistrict.DistrictTotalLightning = DistrictTotalLightning;
+           // CalculatedDistrict.ConvertTotalLigtningToAbstractBuildings();
+            CalculatedDistrict.CalculateDistrictPower();
+            return CalculatedDistrict;
+        }
 
+        public List<List<District>> CalculateDistricts(List<List<List<int>>> set)
+        {
+            List<List<District>> result = new List<List<District>>();
+            foreach (var district in set)
+            {
+                int remainingSubstations = Substations.Count();
+                double tLightning = DistrictTotalLightning;
+                double remainingTLightning = tLightning;
+                double remainingFromLast = 0;
+                double maximumSubsLoad = TransformerLoad * 2 * MaxCoeffOfLoadSubstation;
+                double minSubsLoad = TransformerLoad*2 * MinCoeffOfLoadSubstation;
+                int iteration = 0;
+                List<District> Subs = new List<District>();
+                List<int> i=new List<int>();
+                foreach (var substation in district)
+                {
+                    District calc = Auto2(this, substation);
+                    if (calc.FullPowerOfDistrict < maximumSubsLoad && calc.FullPowerOfDistrict + (tLightning / remainingSubstations) * 3 > minSubsLoad)
+                    {
+                        double possibleLoad = maximumSubsLoad - calc.FullPowerOfDistrict;
+                    //    double tLightLoadPerSub = tLightning/ Substations.Count();
+
+                        if (possibleLoad >= 0)
+                        {
+                            //// Если нагрузить можно больше чем на равную часть
+                            //if (possibleLoad >= tLightLoadPerSub)
+                            //{
+                            //    if (remainingTLightning - tLightLoadPerSub > 0)
+                            //    {
+                            //        calc.FullPowerOfDistrict += tLightLoadPerSub;
+                            //        remainingTLightning -= tLightLoadPerSub;
+                            //        if (maximumSubsLoad - calc.FullPowerOfDistrict >= remainingFromLast)
+                            //        {
+                            //            if (remainingTLightning - remainingFromLast >= 0)
+                            //            {
+                            //                calc.FullPowerOfDistrict += remainingFromLast;
+                            //                remainingTLightning -= remainingFromLast;
+                            //                remainingFromLast = 0;
+                            //            }
+                            //        }
+                            //        else if (maximumSubsLoad - calc.FullPowerOfDistrict > 0)
+                            //        {
+                            //            calc.FullPowerOfDistrict += maximumSubsLoad - calc.FullPowerOfDistrict;
+                            //            remainingTLightning -= maximumSubsLoad - calc.FullPowerOfDistrict;
+                            //            remainingFromLast -= maximumSubsLoad - calc.FullPowerOfDistrict;
+                            //        }
+                            //    }
+                            //    if (maximumSubsLoad - calc.FullPowerOfDistrict>0)
+                            //    i.Add(iteration);
+                            //    if(remainingSubstations>0)
+                            //    remainingSubstations--;
+                            //    iteration++;
+                            //}
+                            //// Если возможная загрузка меньше чем нагрузка равномерная на каждую
+                            //else if (possibleLoad<tLightLoadPerSub && remainingTLightning-possibleLoad<=0)
+                            //{
+                            //    remainingFromLast += tLightLoadPerSub - possibleLoad;
+                            //    calc.FullPowerOfDistrict += possibleLoad;
+                            //    remainingTLightning -= possibleLoad;
+                            //}
+                    
+                            //if (remainingSubstations==0 && remainingTLightning>0)
+                            //{
+                            //    foreach (var num in i)
+                            //    {
+                            //        double loadCapacity = maximumSubsLoad - Subs[num].FullPowerOfDistrict;
+                            //        if (loadCapacity > 0 && remainingTLightning != 0)
+                            //        {
+                            //            if (maximumSubsLoad - Subs[num].FullPowerOfDistrict>= remainingTLightning)
+                            //            {
+                            //                Subs[num].FullPowerOfDistrict += remainingTLightning;
+                            //                remainingTLightning -= remainingTLightning;
+                            //            }
+                            //            else
+                            //            {
+                            //                Subs[num].FullPowerOfDistrict += Subs[num].FullPowerOfDistrict - maximumSubsLoad;
+                            //                remainingTLightning -= Subs[num].FullPowerOfDistrict - maximumSubsLoad;
+                            //            }
+                            //        }
+                            //    }
+                            //}
+
+                            //if (possibleLoad > tLightning && tLightning > 0)
+                            //{
+                            //  //  int j = Substations.Count - remainingSubstations;
+                            //    calc.FullPowerOfDistrict += tLightning/2;
+                            //    tLightning -= tLightning/2;
+                            //        i = Substations.Count() - remainingSubstations;
+                            //    remainingSubstations--;
+                            //}
+                            //else if (possibleLoad > tLightning / remainingSubstations && tLightning > 0)
+                            //{
+                            //    calc.FullPowerOfDistrict += tLightning / remainingSubstations;
+                            //    tLightning -= tLightning / remainingSubstations;
+                            //        if (i==99) i = Substations.Count() - remainingSubstations;
+                            //        remainingSubstations--;
+                            //}
+                            //else if (possibleLoad <= tLightning / remainingSubstations && tLightning > 0)
+                            //{
+                            //    calc.FullPowerOfDistrict += possibleLoad;
+                            //    tLightning -= possibleLoad;
+                            //    remainingSubstations--;
+                            //}
+                            //// Проверяю остатки нагрузки осветительной
+                            //if (remainingSubstations==0 && tLightning>0)
+                            //{
+                            //        if (i != 99)
+                            //        {
+                            //            Subs[i].FullPowerOfDistrict += tLightning;
+                            //            tLightning = 0;
+                            //        }
+                            //}
+
+                            Subs.Add(calc);
+                        }
+                        
+                    }
+                }
+                if (Subs.Count() == Substations.Count() /*&& remainingTLightning == 0*/ && Subs.All(o => o.FullPowerOfDistrict <= maximumSubsLoad && o.FullPowerOfDistrict+DistrictTotalLightning*0.9 >= minSubsLoad))
+                {
+                    double tempLightningDist = DistrictTotalLightning;//осветительная нагрузка
+                    var x = from s in Subs select s.Id; // Старый порядок подстанций
+                    Subs = Subs.OrderBy(o => o.FullPowerOfDistrict).ToList();
+                    foreach (var s in Subs)
+                    {
+                        double toAdd = maximumSubsLoad - s.FullPowerOfDistrict;
+                        if (tempLightningDist >= toAdd)
+                        {
+                            s.FullPowerOfDistrict = Math.Round(s.FullPowerOfDistrict + toAdd, 2);
+                            tempLightningDist -= toAdd;
+                        }
+                        else // tempLightningDist < toAdd
+                        {
+                            s.FullPowerOfDistrict = Math.Round(s.FullPowerOfDistrict + tempLightningDist, 2);
+                            tempLightningDist -= tempLightningDist;
+                        }
+                    }
+                    List<District> res = new List<District>();
+                    foreach (var id in x)
+                    {
+                        foreach (var s in Subs)
+                        { if (s.Id == id) res.Add(s); }
+                    }
+
+                    result.Add(res); 
+                }
+                System.Diagnostics.Debug.WriteLine(DateTime.Now + " Count Result: " + result.Count());
+            }    
+            return result;
+        }
 
         //!!!!!!!!!!!!!!!!!!!1 FOR TEST
         public List<List<List<int>>> CPS(List<List<List<int>>> sequences)
         {
+            int numberOfBuildings = Substations[0].OptimizationDataBuildings.Count();
             int i = 0;
             List<List<List<int>>> result = new List<List<List<int>>>();
             foreach (var sequence in sequences)
@@ -811,7 +920,29 @@ namespace WpfPaging.DistrictObjects
                 i++;
             }
 
-            return result;
+            List<List<List<int>>> difference = new List<List<List<int>>>();
+            List<int> plannumGen = new List<int>();//test
+            foreach (var res in result)
+            {
+                List<int> test = new List<int>();
+                List<int> plannum = new List<int>();//test
+                foreach (var ob in OptimizationDataBuildings)
+                {
+                    plannum.Add(ob.PlanNumber);
+                }
+
+                foreach (var o in res)
+                {
+                    test.AddRange(o);
+                }
+                if (test.Count == numberOfBuildings) //тест
+                    difference.Add(res.ToList());
+                var x = plannum.Except(test);//test
+                plannumGen.AddRange(x.ToList()); //test
+            }
+            plannumGen = plannumGen.Distinct().ToList(); //test
+          //  result = new List<List<List<int>>>(difference);
+            return difference;
         }
 
     }

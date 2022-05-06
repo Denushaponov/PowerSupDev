@@ -151,7 +151,8 @@
                 <TextBlock Style="{StaticResource BlockField}" FontWeight="Bold">Номінал трансформатору</TextBlock>
                 <TextBox Style="{StaticResource TextField}" Text="{Binding SelectedDistrict.TransformerLoad, UpdateSourceTrigger=LostFocus}"></TextBox>
                 <!--Text="{Binding SelectedSpecialCoefficientOfMax.CoefficientOfMax, UpdateSourceTrigger=LostFocus, NotifyOnTargetUpdated=True}"-->
-                <Button VerticalAlignment="Top" Margin="0, 25, 0,0"  Style="{StaticResource MenuControls}" Background="LimeGreen" Command="{Binding DetermineNumberOfSubstations}" x:Name="SaveThisCoefficients" Content="Зберегти внесені коефіцієнти" Width="240"></Button>
+                <Button VerticalAlignment="Top" Margin="0, 25, 0,0"  Style="{StaticResource MenuControls}" Background="LimeGreen" Command="{Binding DetermineNumberOfSubstations}" x:Name="SaveThisCoefficients" Content="Створити підстанції" Width="240"></Button>
+                <Button VerticalAlignment="Top" Margin="0, 25, 0,0"  Style="{StaticResource MenuControls}" Background="LimeGreen" Command="{Binding SaveSubstationsCom}" x:Name="Save" Content="Зберегти підстанції" Width="240"></Button>
                 <Button Command="{Binding Optimize}">Optimize</Button>
             </StackPanel>
             <!--Input panel determine subsrtations tab END-->
@@ -168,7 +169,7 @@
                         </Style.Triggers>
                     </Style>
                 </StackPanel.Style>
-                <Button VerticalAlignment="Top" Margin="0, 25, 0,0"  Style="{StaticResource MenuControls}" Background="LimeGreen" Command="{Binding GoForLengths}" x:Name="ChangeLengths" Content="Внести значення двожини" Width="240"></Button>
+                <Button VerticalAlignment="Top" Margin="0, 25, 0,0"  Style="{StaticResource MenuControls}" Background="LimeGreen" Command="{Binding GoForLengths}" x:Name="ChangeLengths" Content="Внести значення довжин" Width="240"></Button>
             </StackPanel>
             <!--Input panel Lengths tab END-->
 

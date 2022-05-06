@@ -33,23 +33,32 @@ namespace DistrictSupplySolution.DistrictObjects
             
             int minimalNumber = 0;
             int maximalNum = 0;
+            double minimalLoadComparer = transformerPOwer * transormerNum * (minCoefOfLoad + 0.1);
+            double maximalLoadComparer = transformerPOwer * transormerNum * (maxCoefOfLoad + 0.2);
             double minimalLoad = transformerPOwer * transormerNum * (minCoefOfLoad+0.1);
-            double maximalLoad = transformerPOwer * transormerNum * (maxCoefOfLoad+0.2);
-
+            double maximalLoad = transformerPOwer * transormerNum * (maxCoefOfLoad+0.2);  
             var MinimalDetermine = from ab in FitLengthsColl
+                                   orderby ab.Power descending
+                                   select ab;
+            var MaximalDetermine = from ab in FitLengthsColl
                                    orderby ab.Power ascending
                                    select ab;
-           foreach (var ab in MinimalDetermine)
+            foreach (var ab in MinimalDetermine)
             {
-                if (0 < minimalLoad)
+                if (ab.Power < minimalLoad)
                 {
-                    if (minimalLoad>=ab.Power)
+                    if (minimalLoad >= ab.Power)
                     {
-                    minimalLoad -= ab.Power;
-                    minimalNumber++;
+                        minimalLoad -= ab.Power;
+                        minimalNumber++;
                     }
                 }
-                if (0 < maximalLoad)
+                else break;
+            }
+           foreach (var ab in MaximalDetermine)
+
+            {
+                if (ab.Power < maximalLoad)
                 {
                     if (maximalLoad >= ab.Power)
                     {
@@ -61,12 +70,21 @@ namespace DistrictSupplySolution.DistrictObjects
             }
             //var results = ExtentionMethods.GetCombinations(input).Where(x 
             //=> x.Length >= minNumOfBuildings && x.Length <= maxNumOfBuildings);
-            var tolists = from ab in MinimalDetermine select ab.Number;
+            var tolists = from ab in MaximalDetermine select ab.Number;
             IEnumerable<int[]> Combinations = ExtMethods.GetAbCombinations(tolists.ToList()).Where(x
-                => x.Length >= minimalNumber && x.Length<=maximalNum);
+                => x.Length >= minimalNumber && x.Length<=maximalNum);//тест ТОДО
                 List<List<int>> result = new List<List<int>>();
             foreach (var i in Combinations)
             {
+                double loadOfSet = 0;
+                foreach(var o in i)
+                {
+                    //проверить сумма нагрузок соответствет минимальной нагрузке или нет
+                    // получаю здание с таким же индексом
+                    OptimizationDataBuilding x = OptimizationDataBuildings.Where(ob => ob.PlanNumber == o).First();
+                    loadOfSet += x.FullPower;
+                }
+                if (minimalLoadComparer<=loadOfSet&&maximalLoadComparer>=loadOfSet)
                 result.Add(i.OrderByDescending(o => o).ToList());
             }
             result = result.Distinct().ToList();
@@ -74,6 +92,7 @@ namespace DistrictSupplySolution.DistrictObjects
             //  List<List<int>> co = Combinations.ToList();
             //return Combinations.ToList(); //TODO
             return result;
+            // TODO чтобы было 32 
     }
 
     }

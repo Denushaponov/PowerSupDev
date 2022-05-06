@@ -62,13 +62,6 @@ namespace WpfPaging.DistrictObjects
             { IsDuplicate = true; }
             else IsDuplicate = false;
             return IsDuplicate;
-          
-            
-          
-
-            
-
-
         }
 
 

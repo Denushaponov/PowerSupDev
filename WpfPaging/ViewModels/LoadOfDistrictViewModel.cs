@@ -122,6 +122,7 @@ namespace DistrictSupplySolution.ViewModels
         {
             if (_isDistrictUpdated == true)
             {
+                SelectedDistrict.AbstractBuildings.Clear();
                 SelectedDistrict.ConvertBuildingsToAbstractBuildings();
                 _isDistrictUpdated = false;
             }
