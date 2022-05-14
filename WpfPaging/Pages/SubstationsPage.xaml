@@ -18,8 +18,7 @@
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Width" Value="120"/>
             <Setter Property="Height" Value="30"/>
-            <Setter Property="Background" Value="CornflowerBlue"/>
-            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="LightGray"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
         </Style>
         <!-- Стиль для кнопок добавления-->
@@ -32,6 +31,7 @@
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Padding" Value="0"/>
+            <Setter Property="Foreground" Value="Black"/>
         </Style>
         <!-- ДЛЯ КОНПОК УДАЛЕНИЯ-->
         <Style x:Key="RemoveButton" TargetType="Button" >
@@ -151,8 +151,10 @@
                 <TextBlock Style="{StaticResource BlockField}" FontWeight="Bold">Номінал трансформатору</TextBlock>
                 <TextBox Style="{StaticResource TextField}" Text="{Binding SelectedDistrict.TransformerLoad, UpdateSourceTrigger=LostFocus}"></TextBox>
                 <!--Text="{Binding SelectedSpecialCoefficientOfMax.CoefficientOfMax, UpdateSourceTrigger=LostFocus, NotifyOnTargetUpdated=True}"-->
-                <Button VerticalAlignment="Top" Margin="0, 25, 0,0"  Style="{StaticResource MenuControls}" Background="LimeGreen" Command="{Binding DetermineNumberOfSubstations}" x:Name="SaveThisCoefficients" Content="Створити підстанції" Width="240"></Button>
-                <Button VerticalAlignment="Top" Margin="0, 25, 0,0"  Style="{StaticResource MenuControls}" Background="LimeGreen" Command="{Binding SaveSubstationsCom}" x:Name="Save" Content="Зберегти підстанції" Width="240"></Button>
+                <Button VerticalAlignment="Top" Margin="0, 25, 0,0"  Style="{StaticResource MenuControls}" Background="LawnGreen" Foreground="Blue" Command="{Binding DetermineNumberOfSubstations}" x:Name="SaveThisCoefficients" Content="Створити підстанції" Width="240">
+                    
+                </Button>
+                <Button VerticalAlignment="Top" Margin="0, 25, 0,0"  Style="{StaticResource MenuControls}" Background="LightBlue" Foreground="Blue" Command="{Binding SaveSubstationsCom}" x:Name="Save" Content="Зберегти підстанції" Width="240"></Button>
                 <Button Command="{Binding Optimize}">Optimize</Button>
             </StackPanel>
             <!--Input panel determine subsrtations tab END-->
@@ -193,7 +195,7 @@
                 <TextBlock Style="{StaticResource BlockField}" FontWeight="Bold">Максимальна довжина кабелю</TextBlock>
                 <TextBox Style="{StaticResource TextField}" Text="{Binding SelectedDistrict.MaxCalbeLength, UpdateSourceTrigger=LostFocus}"></TextBox>
                 <!--Text="{Binding SelectedSpecialCoefficientOfMax.CoefficientOfMax, UpdateSourceTrigger=LostFocus, NotifyOnTargetUpdated=True}"-->
-                <Button VerticalAlignment="Top" Margin="0, 25, 0,0"  Style="{StaticResource MenuControls}" Background="LimeGreen" Command="{Binding DetermineNumberOfSubstations}" x:Name="OptimizeButton" Content="Визначити оптимальні варіанти" Width="240"></Button>
+                <Button VerticalAlignment="Top" Margin="0, 25, 0,0"  Style="{StaticResource MenuControls}" Background="LimeGreen" Command="{Binding Optimize}" x:Name="OptimizeButton" Content="Визначити оптимальні варіанти" Width="240"></Button>
             </StackPanel>
             <!--Input panel opti params  tab END-->
 

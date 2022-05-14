@@ -719,10 +719,10 @@ namespace WpfPaging.DistrictObjects
                 int remainingSubstations = Substations.Count();
                 double tLightning = DistrictTotalLightning;
                 double remainingTLightning = tLightning;
-                double remainingFromLast = 0;
+
                 double maximumSubsLoad = TransformerLoad * 2 * MaxCoeffOfLoadSubstation;
                 double minSubsLoad = TransformerLoad*2 * MinCoeffOfLoadSubstation;
-                int iteration = 0;
+        
                 List<District> Subs = new List<District>();
                 List<int> i=new List<int>();
                 foreach (var substation in district)
@@ -731,104 +731,16 @@ namespace WpfPaging.DistrictObjects
                     if (calc.FullPowerOfDistrict < maximumSubsLoad && calc.FullPowerOfDistrict + (tLightning / remainingSubstations) * 3 > minSubsLoad)
                     {
                         double possibleLoad = maximumSubsLoad - calc.FullPowerOfDistrict;
-                    //    double tLightLoadPerSub = tLightning/ Substations.Count();
 
                         if (possibleLoad >= 0)
                         {
-                            //// Если нагрузить можно больше чем на равную часть
-                            //if (possibleLoad >= tLightLoadPerSub)
-                            //{
-                            //    if (remainingTLightning - tLightLoadPerSub > 0)
-                            //    {
-                            //        calc.FullPowerOfDistrict += tLightLoadPerSub;
-                            //        remainingTLightning -= tLightLoadPerSub;
-                            //        if (maximumSubsLoad - calc.FullPowerOfDistrict >= remainingFromLast)
-                            //        {
-                            //            if (remainingTLightning - remainingFromLast >= 0)
-                            //            {
-                            //                calc.FullPowerOfDistrict += remainingFromLast;
-                            //                remainingTLightning -= remainingFromLast;
-                            //                remainingFromLast = 0;
-                            //            }
-                            //        }
-                            //        else if (maximumSubsLoad - calc.FullPowerOfDistrict > 0)
-                            //        {
-                            //            calc.FullPowerOfDistrict += maximumSubsLoad - calc.FullPowerOfDistrict;
-                            //            remainingTLightning -= maximumSubsLoad - calc.FullPowerOfDistrict;
-                            //            remainingFromLast -= maximumSubsLoad - calc.FullPowerOfDistrict;
-                            //        }
-                            //    }
-                            //    if (maximumSubsLoad - calc.FullPowerOfDistrict>0)
-                            //    i.Add(iteration);
-                            //    if(remainingSubstations>0)
-                            //    remainingSubstations--;
-                            //    iteration++;
-                            //}
-                            //// Если возможная загрузка меньше чем нагрузка равномерная на каждую
-                            //else if (possibleLoad<tLightLoadPerSub && remainingTLightning-possibleLoad<=0)
-                            //{
-                            //    remainingFromLast += tLightLoadPerSub - possibleLoad;
-                            //    calc.FullPowerOfDistrict += possibleLoad;
-                            //    remainingTLightning -= possibleLoad;
-                            //}
-                    
-                            //if (remainingSubstations==0 && remainingTLightning>0)
-                            //{
-                            //    foreach (var num in i)
-                            //    {
-                            //        double loadCapacity = maximumSubsLoad - Subs[num].FullPowerOfDistrict;
-                            //        if (loadCapacity > 0 && remainingTLightning != 0)
-                            //        {
-                            //            if (maximumSubsLoad - Subs[num].FullPowerOfDistrict>= remainingTLightning)
-                            //            {
-                            //                Subs[num].FullPowerOfDistrict += remainingTLightning;
-                            //                remainingTLightning -= remainingTLightning;
-                            //            }
-                            //            else
-                            //            {
-                            //                Subs[num].FullPowerOfDistrict += Subs[num].FullPowerOfDistrict - maximumSubsLoad;
-                            //                remainingTLightning -= Subs[num].FullPowerOfDistrict - maximumSubsLoad;
-                            //            }
-                            //        }
-                            //    }
-                            //}
-
-                            //if (possibleLoad > tLightning && tLightning > 0)
-                            //{
-                            //  //  int j = Substations.Count - remainingSubstations;
-                            //    calc.FullPowerOfDistrict += tLightning/2;
-                            //    tLightning -= tLightning/2;
-                            //        i = Substations.Count() - remainingSubstations;
-                            //    remainingSubstations--;
-                            //}
-                            //else if (possibleLoad > tLightning / remainingSubstations && tLightning > 0)
-                            //{
-                            //    calc.FullPowerOfDistrict += tLightning / remainingSubstations;
-                            //    tLightning -= tLightning / remainingSubstations;
-                            //        if (i==99) i = Substations.Count() - remainingSubstations;
-                            //        remainingSubstations--;
-                            //}
-                            //else if (possibleLoad <= tLightning / remainingSubstations && tLightning > 0)
-                            //{
-                            //    calc.FullPowerOfDistrict += possibleLoad;
-                            //    tLightning -= possibleLoad;
-                            //    remainingSubstations--;
-                            //}
-                            //// Проверяю остатки нагрузки осветительной
-                            //if (remainingSubstations==0 && tLightning>0)
-                            //{
-                            //        if (i != 99)
-                            //        {
-                            //            Subs[i].FullPowerOfDistrict += tLightning;
-                            //            tLightning = 0;
-                            //        }
-                            //}
-
                             Subs.Add(calc);
                         }
                         
                     }
                 }
+
+                // Распределение освещения
                 if (Subs.Count() == Substations.Count() /*&& remainingTLightning == 0*/ && Subs.All(o => o.FullPowerOfDistrict <= maximumSubsLoad && o.FullPowerOfDistrict+DistrictTotalLightning*0.9 >= minSubsLoad))
                 {
                     double tempLightningDist = DistrictTotalLightning;//осветительная нагрузка
