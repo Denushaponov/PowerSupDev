@@ -3,6 +3,8 @@ using DistrictSupplySolution;
 using DistrictSupplySolution.DbnTables;
 using DistrictSupplySolution.DistrictObjects;
 using DistrictSupplySolution.DistrictObjects.BuildingObjects;
+using LiveCharts;
+using LiveCharts.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -81,7 +83,8 @@ namespace WpfPaging.DistrictObjects
         /// <summary>
         /// Список вариантов микрорайона которые будут оптимизироваться
         /// </summary>
-        public List<District> OptiDistricts { get; set; }
+        public List<List<District>> OptiDistricts { get; set; }
+        public List<(int, double)> OptiInfo { get; set; }
         public ObservableCollection<OptimizationDataBuilding> OptimizationDataBuildings { get; set; } = new ObservableCollection<OptimizationDataBuilding>();
 
         /// <summary>
@@ -100,6 +103,10 @@ namespace WpfPaging.DistrictObjects
         /// Коеффициент загрузки ТП
         /// </summary>
         public double CoeffOfLoadSubstation { get; set; }
+        public ObservableCollection<FinalReport> Report { get; set; } = new ObservableCollection<FinalReport>();
+        public SeriesCollection ChartSeries { get; set;} = new SeriesCollection();
+        public SeriesCollection OrderedChartSeries { get; set;} = new SeriesCollection();
+        public string[] Labels { get; set;}
 
         #region Optimization parameters
         public double MinCoeffOfLoadSubstation { get; set; }
@@ -596,6 +603,8 @@ namespace WpfPaging.DistrictObjects
 
         public void OptiProc()
         {
+            OptiDistricts = new List<List<District>>();
+            OptiInfo = new List<(int, double)>();
             System.Diagnostics.Debug.WriteLine(DateTime.Now + " ");
             int i = 0;
             //тут можно рассчитать каждый микрорайон
@@ -611,37 +620,14 @@ namespace WpfPaging.DistrictObjects
             result = CPS(combinationsList);
             combinationsList.Clear();
             var x = CalculateDistricts(result);
-
-            //result = WithoutintersectionsProduct(result.ToList());
-            ///11111111111
-          //  System.Diagnostics.Debug.WriteLine(DateTime.Now + " Listing");
-          //  foreach (var e in result)
-          //  {
-          //      List<int> comparer = new List<int>();
-          //      foreach (var u in e)
-          //      {
-          //          comparer.AddRange(u);  
-          //      }
-                
-          //      if (comparer.GroupBy(x => x).All(g => g.Count() == 1))
-          //      {
-          //           List<List<int>> x = e.ToList();
-          //          combinationsList2.Insert(0, x);
-          //      }
-          //  }
-          //  System.Diagnostics.Debug.WriteLine(DateTime.Now + " Intersection");
-          // // combinationsList2 = WithoutintersectionsProduct(combinationsList2);
-            
-            
-          // ///1111111111111
-          //  System.Diagnostics.Debug.WriteLine(combinationsList2.Count());
-          //  System.Diagnostics.Debug.WriteLine(DateTime.Now + " Intersection");
-          ////  var JK = result.Inrersec();
-          // // System.Diagnostics.Debug.WriteLine(JK.Count());
-          //  Console.WriteLine(DateTime.Now);
-
-          //  Console.WriteLine(result.Count());
-          //  Console.ReadKey();
+            result.Clear();
+            OptiInfo = OptimizeByLengths2(x);
+            foreach (var o in OptiInfo)
+            {
+                OptiDistricts.Add(x[o.Item1]);  
+            }
+            Reporting(OptiInfo, x);
+            Console.WriteLine();
         }
 
         public District()
@@ -671,7 +657,6 @@ namespace WpfPaging.DistrictObjects
             //Разобраться с логикой для освещения
             CalculatedDistrict.DistrictTotalLightning = DistrictTotalLightning;
             CalculatedDistrict.ConvertTotalLigtningToAbstractBuildings();
-
             CalculatedDistrict.CalculateDistrictPower();
             return CalculatedDistrict;
         }
@@ -728,7 +713,9 @@ namespace WpfPaging.DistrictObjects
                 foreach (var substation in district)
                 {
                     District calc = Auto2(this, substation);
-                    if (calc.FullPowerOfDistrict < maximumSubsLoad && calc.FullPowerOfDistrict + (tLightning / remainingSubstations) * 3 > minSubsLoad)
+                    if (calc.FullPowerOfDistrict < maximumSubsLoad &&
+                        calc.FullPowerOfDistrict + (tLightning / remainingSubstations) > minSubsLoad)
+
                     {
                         double possibleLoad = maximumSubsLoad - calc.FullPowerOfDistrict;
 
@@ -741,11 +728,41 @@ namespace WpfPaging.DistrictObjects
                 }
 
                 // Распределение освещения
-                if (Subs.Count() == Substations.Count() /*&& remainingTLightning == 0*/ && Subs.All(o => o.FullPowerOfDistrict <= maximumSubsLoad && o.FullPowerOfDistrict+DistrictTotalLightning*0.9 >= minSubsLoad))
+                if (Subs.Count() == Substations.Count() 
+                    && Subs.All(o => o.FullPowerOfDistrict <= maximumSubsLoad 
+                    && o.FullPowerOfDistrict+DistrictTotalLightning*0.9 >= minSubsLoad))
+
                 {
                     double tempLightningDist = DistrictTotalLightning;//осветительная нагрузка
                     var x = from s in Subs select s.Id; // Старый порядок подстанций
                     Subs = Subs.OrderBy(o => o.FullPowerOfDistrict).ToList();
+                    // Проверить можно ли равномерно распределить
+                    bool CanBeDistributed = false;
+                    int n = 0;
+                    foreach (var s in Subs)
+                    {
+                        if (maximumSubsLoad - s.FullPowerOfDistrict > tempLightningDist / Substations.Count)
+                        {
+                            if (n + 1 == Subs.Count)
+                                CanBeDistributed = true;
+                        }
+                        else break;
+                        n++;
+                    }
+
+
+                    if (CanBeDistributed==true)
+                    {
+                        foreach (var s in Subs)
+                        {
+                           s.FullPowerOfDistrict = Math.Round(s.FullPowerOfDistrict + tempLightningDist/Substations.Count, 2);
+                            AbstractBuilding ab = new AbstractBuilding();
+                            ab.Type = "Зовнішнє освітлення";
+                            s.AbstractBuildings.Add(ab);
+                        }
+                    }
+                    else 
+                    {
                     foreach (var s in Subs)
                     {
                         double toAdd = maximumSubsLoad - s.FullPowerOfDistrict;
@@ -753,12 +770,20 @@ namespace WpfPaging.DistrictObjects
                         {
                             s.FullPowerOfDistrict = Math.Round(s.FullPowerOfDistrict + toAdd, 2);
                             tempLightningDist -= toAdd;
+                                AbstractBuilding ab = new AbstractBuilding();
+                                ab.Type = "Зовнішнє освітлення";
+                                s.AbstractBuildings.Add(ab);
                         }
                         else // tempLightningDist < toAdd
                         {
                             s.FullPowerOfDistrict = Math.Round(s.FullPowerOfDistrict + tempLightningDist, 2);
                             tempLightningDist -= tempLightningDist;
+                                AbstractBuilding ab = new AbstractBuilding();
+                                ab.Type = "Зовнішнє освітлення";
+                                s.AbstractBuildings.Add(ab);
+                                break;
                         }
+                    }
                     }
                     List<District> res = new List<District>();
                     foreach (var id in x)
@@ -774,16 +799,16 @@ namespace WpfPaging.DistrictObjects
             return result;
         }
 
-        //!!!!!!!!!!!!!!!!!!!1 FOR TEST
+    
         public List<List<List<int>>> CPS(List<List<List<int>>> sequences)
         {
             int numberOfBuildings = Substations[0].OptimizationDataBuildings.Count();
+            System.Diagnostics.Debug.WriteLine("Number of buildings: " + numberOfBuildings + " total");
             int i = 0;
             List<List<List<int>>> result = new List<List<List<int>>>();
             foreach (var sequence in sequences)
             {
-                // List<List<int>> localSequence = sequence.OrderBy(a => a.Sort(b => b)).Distinct().ToList();
-                List<List<int>> localSequence = new List<List<int>>(); //sequence.OrderByDescending(a => a.(b => b.)).Distinct().ToList();
+                List<List<int>> localSequence = new List<List<int>>(); 
                 System.Diagnostics.Debug.WriteLine("Number of elements: " + sequence.Count() + " before removing duplicates");
                 foreach (var seq in sequence)
                 {
@@ -791,15 +816,15 @@ namespace WpfPaging.DistrictObjects
                     localSequence.Add(seqOrdered);
                 }
                     localSequence = localSequence.Distinct().ToList();
-                System.Diagnostics.Debug.WriteLine("Number of elements: " + localSequence.Count() + " after removing duplicates");
+              System.Diagnostics.Debug.WriteLine("Number of elements: " + localSequence.Count() + " after removing duplicates");
+              System.Diagnostics.Debug.WriteLine(DateTime.Now + " Iteration #" + i + " Start");
 
-                System.Diagnostics.Debug.WriteLine(DateTime.Now + " Iteration #" + i + " Start");
+                // Cartesian product of sets
                 if (i == 0)
                 {
                     foreach (var x in localSequence)
                     {
-                        List<List<int>> tempRes = new List<List<int>>();
-                       
+                        List<List<int>> tempRes = new List<List<int>>();                       
                         tempRes.Add(x.OrderBy(s => s).ToList());
                         result.Add(tempRes.Distinct().ToList());
                     }
@@ -807,14 +832,11 @@ namespace WpfPaging.DistrictObjects
                 else
                 {
                     List<List<List<int>>> tempResult = new List<List<List<int>>>();
-                    //tempResult = result;
-                    // result = new List<List<List<int>>>();
 
                     foreach (var prev in result)
                     {
                         foreach (var curr in localSequence)
                         {
-
                             List<List<int>> temp = new List<List<int>>();
                             temp.AddRange(prev);
                             List<int> orderedCurr = curr.OrderBy(s => s).ToList();
@@ -830,14 +852,16 @@ namespace WpfPaging.DistrictObjects
                 System.Diagnostics.Debug.WriteLine(DateTime.Now + " Iteration #" + i + " END");
                 System.Diagnostics.Debug.WriteLine("Number of elements: " + result.Count());
                 i++;
+                // Cartesian product of sets END
             }
-
+            System.Diagnostics.Debug.WriteLine("Final Number of elements: " + result.Count());
+            // Отсеять те, количество зданий неполное 
             List<List<List<int>>> difference = new List<List<List<int>>>();
-            List<int> plannumGen = new List<int>();//test
+            List<int> plannumGen = new List<int>();
             foreach (var res in result)
             {
                 List<int> test = new List<int>();
-                List<int> plannum = new List<int>();//test
+                List<int> plannum = new List<int>();
                 foreach (var ob in OptimizationDataBuildings)
                 {
                     plannum.Add(ob.PlanNumber);
@@ -853,10 +877,180 @@ namespace WpfPaging.DistrictObjects
                 plannumGen.AddRange(x.ToList()); //test
             }
             plannumGen = plannumGen.Distinct().ToList(); //test
-          //  result = new List<List<List<int>>>(difference);
+         
             return difference;
         }
 
+/// <summary>
+/// Оптимізація за сумарною довжиною
+/// </summary>
+/// <param name="districts">Effective districts calculated</param>
+/// <returns></returns>
+        public List<(int, double)> OptimizeByLengths(List<List<District>> districts)
+        {
+            int pos = 0;
+            List<(int, double)> topTenOptimized = new List<(int, double)>();
+            double previousSummaryNumOfLength = double.PositiveInfinity;
+            foreach (var d in districts)
+            {
+                double currLen = 0;
+                int i = 0;
+                foreach (var sub in d)
+                {
+                    foreach(var ab in sub.Building.ApartmentBuildings)
+                    {
+                        var tempLen = Substations[i].OptimizationDataBuildings.Where(o => o.PlanNumber == ab.PlanNumber).FirstOrDefault();
+                        currLen += tempLen.CableLength;
+                    }
+                    foreach(var cb in sub.Building.CommercialBuildings)
+                    {
+                        var tempLen = Substations[i].OptimizationDataBuildings.Where(o => o.PlanNumber == cb.PlanNumber).FirstOrDefault();
+                        currLen += tempLen.CableLength;
+                    }
+                    i++;
+                }
+                if (previousSummaryNumOfLength>currLen)
+                {
+                    topTenOptimized.Insert(0, (pos, currLen));
+                    previousSummaryNumOfLength = currLen;
+                }
+                pos++;
+            }
+            
+            return topTenOptimized;
+        }
+
+        public List<(int, double)> OptimizeByLengths2(List<List<District>> districts)
+        {
+            ChartValues<string> number = new ChartValues<string>();
+            ChartValues<double> length = new ChartValues<double>();
+            ChartValues<double> lengthOrdered = new ChartValues<double>();
+            int pos = 0;
+            List<(int, double)> topTenOptimized = new List<(int, double)>();
+            // double previousSummaryNumOfLength = double.PositiveInfinity;
+            foreach (var d in districts)
+            {
+                double currLen = 0;
+                int i = 0;
+                foreach (var sub in d)
+                {
+                    foreach (var ab in sub.Building.ApartmentBuildings)
+                    {
+                        var tempLen = Substations[i].OptimizationDataBuildings.Where(o =>
+                        o.PlanNumber == ab.PlanNumber).FirstOrDefault();
+                        currLen += tempLen.CableLength;
+                    }
+                    foreach (var cb in sub.Building.CommercialBuildings)
+                    {
+                        var tempLen = Substations[i].OptimizationDataBuildings.Where(o =>
+                        o.PlanNumber == cb.PlanNumber).FirstOrDefault();
+                        currLen += tempLen.CableLength;
+                    }
+                    i++;
+                }
+                topTenOptimized.Add((pos, currLen));
+                number.Add(pos.ToString());
+                length.Add(Math.Round(currLen,2));
+                pos++;
+            }
+
+            var x = length.OrderBy(o => o);
+            foreach (var l in x)
+            {
+                lengthOrdered.Add(l);
+            }
+            List<(int, double)> result = new List<(int, double)>();
+            topTenOptimized.Sort((a, b) => a.Item2.CompareTo(b.Item2));
+            // topTenOptimized = new List<(int, double)>();
+            for (int i = 0; i < 9; i++)
+            {
+                result.Add(topTenOptimized[i]);
+            }
+           // result.Add(topTenOptimized[topTenOptimized.Count() / 2]);
+            result.Add(topTenOptimized[topTenOptimized.Count() - 1]);
+
+            ChartSeries = new SeriesCollection
+            {
+                new LineSeries
+                {
+                    Values = length,
+                    PointGeometrySize=0.5
+                    //PointGeometry = null
+                }
+            };
+            OrderedChartSeries = new SeriesCollection
+            {
+                new LineSeries
+                {
+                    Values = lengthOrdered,
+                    PointGeometrySize=0.5
+                }
+            };
+            Labels = number.ToArray();
+            return result;
+        }
+
+       
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="topTen">10 варіантів</param>
+        /// <param name="districts">Множина мікрорайонів</param>
+        public void Reporting(List<(int, double)> topTen, List<List<District>> districts)
+        {
+            Report.Clear();
+            int i = 0;
+            foreach (var dist in topTen)
+            {
+                FinalReport reportDistrictInfo = new FinalReport();
+                reportDistrictInfo.Buildings = "No " + (i+1).ToString();
+                
+                reportDistrictInfo.SubstationName = "Варіант мікрорайону";
+                if (i+1==topTen.Count())
+                    reportDistrictInfo.SubstationName = "Найгірший варіант";
+                reportDistrictInfo.Load = "";
+               
+                reportDistrictInfo.CoeficientOfLoad = "";
+                Report.Add(reportDistrictInfo);
+                int n = 1;
+                foreach (var sub in districts[dist.Item1])
+                {
+                    FinalReport reportSubstationInfo = new FinalReport();
+                    reportSubstationInfo.SubstationName = "ТП" + n.ToString();
+
+                    string buildings="";
+                    int c = 0;
+                    foreach (var b in sub.AbstractBuildings)
+                    {
+                        buildings += b.PlanNumber;
+                        if (b.Type == "Зовнішнє освітлення")
+                            buildings += b.Type;
+                        if (c + 1 != sub.AbstractBuildings.Count() && buildings!="")
+                            buildings += ", ";
+                        c++;
+                    }
+                        char[] charsToTrim = { ' ', ',' };
+                        buildings = buildings.Trim(charsToTrim);
+                    reportSubstationInfo.Buildings = buildings;
+
+                    reportSubstationInfo.Load = sub.FullPowerOfDistrict.ToString();
+                    double coef = Math.Round(sub.FullPowerOfDistrict / (TransformerLoad * NumberOfTransformers), 2);
+                    reportSubstationInfo.CoeficientOfLoad = coef.ToString();
+                    Report.Add(reportSubstationInfo);
+                    n++;
+                }
+                reportDistrictInfo = new FinalReport();
+                reportDistrictInfo.LengthsOfCable = Math.Round(dist.Item2, 2).ToString() + " м";
+                reportDistrictInfo.Buildings = "Загальна довжина кабелю мікрорайону";
+                Report.Add(reportDistrictInfo);
+                reportDistrictInfo = new FinalReport();
+                Report.Add(reportDistrictInfo);
+                reportDistrictInfo = new FinalReport();
+                Report.Add(reportDistrictInfo);
+                i++;
+
+            }
+        }
     }
 
 }

@@ -88,7 +88,9 @@ namespace WpfPaging.DistrictObjects
             foreach (var c in DbnCommercialBuildings.CommercialBuildingsList)
             {
 
-                if (c.TypeOfCommercial == TypeOfCommercial && c.ValueOfCharacteristics >= ValueOfCharacteristics && ValueOfCharacteristics >= i)
+                if (c.TypeOfCommercial == TypeOfCommercial &&
+                    c.ValueOfCharacteristics >= ValueOfCharacteristics &&
+                    ValueOfCharacteristics >= i)
                 {
 
                     MeasurmentUnit = c.MeasurmentUnit;

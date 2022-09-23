@@ -3,7 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:DistrictSupplySolution.Pages"
+      xmlns:local="clr-namespace:DistrictSupplySolution.Pages" xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
       mc:Ignorable="d" 
        DataContext="{Binding SubstationsViewModel, Source={StaticResource ViewModelLocator}}"
       d:DesignHeight="800" d:DesignWidth="1200"
@@ -155,7 +155,8 @@
                     
                 </Button>
                 <Button VerticalAlignment="Top" Margin="0, 25, 0,0"  Style="{StaticResource MenuControls}" Background="LightBlue" Foreground="Blue" Command="{Binding SaveSubstationsCom}" x:Name="Save" Content="Зберегти підстанції" Width="240"></Button>
-                <Button Command="{Binding Optimize}">Optimize</Button>
+               
+              
             </StackPanel>
             <!--Input panel determine subsrtations tab END-->
 
@@ -232,8 +233,55 @@
                     </DataGrid>
                 </TabItem>
                 <TabItem x:Name="OptimizationParametersTab">
-                    <TabItem.Header>Параметри потимізації</TabItem.Header>
-                  
+                    <TabItem.Header>Параметри оптимізації</TabItem.Header>
+                    <DataGrid x:Name="Report" Grid.Column="1" Margin="0,0,43.5,43.5"  AutoGenerateColumns="False" CanUserDeleteRows="False"  HorizontalAlignment="Left" ItemsSource="{Binding SelectedDistrict.Report}" Grid.ColumnSpan="2">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn CanUserResize="False" x:Name="SubstationName" IsReadOnly="True" Header="№ТП" Width="0.3*" Binding="{Binding SubstationName}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="{x:Type TextBlock}">
+                                        <Style.Triggers>
+                                            <Trigger Property="Text" Value="Варіант мікрорайону">
+                                                <Setter Property="FontWeight" Value="Bold"/>
+                                            </Trigger>
+                                            <Trigger Property="Text" Value="Найгірший варіант">
+                                                <Setter Property="FontWeight" Value="Bold"/>
+                                                <Setter Property="Foreground" Value="DarkRed"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn CanUserResize="False" x:Name="Buildings" IsReadOnly="True" Header="Будівлі"    Width="0.4*" Binding="{Binding Buildings}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="{x:Type TextBlock}">
+                                        <Style.Triggers>
+                                            <Trigger Property="Text" Value="Загальна довжина кабелю мікрорайону">
+                                                <Setter Property="FontWeight" Value="Bold"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn CanUserResize="False" x:Name="Load" IsReadOnly="True" Header="Sтп"   Width="0.1*" Binding="{Binding Load}"/>
+                            <DataGridTextColumn CanUserResize="False" x:Name="Coeff" IsReadOnly="True" Header="Кзав"   Width="0.1*" Binding="{Binding CoeficientOfLoad}"/>
+                            <DataGridTextColumn CanUserResize="False" x:Name="TotalLength" FontWeight="Bold"  IsReadOnly="True" Header="Lзаг"  Width="0.1*" Binding="{Binding LengthsOfCable}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                </TabItem>
+                <TabItem>
+                    <TabItem.Header>Графік</TabItem.Header>
+                    <StackPanel VerticalAlignment="Center">
+                        
+                    <lvc:CartesianChart Height="300" Series="{Binding SelectedDistrict.ChartSeries}">
+                    </lvc:CartesianChart>
+                        <TextBlock HorizontalAlignment="Center" FontSize="14">Графік 1.1 - Невпорядковані елементи множини оптимальних варіантів</TextBlock>
+
+                        <lvc:CartesianChart Height="300" Series="{Binding SelectedDistrict.OrderedChartSeries}">
+                    </lvc:CartesianChart>
+                        <TextBlock HorizontalAlignment="Center" FontSize="14">Графік 1.2 - Впорядковані за зростанням елементи множини оптимальних варіантів</TextBlock>
+                    </StackPanel>
+                    
                 </TabItem>
             </TabControl>
         </Grid>

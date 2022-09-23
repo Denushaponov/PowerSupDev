@@ -68,31 +68,25 @@ namespace DistrictSupplySolution.DistrictObjects
                 }
                 else break;
             }
-            //var results = ExtentionMethods.GetCombinations(input).Where(x 
-            //=> x.Length >= minNumOfBuildings && x.Length <= maxNumOfBuildings);
+          
             var tolists = from ab in MaximalDetermine select ab.Number;
-            IEnumerable<int[]> Combinations = ExtMethods.GetAbCombinations(tolists.ToList()).Where(x
-                => x.Length >= minimalNumber && x.Length<=maximalNum);//тест ТОДО
-                List<List<int>> result = new List<List<int>>();
+            IEnumerable<int[]> Combinations = ExtMethods.GetAbCombinations(tolists.ToList()).Where(
+                x=>x.Length >= minimalNumber && x.Length<=maximalNum);
+            List<List<int>> result = new List<List<int>>();
             foreach (var i in Combinations)
             {
                 double loadOfSet = 0;
                 foreach(var o in i)
                 {
-                    //проверить сумма нагрузок соответствет минимальной нагрузке или нет
-                    // получаю здание с таким же индексом
-                    OptimizationDataBuilding x = OptimizationDataBuildings.Where(ob => ob.PlanNumber == o).First();
+                    OptimizationDataBuilding x = OptimizationDataBuildings.Where(
+                        ob =>ob.PlanNumber == o).First();
                     loadOfSet += x.FullPower;
                 }
                 if (minimalLoadComparer<=loadOfSet&&maximalLoadComparer>=loadOfSet)
                 result.Add(i.OrderByDescending(o => o).ToList());
             }
             result = result.Distinct().ToList();
-              //  int i = Combinations.Count();
-            //  List<List<int>> co = Combinations.ToList();
-            //return Combinations.ToList(); //TODO
             return result;
-            // TODO чтобы было 32 
     }
 
     }

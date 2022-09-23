@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevExpress.Mvvm;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -21,6 +22,7 @@ namespace DistrictSupplySolution.Pages
         public SubstationsPage()
         {
             InitializeComponent();
+            // In initialization
         }
     }
 }
